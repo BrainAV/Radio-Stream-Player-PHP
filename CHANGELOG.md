@@ -10,6 +10,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- None.
+
+### Changed
+- None.
+
+### Fixed
+- None.
+
+## [2.0.0] - 2026-03-09
+
+### Added
+- **Agent Skill (documentation-sentinel)**: Introduced a specialized skill to enforce documentation integrity. It prevents "cropping" of Markdown files and ensures the project's historical context (roadmap goals, changelog entries) is never lost during AI interactions.
+- **Non-Intrusive AJAX Login**: Implemented a new modal-based login system that allows users to sign in or out without stopping the music or reloading the page.
+- **Dedicated Auth API**: Created `api/auth.php` to handle secure, asynchronous authentication requests.
 - **User Profile Management**: Logged-in users can now update their email and password directly from a new "Account" tab in the Settings modal.
 - **Premium UI Polish**: Full Glassmorphism redesign of the Settings overlay with high-blur backdrops, sleek tabs, and ultra-slim custom scrollbars.
 - **Improved Notifications**: Elegant inline notification system for profile updates with color-coded feedback and auto-hiding success alerts.
@@ -17,9 +31,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Hybrid Storage System**: The player now dynamically chooses between `localStorage` (for guests) and the MySQL database (for registered users) to save favorite stations and custom entries.
 
 ### Changed
+- **Dark Mode Visibility**: Improved dropdown and select menu readability in dark mode by adding `color-scheme` support and explicit option styling.
 - **Settings UX**: Redesigned all dropdown selectors with custom visuals and added scale-up animations for background presets.
 - **Light Theme Contrast**: Optimized color palettes and opacity in Light mode to ensure maximum readability against translucent backdrops.
-- **Login Flow**: Updated the login overlay to submit to its own view state, ensuring error messages are persisted and visible on failure.
+- **Unified Input Styling**: Standardized all form inputs and selects with consistent glassmorphism tokens, focus states, and box-sizing.
+- **Login Flow**: Transitioned from a standalone login page to an integrated AJAX modal, ensuring perfect UI synchronization in the header when authentication state changes.
 
 ### Fixed
 - **Radio Browser Search**: Restored the broken search button and enabled "Enter" key support for quick searching.

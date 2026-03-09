@@ -57,62 +57,53 @@ This document outlines the future direction and planned features for the Radio S
     -   **[x]** Build a UI in the Settings modal (or a new panel) to search by tag, name, or country.
     -   **[x]** Leverage the existing Cloudflare Proxy natively to tunnel any `http://` streams returned by the API securely. 
     -   **[x]** Allow users to easily add searched stations to their "Custom Stations" or "Favorites".
--   **[ ] Monetization:**
-    -   **[ ]** Add placeholder ads to the player UI to draft layout and test responsiveness gracefully with the "Glassmorphism" aesthetic.
-    -   **[ ]** Integrate Google AdSense to capitalize on high session durations while users leave the player open.
 
 ---
 
 ## 🤖 Agent Tooling & Workflow (v1.4+)
 
-*These goals focus on enhancing the AI assistant's context and capabilities through explicit `SKILL.md` personas, resulting in "easy wins" and consistent development.*
+*These goals focus on enhancing the AI assistant's context and capabilities.*
 
 -   **[x] Initial Skill Foundation:**
     -   **[x]** Implement `.agent/skills` directory architecture.
     -   **[x]** Create `station-curator` skill for automated stream validation.
     -   **[x]** Create `ui-consistency` skill to enforce Glassmorphism tokens.
 -   **[x] Specialized Development Personas:**
-    -   **[x] `audio-engineer`:** A skill dedicated to Web Audio API best practices, preventing memory leaks and managing audio graph connections effectively.
-    -   **[x] `a11y-auditor`:** A skill used alongside new UI development to guarantee accessibility standards, keyboard focus paths, and ARIA labels.
-    -   **[x] `release-manager`:** A workflow automation skill that dictates exactly how to bump versions, format release notes, and update the changelog.
+    -   **[x] `audio-engineer`, `a11y-auditor`, and `release-manager` workflows.**
+    -   **[x] `documentation-sentinel` skill to preserve project history and integrity.**
 
 ---
 
-## 🔭 Long-Term Goals (v2.0+)
+## 🏗️ v2.0 Milestone: The PHP Awakening (COMPLETED)
 
-*These are major architectural changes and features that would represent a significant evolution of the project.*
+*Major architectural transition to a full-stack PHP/MySQL environment.*
 
--   **[x] Advanced State Management:**
-    -   Refactored the simple global `radioStreamState` object into a more robust state management pattern (class-based `StateManager` pub/sub) to better handle application complexity.
--   **[ ] UI/UX Design Improvements:**
-    -   Implement VU meter rotation to landscape mode (currently portrait-oriented).
--   **[ ] Build Process Integration:**
-    -   Introduce a modern build tool like Vite or Parcel to enable features like ES modules, CSS pre-processing, and code minification for production builds.
--   **[x] Backend Service (Cloudflare Worker Proxy):**
-    -   **[x]** Implemented a secure proxy using a Cloudflare Worker (`api.djay.ca`) to tunnel insecure HTTP streams over HTTPS.
-    -   **[x] Goal achieved:** Application is hosted securely on GitHub Pages with HTTPS while safely playing legacy HTTP streams, solving "Mixed Content" issues.
-    -   **[x] Metadata:** Extended the worker with a `/metadata` endpoint to parse ICY metadata server-side, avoiding CORS issues and audio decoding artifacts in the browser.
--   **[ ] Migration to Self-Hosted Backend (PHP/SQL):**
-    -   Migrate away from static GitHub Pages hosting to a full LAMP/LEMP stack environment.
-    -   **Repository Strategy:** To maintain a clean, dependency-free version for users, this repository will remain **HTML-only**. A new, separate repository (e.g., `Radio-Stream-Player-PHP`) will be created for the full-stack solution.
-    -   **Goal:** Enable advanced features like user accounts, server-side playlist management, and a robust API.
-    -   **Implementation:** Develop a PHP backend with a MySQL/MariaDB database to store stations, user preferences, and analytics.
-    -   **File Uploads:** Allow users to upload custom background images (e.g., WebP) instead of just providing URLs.
-    -   **Community Features:**
-        -   Store user-submitted station suggestions in the database for review.
-        -   Log broken stream reports to an admin dashboard.
-    -   **Backend Evolution & Decentralization:**
-        -   **PHP-based Metadata Extraction:** Port the Cloudflare Worker ICY metadata logic to a native PHP endpoint (`api/metadata.php`) to remove external dependencies.
-        -   **PHP-based Stream Proxy:** Port the Cloudflare Worker audio proxy logic to a native PHP endpoint (`api/proxy.php`) for true self-hosted independence.
-        -   **Song History (Premium):** Implement a database-backed history of played tracks for logged-in users, enabling features like "Recently Played" or "Playlists".
-    -   **[ ] Station Management & Evolution:**
-    -   **[ ]** Transition from hardcoded `stations.js` to a dynamic SQL database backend.
-    -   **[ ]** Repurpose `stations.js` as a dedicated configuration for "Sponsored" or promoted stations.
-    -   **[ ]** Consolidate all station sources (Custom, Directory, Default) into a single, unified database schema.
-    -   **[ ]** Update directory source links to resolve temporary "Custom" handling for legacy streams (e.g., CIDC).
--   **[ ] Database Schema:** Plan for a robust schema including:
-        -   `Station ID`
-        -   `Genre` (Categorization)
-        -   `Country of Origin`
-        -   `Bitrate/Format`
--   **[ ] Search & Filtering:** Implement a search bar and filter controls (by Genre/Country) to easily find stations within the larger database.
+-   **[x] Migration to Self-Hosted Backend (PHP/SQL):**
+    -   **[x]** Migrated away from static GitHub Pages hosting to a full LAMP/LEMP stack environment.
+    -   **[x] Goal achieved:** Enabled advanced features like user accounts, server-side station management, and a robust AJAX-powered API.
+    -   **[x] Implementation:** Developed a PHP backend with a PDO/MySQL database to store stations and user preferences.
+-   **[x] Non-Intrusive Auth Flow:**
+    -   **[x]** Implemented AJAX login/logout modals to ensure music playback never stops during authentication.
+-   **[x] Station Management Evolution:**
+    -   **[x]** Transitioned from hardcoded `stations.js` to a dynamic SQL database backend.
+    -   **[x]** Consolidated all station sources (Custom, Directory, Default) into a single, unified database schema.
+
+---
+
+## 🔭 Future Evolution (v2.1+)
+
+*The next generation of self-hosted features.*
+
+-   **[ ] Backend Evolution & Decentralization:**
+    -   **[ ] PHP-based Metadata Extraction:** Port the Cloudflare Worker ICY metadata logic to a native PHP endpoint (`api/metadata.php`) to remove external dependencies.
+    -   **[ ] PHP-based Stream Proxy:** Port the Cloudflare Worker audio proxy logic to a native PHP endpoint (`api/proxy.php`) for true self-hosted independence.
+    -   **[ ] Song History (Premium):** Implement a database-backed history of played tracks for logged-in users.
+-   **[ ] Admin Dashboard:**
+    -   Build a dedicated UI for managing default stations, user feedback, and broken stream reports.
+-   **[ ] Search & Filtering:**
+    -   Implement a global search bar and filter controls (by Genre/Country) to easily find stations within the larger database.
+-   **[ ] Custom Background Uploads:**
+    -   Allow users to upload images (WebP) instead of just providing URLs.
+-   **[ ] Monetization:**
+    -   **[ ]** Add placeholder ads to the player UI to draft layout and test responsiveness gracefully with the "Glassmorphism" aesthetic.
+    -   **[ ]** Integrate Google AdSense to capitalize on high session durations while users leave the player open.

@@ -701,6 +701,127 @@ export function initSettings() {
             }, 5000);
         }
     }
+    // --- Non-Intrusive Auth Logic ---
+    const loginModal = document.getElementById('login-modal');
+    const closeLoginBtn = document.getElementById('close-login-btn');
+    const authLoginBtn = document.getElementById('auth-login-btn');
+    const loginEmailInput = document.getElementById('login-email');
+    const loginPassInput = document.getElementById('login-password');
+    const loginErrorMsg = document.getElementById('login-error-msg');
+
+    function updateAuthButton() {
+        const header = document.querySelector('.tool-header');
+        if (!header) return;
+
+        // Find existing auth button (either login or logout)
+        let authBtn = document.getElementById('header-login-btn') || document.getElementById('header-logout-btn');
+        
+        if (!authBtn) {
+            // If for some reason it's missing, create it
+            authBtn = document.createElement('button');
+            authBtn.className = 'theme-btn';
+            authBtn.style.fontSize = '14px';
+            authBtn.style.marginLeft = '10px';
+            authBtn.style.display = 'flex';
+            authBtn.style.alignItems = 'center';
+            header.appendChild(authBtn);
+        }
+
+        // Update properties based on state
+        if (window.IS_LOGGED_IN) {
+            authBtn.id = 'header-logout-btn';
+            authBtn.textContent = 'Logout';
+            authBtn.onclick = handleLogout;
+        } else {
+            authBtn.id = 'header-login-btn';
+            authBtn.textContent = 'Login';
+            authBtn.onclick = () => {
+                if (loginModal) loginModal.style.display = 'flex';
+            };
+        }
+    }
+
+    async function handleLogout() {
+        try {
+            const response = await fetch('api/auth.php?action=logout');
+            const data = await response.json();
+            if (data.status === 'success') {
+                window.IS_LOGGED_IN = false;
+                updateAuthButton();
+                refreshAppData();
+            }
+        } catch (e) {
+            console.error('Logout failed', e);
+        }
+    }
+
+    function refreshAppData() {
+        populateGenres();
+        renderCustomStations();
+        renderFavorites();
+        window.dispatchEvent(new CustomEvent('stationListUpdated'));
+        window.dispatchEvent(new CustomEvent('settingsOpened'));
+    }
+
+    if (closeLoginBtn) {
+        closeLoginBtn.addEventListener('click', () => {
+            if (loginModal) loginModal.style.display = 'none';
+        });
+    }
+
+    if (loginModal) {
+        loginModal.addEventListener('click', (e) => {
+            if (e.target === loginModal) loginModal.style.display = 'none';
+        });
+    }
+
+    if (authLoginBtn) {
+        authLoginBtn.addEventListener('click', async () => {
+            const email = loginEmailInput.value;
+            const password = loginPassInput.value;
+
+            if (!email || !password) {
+                showLoginError('Please enter both email and password.');
+                return;
+            }
+
+            authLoginBtn.disabled = true;
+            authLoginBtn.textContent = 'Logging in...';
+
+            try {
+                const response = await fetch('api/auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ login_submit: 1, email, password })
+                });
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    window.IS_LOGGED_IN = true;
+                    if (loginModal) loginModal.style.display = 'none';
+                    updateAuthButton();
+                    refreshAppData();
+                } else {
+                    showLoginError(data.message || 'Login failed.');
+                }
+            } catch (e) {
+                showLoginError('Network error. Try again.');
+            } finally {
+                authLoginBtn.disabled = false;
+                authLoginBtn.textContent = 'Login';
+            }
+        });
+    }
+
+    function showLoginError(msg) {
+        if (loginErrorMsg) {
+            loginErrorMsg.textContent = msg;
+            loginErrorMsg.style.display = 'block';
+        }
+    }
+
+    // Initialize the button state on load
+    updateAuthButton();
 }
 
 function openSettings() {
@@ -710,4 +831,4 @@ function openSettings() {
 
 function closeSettings() {
     settingsModal.style.display = 'none';
-}
+}
