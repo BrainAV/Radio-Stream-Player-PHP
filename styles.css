@@ -1,0 +1,1372 @@
+:root {
+    --primary-color: #3b82f6;
+    --primary-hover: #2563eb;
+    --text-color: #1f2937;
+    --bg-color: #f9fafb;
+    --console-bg: #f3f4f6;
+    --card-bg: #ffffff;
+    --border-color: #e5e7eb;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme {
+    --primary-color: #60a5fa;
+    --primary-hover: #93c5fd;
+    --text-color: #d1d5db;
+    --bg-color: #111827;
+    --console-bg: #1f2937;
+    --card-bg: #374151;
+    --border-color: #4b5567;
+    --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    /* Add a background image to see the glass effect */
+    background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1950');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    /* Keeps the background static during scroll */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    transition: background-color 0.3s, color 0.3s;
+    /* Safe area insets for notched/island devices (iPhone X+) */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+.main-content {
+    /* Add a subtle overlay to ensure text is always readable */
+    background-color: rgba(0, 0, 0, 0.2);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    min-height: 80vh;
+}
+
+.tool-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 25px;
+    /* Glassmorphism effect */
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.tool-header h2 {
+    font-size: 1.2rem;
+    margin: 0;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.theme-btn {
+    background: var(--console-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 10px;
+    /* Balanced padding for icon button */
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.radiostream-player {
+    /* Glassmorphism effect */
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    padding: 25px;
+    width: 90%;
+    max-width: 600px;
+    min-width: 0;
+    margin: 0 auto;
+    color: var(--text-color);
+    /* This will be overridden by dark theme if active */
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+}
+
+.player-content {
+    flex: 1;
+    min-width: 0;
+    /* Critical for text overflow inside flex children */
+    display: flex;
+    flex-direction: column;
+}
+
+.dark-theme .tool-header,
+.dark-theme .radiostream-player {
+    background: rgba(31, 41, 55, 0.3);
+    /* Darker glass for dark mode */
+}
+
+.dark-theme .radiostream-player {
+    color: #e5e7eb;
+    /* Use a lighter text color for better contrast on the dark glass */
+}
+
+/* Ensure the popout window shares the same background as the main page for a consistent glass effect */
+/* We don't need to override anything. The default body style with the 
+   background image will apply, which is what we want. */
+
+.popout-player {
+    /* Glassmorphism effect for the popout player */
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+}
+
+.popout-player .control-bar {
+    padding: 0 5px;
+    margin-top: 5px;
+}
+
+.dark-theme .popout-player {
+    background: rgba(31, 41, 55, 0.3);
+    /* Darker glass for dark mode */
+}
+
+
+.vu-meters {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    width: 80px;
+    align-items: stretch;
+    position: relative;
+}
+
+/* Base VU Meter Styles */
+.vu-meter {
+    background: var(--console-bg);
+    border-radius: 8px;
+    height: 100%;
+    width: 30px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Classic VU Style */
+.vu-classic .vu-meter {
+    width: 15px;
+}
+
+.vu-level {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: #00ff00;
+    transition: height 0.1s ease, background 0.1s ease;
+}
+
+/* LED VU Style */
+.vu-led .vu-meter {
+    width: 20px;
+    padding: 1px;
+}
+
+.led-container {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 1px;
+    height: calc(100% - 2px);
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.led-segment {
+    width: 100%;
+    flex: 1;
+    min-height: 3px;
+    background: #00ff00;
+    border-radius: 1px;
+    opacity: 0.1;
+    transition: opacity 0.1s ease, background 0.1s ease;
+}
+
+/* Circular VU Style */
+.vu-circular .vu-meter {
+    width: 35px;
+    height: 100%;
+    border-radius: 0;
+    background: var(--console-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    color: var(--text-color);
+}
+
+.vu-meters.vu-circular {
+    width: 80px;
+    gap: 10px;
+}
+
+.vu-circular svg {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.circular-level {
+    transition: stroke-dashoffset 0.1s ease, stroke 0.1s ease;
+}
+
+/* Waveform VU Style */
+.vu-waveform .vu-meter {
+    width: 60px;
+    background: transparent;
+    border: 1px solid var(--border-color);
+}
+
+.vu-waveform .vu-meters {
+    width: 140px;
+    gap: 20px;
+}
+
+.waveform-canvas {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+}
+
+/* Spectrum VU Style */
+.vu-spectrum .vu-meter {
+    width: 60px;
+    padding: 2px;
+}
+
+.vu-spectrum .vu-meters {
+    width: 140px;
+    gap: 20px;
+}
+
+.spectrum-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    gap: 1px;
+}
+
+.spectrum-bar {
+    background: #00ff00;
+    width: 3px;
+    min-height: 2px;
+    transition: height 0.1s ease, background 0.1s ease;
+    border-radius: 1px 1px 0 0;
+}
+
+/* Retro VU Style */
+.vu-retro .vu-meter {
+    width: 35px;
+    height: 80px;
+    background: radial-gradient(ellipse at center bottom, var(--console-bg) 40%, var(--border-color) 80%);
+    border-radius: 35px 35px 0 0;
+    overflow: visible;
+    position: relative;
+    border: 1px solid var(--border-color);
+}
+
+.vu-retro .vu-meters {
+    width: 80px;
+    gap: 10px;
+}
+
+.retro-vu {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.retro-scale {
+    position: absolute;
+    bottom: 2px;
+    font-size: 4px;
+    color: var(--text-color);
+    opacity: 0.8;
+    white-space: nowrap;
+    letter-spacing: 0px;
+    line-height: 1;
+    transform: scale(0.8);
+}
+
+.retro-needle {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    width: 1px;
+    height: 20px;
+    border-left: 1px solid #00ff00;
+    transform-origin: bottom center;
+    transform: translate(-50%, 0) rotate(-45deg);
+    transition: transform 0.2s ease, border-color 0.1s ease;
+    z-index: 5;
+}
+
+.retro-needle::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: -1px;
+    width: 3px;
+    height: 3px;
+    background: var(--primary-color);
+    border-radius: 50%;
+}
+
+/* Neon VU Style */
+.vu-neon .vu-meter {
+    width: 25px;
+    background: #000;
+    /* Deep black for contrast */
+    border: 1px solid #333;
+    box-shadow: inset 0 0 10px #000;
+}
+
+.neon-level {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    transition: height 0.1s ease, background 0.1s ease, box-shadow 0.1s ease;
+    /* Box shadow is set dynamically in JS */
+}
+
+.player-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.station-selector {
+    display: flex;
+    gap: 8px;
+}
+
+.station-selector label {
+    /* The label is now hidden, but kept for accessibility.
+       We use aria-label on the select element instead. */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.station-selector select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    background: var(--console-bg);
+    color: var(--text-color);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.station-selector select:focus {
+    outline: none;
+    border-color: var(--primary-hover);
+}
+
+.control-bar {
+    display: flex;
+    align-items: center;
+    /* Vertically align all items in the bar */
+    gap: 10px;
+    width: 100%;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-grow: 1;
+    /* Allow the volume control to take up remaining space */
+    min-width: 100px;
+}
+
+.volume-control label {
+    /* The label is now hidden, but kept for accessibility.
+       We use aria-label on the range input instead. */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.volume-control input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    /* Make the track slimmer */
+    background: transparent;
+    /* Background will be set by JS */
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+}
+
+.volume-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    /* Slightly smaller thumb */
+    height: 18px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid var(--card-bg);
+    /* Creates a "halo" effect that looks good on the glass */
+    box-shadow: var(--card-shadow);
+    margin-top: -6px;
+    /* Center the thumb on the track */
+    transition: transform 0.2s ease;
+}
+
+.volume-control input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid var(--card-bg);
+    box-shadow: var(--card-shadow);
+}
+
+.volume-control input[type="range"]:hover::-webkit-slider-thumb {
+    transform: scale(1.1);
+}
+
+.now-playing-container {
+    background: var(--console-bg);
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.now-playing-label {
+    font-size: 0.8em;
+    font-weight: 600;
+    color: var(--text-color);
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.now-playing-track-wrapper {
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    width: 100%;
+}
+
+.now-playing-track {
+    font-size: 1.2em;
+    font-weight: 500;
+    color: var(--primary-color);
+    display: inline-block;
+    transition: color 0.3s ease;
+}
+
+/* Marquee animation class applied via JS when text is too long */
+.marquee-active {
+    animation: marquee 15s linear infinite;
+    padding-right: 50px;
+    /* Space before it repeats */
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(10%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* Generic button style for standalone */
+.console-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+
+.console-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+.console-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.console-btn .icon {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+#play-pause-btn {
+    padding: 10px;
+    /* Make the play/pause button square */
+}
+
+/* Favorite Button */
+#favorite-btn {
+    padding: 10px;
+    background-color: var(--console-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+#favorite-btn.active {
+    color: #fbbf24;
+    /* Amber/Gold color */
+    border-color: #fbbf24;
+}
+
+/* Adjustments for pop-out player */
+.popout-player .now-playing {
+    font-size: 0.9em;
+    padding: 8px 10px;
+    margin: 0 5px;
+}
+
+.popout-player .station-selector select {
+    padding: 6px;
+    font-size: 0.9rem;
+}
+
+.popout-player .console-btn {
+    padding: 8px;
+    /* Make buttons smaller */
+}
+
+.popout-player .volume-control {
+    min-width: 80px;
+    /* Ensure volume slider has some space */
+}
+
+.popout-player .volume-control input[type="range"]::-webkit-slider-thumb {
+    width: 16px;
+    height: 16px;
+    margin-top: -5px;
+    /* Re-center smaller thumb on track */
+}
+
+.popout-player .volume-control input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+}
+
+/* ============================================
+   Tablet Responsive Styles (≤ 768px)
+   ============================================ */
+@media (max-width: 768px) {
+    .radiostream-player {
+        padding: 20px;
+        width: 95%;
+    }
+
+    .console-btn {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    #favorite-btn {
+        min-width: 44px;
+        min-height: 44px;
+    }
+}
+
+/* ============================================
+   Mobile Responsive Styles (≤ 500px)
+   ============================================ */
+@media (max-width: 500px) {
+
+    /* --- Player Card Layout --- */
+    .radiostream-player {
+        flex-direction: column;
+        padding: 16px;
+        min-width: 0;
+        width: calc(100% - 24px);
+        gap: 12px;
+    }
+
+    .player-content {
+        gap: 10px;
+    }
+
+    .main-content {
+        padding: 12px;
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+
+    /* --- Header --- */
+    .tool-header {
+        padding: 8px 16px;
+    }
+
+    .tool-header h2 {
+        font-size: 1.05rem;
+    }
+
+    /* --- VU Meters (horizontal on mobile) --- */
+    .vu-meters {
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+        height: 50px;
+    }
+
+    /* Mobile Classic Style */
+    .vu-classic .vu-meter {
+        width: 60px;
+        height: 20px;
+    }
+
+    .vu-classic .vu-level {
+        height: 100%;
+        width: 0%;
+        bottom: auto;
+        left: 0;
+    }
+
+    /* Mobile LED Style */
+    .vu-led .vu-meter {
+        width: 80px;
+        height: 20px;
+    }
+
+    .vu-led .led-container {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .vu-led .led-segment {
+        width: 3px;
+        height: 100%;
+    }
+
+    /* Mobile Circular Style */
+    .vu-meters.vu-circular {
+        width: 100%;
+        gap: 30px;
+        justify-content: center;
+    }
+
+    .vu-circular .vu-meter {
+        width: 50px;
+        height: 50px;
+    }
+
+    /* Mobile Waveform Style */
+    .vu-waveform .vu-meters {
+        width: 100%;
+        gap: 20px;
+    }
+
+    .vu-waveform .vu-meter {
+        width: 80px;
+        height: 40px;
+    }
+
+    /* Mobile Spectrum Style */
+    .vu-spectrum .vu-meters {
+        width: 100%;
+        gap: 20px;
+    }
+
+    .vu-spectrum .vu-meter {
+        width: 80px;
+        height: 40px;
+    }
+
+    .vu-spectrum .spectrum-container {
+        align-items: flex-end;
+    }
+
+    .vu-spectrum .spectrum-bar {
+        width: 4px;
+    }
+
+    /* Mobile Retro Style */
+    .vu-retro .vu-meters {
+        width: 100%;
+        gap: 30px;
+        justify-content: center;
+    }
+
+    .vu-retro .vu-meter {
+        width: 50px;
+        height: 50px;
+    }
+
+    .vu-retro .retro-scale {
+        font-size: 5px;
+    }
+
+    .vu-retro .retro-needle {
+        height: 20px;
+    }
+
+    /* Mobile Neon Style */
+    .vu-neon .vu-meter {
+        width: 60px;
+        height: 20px;
+    }
+
+    .vu-neon .neon-level {
+        height: 100%;
+        width: 0%;
+        bottom: auto;
+        left: 0;
+    }
+
+    /* --- Control Bar: Stacked Layout --- */
+    .control-bar {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    /* Station selector takes full width (row 1) */
+    .station-selector {
+        width: 100%;
+        order: 1;
+    }
+
+    .station-selector select {
+        font-size: 0.95rem;
+        padding: 12px 10px;
+    }
+
+    /* Play button */
+    #play-pause-btn {
+        order: 2;
+        min-width: 48px;
+        min-height: 48px;
+        padding: 12px;
+    }
+
+    /* Volume slider expands to fill remaining space (row 2) */
+    .volume-control {
+        order: 3;
+        flex-grow: 1;
+        min-width: 0;
+    }
+
+    .volume-control input[type="range"] {
+        height: 8px;
+    }
+
+    .volume-control input[type="range"]::-webkit-slider-thumb {
+        width: 24px;
+        height: 24px;
+        margin-top: -8px;
+    }
+
+    .volume-control input[type="range"]::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+    }
+
+    /* Favorite button: larger touch target */
+    #favorite-btn {
+        min-width: 48px;
+        min-height: 48px;
+        padding: 12px;
+    }
+
+    /* Hide popout button — not useful on mobile browsers */
+    #popout-btn {
+        display: none;
+    }
+
+    /* All icon buttons: enforce minimum touch target */
+    .console-btn {
+        min-width: 48px;
+        min-height: 48px;
+    }
+
+    /* --- Now Playing --- */
+    .now-playing-container {
+        padding: 8px 12px;
+    }
+
+    .now-playing-track {
+        font-size: 1.05em;
+    }
+
+    .now-playing-label {
+        font-size: 0.75em;
+    }
+
+    /* --- Settings Modal: Bottom Sheet --- */
+    .settings-modal {
+        align-items: flex-end;
+    }
+
+    .settings-content {
+        width: 100%;
+        max-width: 100%;
+        max-height: 85vh;
+        border-radius: 20px 20px 0 0;
+        padding: 16px;
+        padding-bottom: calc(16px + env(safe-area-inset-bottom));
+        animation: slideUp 0.3s ease-out;
+    }
+
+    /* Settings tabs: larger tap targets */
+    .settings-tab-btn {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+        flex: 1;
+        text-align: center;
+    }
+
+    .settings-tabs {
+        gap: 2px;
+    }
+
+    /* Directory search: stack vertically */
+    .directory-search-container {
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+
+    .directory-search-container #rb-search-by {
+        flex: none !important;
+        width: 100%;
+    }
+
+    .directory-search-container #rb-search-input {
+        width: 100%;
+    }
+
+    .directory-search-container #rb-search-btn {
+        width: 100%;
+        padding: 10px 15px;
+    }
+
+    /* Background presets already handled below */
+}
+
+/* Bottom sheet slide-up animation for mobile settings */
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Dark theme adjustments for VU meters */
+.dark-theme .waveform-canvas {
+    filter: brightness(1.2);
+}
+
+.dark-theme .retro-vu {
+    background: radial-gradient(circle, var(--console-bg) 60%, var(--border-color) 100%);
+}
+
+.dark-theme .led-segment {
+    box-shadow: 0 0 2px currentColor;
+}
+
+.dark-theme .spectrum-bar {
+    box-shadow: 0 0 1px currentColor;
+}
+
+/* Animation enhancements */
+.vu-meter {
+    transition: all 0.3s ease;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+    }
+
+    100% {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+}
+
+/* Hover effects */
+.vu-circular svg:hover .circular-level {
+    stroke-width: 10;
+}
+
+.vu-retro .retro-vu:hover .retro-needle::after {
+    box-shadow: 0 0 4px var(--primary-color);
+}
+
+/* Accessibility: Focus States */
+
+/* Add a visible outline for keyboard users */
+.console-btn:focus-visible,
+.theme-btn:focus-visible,
+.station-selector select:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* For range inputs, it's better to style the thumb */
+.volume-control input[type="range"]:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 0 0 3px var(--bg-color), 0 0 0 5px var(--primary-color);
+}
+
+.volume-control input[type="range"]:focus-visible::-moz-range-thumb {
+    box-shadow: 0 0 0 3px var(--bg-color), 0 0 0 5px var(--primary-color);
+}
+
+/* Settings Modal */
+.settings-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.settings-content {
+    background: var(--card-bg);
+    color: var(--text-color);
+    padding: 20px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+    max-height: 90vh;
+    /* Prevent modal from exceeding viewport height */
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.settings-body {
+    overflow-y: auto;
+    /* Enable vertical scrolling for the settings body */
+    flex-grow: 1;
+    /* Allow the body to fill the available space */
+}
+
+.settings-header h3 {
+    margin: 0;
+    color: var(--primary-color);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.setting-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.settings-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    box-sizing: border-box;
+    font-family: inherit;
+    margin-bottom: 10px;
+}
+
+.settings-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.setting-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.setting-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* Custom Stations List */
+.custom-stations-list {
+    max-height: 150px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-color);
+}
+
+.station-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.station-item:last-child {
+    border-bottom: none;
+}
+
+.station-name {
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+}
+
+.station-actions {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.edit-btn,
+.delete-btn {
+    border: none;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.edit-btn {
+    background: var(--primary-color);
+    color: white;
+    font-size: 0.9rem;
+}
+
+.edit-btn:hover {
+    background: var(--primary-hover);
+}
+
+.delete-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.delete-btn:hover {
+    background: #dc2626;
+}
+
+.no-stations {
+    padding: 10px;
+    text-align: center;
+    color: var(--text-color);
+    opacity: 0.7;
+    font-size: 0.9rem;
+}
+
+.settings-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.settings-link:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+/* Background Presets */
+.bg-presets-label {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.bg-preset-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.bg-preset-btn {
+    aspect-ratio: 16/9;
+    border-radius: 6px;
+    border: 2px solid transparent;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.bg-preset-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.bg-preset-btn.active {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--bg-color), 0 0 0 4px var(--primary-color);
+}
+
+@media (max-width: 500px) {
+    .bg-preset-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Settings Tabs */
+.settings-tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
+}
+
+.settings-tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    opacity: 0.7;
+    padding: 8px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 6px 6px 0 0;
+    transition: all 0.2s ease;
+    border-bottom: 2px solid transparent;
+}
+
+.settings-tab-btn:hover {
+    opacity: 1;
+    background: var(--console-bg);
+}
+
+.settings-tab-btn.active {
+    opacity: 1;
+    font-weight: bold;
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.settings-tab-content {
+    /* Animation for smooth tab switching */
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Directory Search UI */
+.directory-search-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.rb-results-container {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px;
+    background: var(--bg-color);
+}
+
+.rb-result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s;
+}
+
+.rb-result-item:last-child {
+    border-bottom: none;
+}
+
+.rb-result-item:hover {
+    background-color: var(--console-bg);
+}
+
+.rb-result-info {
+    flex-grow: 1;
+    min-width: 0;
+    /* allows truncation */
+    margin-right: 15px;
+}
+
+.rb-result-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rb-result-meta {
+    font-size: 0.8rem;
+    color: var(--text-color);
+    opacity: 0.7;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rb-add-btn {
+    background: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.rb-add-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
