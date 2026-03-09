@@ -105,15 +105,14 @@ if (!isset($_SESSION['user_id'])) {
 } 
 
 // --- User IS Logged in ---
-// Serve the actual Glassmorphism Radio Player HTML UI
-// We use readfile to output the raw HTML cleanly right into this buffer.
+// Serve the actual Glassmorphism Radio Player HTML UI using template-player.html
+$html = file_get_contents(__DIR__ . '/template-player.html');
 
-// Inject a tiny logout button into the UI dynamically before serving
-$html = file_get_contents(__DIR__ . '/index.html');
+// Insert the logout button and login state right after the opening body tag
+$loggedInJs = '<script>window.IS_LOGGED_IN = true;</script>';
 $logoutBtn = '<a href="index.php?action=logout" style="position: absolute; top: 20px; right: 20px; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; z-index: 1000; padding: 5px 10px; background: rgba(0,0,0,0.3); border-radius: 4px;">Logout</a>';
 
-// Insert the logout button right after the opening body tag
-$html = preg_replace('/<body[^>]*>/i', "$0\n" . $logoutBtn, $html);
+$html = preg_replace('/<body[^>]*>/i', "$0\n" . $loggedInJs . "\n" . $logoutBtn, $html);
 
 echo $html;
 ?>

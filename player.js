@@ -1,4 +1,4 @@
-import { stations as defaultStations } from './api.js';
+import { stations as defaultStations, fetchUserFavorites, addFavorite, removeFavorite } from './api.js';
 import { stateManager } from './state.js';
 
 export function initPlayer() {
@@ -98,13 +98,23 @@ export function initPlayer() {
     });
 
 
-    function populateStations() {
+    async function populateStations() {
         const state = stateManager.getState();
         const currentVal = stationSelect.value;
         stationSelect.innerHTML = '';
 
-        const favorites = JSON.parse(localStorage.getItem('favoriteStations')) || [];
-        const customStations = JSON.parse(localStorage.getItem('customStations')) || [];
+        let favorites = [];
+        let customStations = [];
+
+        if (window.IS_LOGGED_IN) {
+            const dbStations = await fetchUserFavorites();
+            favorites = dbStations.map(s => s.url);
+            customStations = dbStations.filter(s => s.type === 'custom');
+        } else {
+            favorites = JSON.parse(localStorage.getItem('favoriteStations')) || [];
+            customStations = JSON.parse(localStorage.getItem('customStations')) || [];
+        }
+
         const allStations = [...defaultStations, ...customStations];
 
         const showFavoritesOnly = localStorage.getItem('favoritesOnly') === 'true';
@@ -136,7 +146,7 @@ export function initPlayer() {
             stationSelect.value = filteredStations[0].url;
             stateManager.setStation(filteredStations[0].url);
         }
-        updateFavoriteBtnState(stateManager.getState().currentStation);
+        updateFavoriteBtnState(stateManager.getState().currentStation, favorites);
         updateMediaSession(stateManager.getState());
     }
 
@@ -156,9 +166,19 @@ export function initPlayer() {
         volumeSlider.style.background = bg;
     }
 
-    function updateFavoriteBtnState(currentUrl) {
+    async function updateFavoriteBtnState(currentUrl, cachedFavorites = null) {
         if (!favoriteBtn || !currentUrl) return;
-        const favorites = JSON.parse(localStorage.getItem('favoriteStations')) || [];
+
+        let favorites = [];
+        if (cachedFavorites) {
+            favorites = cachedFavorites;
+        } else if (window.IS_LOGGED_IN) {
+            const dbStations = await fetchUserFavorites();
+            favorites = dbStations.map(s => s.url);
+        } else {
+            favorites = JSON.parse(localStorage.getItem('favoriteStations')) || [];
+        }
+
         const isFav = favorites.includes(currentUrl);
 
         favoriteBtn.classList.toggle('active', isFav);
@@ -285,26 +305,40 @@ export function initPlayer() {
         });
     }
 
-    favoriteBtn?.addEventListener('click', () => {
+    favoriteBtn?.addEventListener('click', async () => {
         const currentUrl = stateManager.getState().currentStation;
-        let favorites = JSON.parse(localStorage.getItem('favoriteStations')) || [];
+        const selectedOption = stationSelect.options[stationSelect.selectedIndex];
+        const name = selectedOption ? selectedOption.text.replace(/^★\s/, '') : 'Saved Station';
+        const genre = selectedOption ? (selectedOption.dataset.genre || '') : '';
+        const country = selectedOption ? (selectedOption.dataset.country || '') : '';
 
-        if (favorites.includes(currentUrl)) {
-            favorites = favorites.filter(url => url !== currentUrl);
-        } else {
-            favorites.push(currentUrl);
-            let customStations = JSON.parse(localStorage.getItem('customStations')) || [];
-            const allKnown = [...defaultStations, ...customStations];
-            if (!allKnown.some(s => s.url === currentUrl)) {
-                const selectedOption = stationSelect.options[stationSelect.selectedIndex];
-                const name = selectedOption ? selectedOption.text.replace(/^★\s/, '') : 'Saved Station';
-                const genre = selectedOption ? (selectedOption.dataset.genre || '') : '';
-                customStations.push({ name, url: currentUrl, genre });
-                localStorage.setItem('customStations', JSON.stringify(customStations));
+        if (window.IS_LOGGED_IN) {
+            // Check if already favorite
+            const favorites = await fetchUserFavorites();
+            const isFav = favorites.some(s => s.url === currentUrl);
+
+            if (isFav) {
+                await removeFavorite(currentUrl);
+            } else {
+                await addFavorite({ name, url: currentUrl, genre, country });
             }
+        } else {
+            let favorites = JSON.parse(localStorage.getItem('favoriteStations')) || [];
+
+            if (favorites.includes(currentUrl)) {
+                favorites = favorites.filter(url => url !== currentUrl);
+            } else {
+                favorites.push(currentUrl);
+                let customStations = JSON.parse(localStorage.getItem('customStations')) || [];
+                const allKnown = [...defaultStations, ...customStations];
+                if (!allKnown.some(s => s.url === currentUrl)) {
+                    customStations.push({ name, url: currentUrl, genre });
+                    localStorage.setItem('customStations', JSON.stringify(customStations));
+                }
+            }
+            localStorage.setItem('favoriteStations', JSON.stringify(favorites));
         }
 
-        localStorage.setItem('favoriteStations', JSON.stringify(favorites));
         populateStations();
         window.dispatchEvent(new CustomEvent('stationListUpdated'));
     });

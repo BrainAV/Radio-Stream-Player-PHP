@@ -101,6 +101,10 @@ This document outlines the future direction and planned features for the Radio S
     -   **Community Features:**
         -   Store user-submitted station suggestions in the database for review.
         -   Log broken stream reports to an admin dashboard.
+    -   **Backend Evolution & Decentralization:**
+        -   **PHP-based Metadata Extraction:** Port the Cloudflare Worker ICY metadata logic to a native PHP endpoint (`api/metadata.php`) to remove external dependencies.
+        -   **PHP-based Stream Proxy:** Port the Cloudflare Worker audio proxy logic to a native PHP endpoint (`api/proxy.php`) for true self-hosted independence.
+        -   **Song History (Premium):** Implement a database-backed history of played tracks for logged-in users, enabling features like "Recently Played" or "Playlists".
     -   **[ ] Station Management & Evolution:**
     -   **[ ]** Transition from hardcoded `stations.js` to a dynamic SQL database backend.
     -   **[ ]** Repurpose `stations.js` as a dedicated configuration for "Sponsored" or promoted stations.

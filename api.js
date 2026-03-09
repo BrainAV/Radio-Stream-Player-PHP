@@ -34,3 +34,45 @@ export async function submitCustomStation(name, url, genre, country) {
         return { status: "error", message: "Network error." };
     }
 }
+
+// Fetch user-specific favorites from the DB
+export async function fetchUserFavorites() {
+    try {
+        const response = await fetch('api/favorites.php');
+        const data = await response.json();
+        return data.status === 'success' ? data.data : [];
+    } catch (error) {
+        console.error("Error fetching favorites:", error);
+        return [];
+    }
+}
+
+// Add/Link a station to user favorites in the DB
+export async function addFavorite(station) {
+    try {
+        const response = await fetch('api/favorites.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(station)
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error adding favorite:", error);
+        return { status: "error" };
+    }
+}
+
+// Remove a station from user favorites in the DB
+export async function removeFavorite(url) {
+    try {
+        const response = await fetch('api/favorites.php', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error removing favorite:", error);
+        return { status: "error" };
+    }
+}
