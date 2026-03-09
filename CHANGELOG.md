@@ -9,11 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **User Profile Management**: Logged-in users can now update their email and password directly from a new "Account" tab in the Settings modal.
+- **Premium UI Polish**: Full Glassmorphism redesign of the Settings overlay with high-blur backdrops, sleek tabs, and ultra-slim custom scrollbars.
+- **Improved Notifications**: Elegant inline notification system for profile updates with color-coded feedback and auto-hiding success alerts.
+- **Agent Skill (profile-manager)**: Introduced a specialized skill for managing user profiles, authentication, and session security.
+- **Hybrid Storage System**: The player now dynamically chooses between `localStorage` (for guests) and the MySQL database (for registered users) to save favorite stations and custom entries.
+
 ### Changed
+- **Settings UX**: Redesigned all dropdown selectors with custom visuals and added scale-up animations for background presets.
+- **Light Theme Contrast**: Optimized color palettes and opacity in Light mode to ensure maximum readability against translucent backdrops.
+- **Login Flow**: Updated the login overlay to submit to its own view state, ensuring error messages are persisted and visible on failure.
+
+### Fixed
+- **Radio Browser Search**: Restored the broken search button and enabled "Enter" key support for quick searching.
+- **Login Navigation**: Added a missing close (X) button to the login overlay for easier navigation back to the main player.
+- **Tab Consistency**: Implemented logic to hide the "Account" tab for guests and automatically redirect them to "General" if they log out while viewing profile settings.
 - **Architectural Overhaul**: Transitioned the entire project to a full-stack PHP/MySQL architecture within the new `Radio-Stream-Player-PHP` repository.
 - **cPanel Compatibility**: Flattened the directory structure, moving `index.html` (now `index.php`), CSS, and JS modules directly to the web root for immediate drop-in compatibility with shared hosting environments.
 - **Backend API**: Removed hardcoded `stations.js` state. Implemented a secure PDO connection (`api/config.php`) and a RESTful endpoint (`api/stations.php`) for dynamic fetching and storage of custom user stations to a MySQL database.
-- **Authentication**: Added an `index.php` wrapper utilizing the `core-cms` login paradigm to protect the player interface.
+- **Authentication**: Added an `index.php` wrapper utilizing the `core-cms` login paradigm to protect the player interface while allowing guest access by default.
+- **UI Refinement**: Integrated login/logout actions into the player header and added a tabbed Settings interface to accommodate new management features.
 
 ---
 

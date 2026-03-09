@@ -455,6 +455,15 @@ export function initSettings() {
     const rbResultsContainer = document.getElementById('rb-results-container');
     let bestRadioBrowserApiUrl = null;
 
+    if (rbSearchBtn) {
+        rbSearchBtn.addEventListener('click', searchRadioBrowser);
+    }
+    if (rbSearchInput) {
+        rbSearchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') searchRadioBrowser();
+        });
+    }
+
     // 1. Discover the best API server
     async function discoverRadioBrowserApi() {
         if (bestRadioBrowserApiUrl) return bestRadioBrowserApiUrl;
@@ -599,20 +608,104 @@ export function initSettings() {
         }
     }
 
-    // Bind search UI events
-    if (rbSearchBtn && rbSearchInput) {
-        rbSearchBtn.addEventListener('click', searchRadioBrowser);
-        rbSearchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                searchRadioBrowser();
+    // --- Account Management Integration ---
+    const accountTabBtn = document.getElementById('account-tab-btn');
+    const profileEmailInput = document.getElementById('profile-email');
+    const profileNewPassInput = document.getElementById('profile-new-password');
+    const profileCurrPassInput = document.getElementById('profile-current-password');
+    const saveProfileBtn = document.getElementById('save-profile-btn');
+    const profileMsg = document.getElementById('profile-msg');
+
+    // Load current data when opening settings
+    window.addEventListener('settingsOpened', async () => {
+        if (accountTabBtn) {
+            if (window.IS_LOGGED_IN) {
+                accountTabBtn.style.display = 'block';
+                try {
+                    const response = await fetch('api/profile.php');
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        profileEmailInput.value = data.data.user_email;
+                    }
+                } catch (e) {
+                    console.error("Failed to fetch profile", e);
+                }
+            } else {
+                accountTabBtn.style.display = 'none';
+                // If we're on the account tab but just logged out, switch to general
+                if (accountTabBtn.classList.contains('active')) {
+                    const generalTabBtn = document.querySelector('.settings-tab-btn[data-tab="general-tab"]');
+                    if (generalTabBtn) generalTabBtn.click();
+                }
+            }
+        }
+    });
+
+    if (saveProfileBtn) {
+        saveProfileBtn.addEventListener('click', async () => {
+            const current_password = profileCurrPassInput.value;
+            if (!current_password) {
+                showProfileMessage('Current password is required.', 'error');
+                return;
+            }
+
+            const payload = {
+                current_password,
+                new_email: profileEmailInput.value,
+                new_password: profileNewPassInput.value
+            };
+
+            saveProfileBtn.disabled = true;
+            saveProfileBtn.textContent = 'Saving...';
+
+            try {
+                const response = await fetch('api/profile.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    showProfileMessage('Profile updated successfully!', 'success');
+                    profileNewPassInput.value = '';
+                    profileCurrPassInput.value = '';
+                } else {
+                    showProfileMessage(data.message || 'Update failed.', 'error');
+                }
+            } catch (e) {
+                showProfileMessage('Network error. Try again.', 'error');
+            } finally {
+                saveProfileBtn.disabled = false;
+                saveProfileBtn.textContent = 'Save Changes';
             }
         });
+    }
+
+    let messageTimeout;
+    function showProfileMessage(msg, type) {
+        if (!profileMsg) return;
+        
+        clearTimeout(messageTimeout);
+        
+        profileMsg.textContent = msg;
+        profileMsg.style.display = 'block';
+        
+        // Use classes instead of inline styles for better control
+        profileMsg.className = 'profile-msg ' + type;
+        
+        // Auto-hide after 5 seconds if success
+        if (type === 'success') {
+            messageTimeout = setTimeout(() => {
+                profileMsg.style.display = 'none';
+            }, 5000);
+        }
     }
 }
 
 function openSettings() {
     settingsModal.style.display = 'flex';
+    window.dispatchEvent(new CustomEvent('settingsOpened'));
 }
 
 function closeSettings() {

@@ -92,6 +92,7 @@
                 <button class="settings-tab-btn active" data-tab="general-tab">General</button>
                 <button class="settings-tab-btn" data-tab="custom-tab">My Stations</button>
                 <button class="settings-tab-btn" data-tab="directory-tab">Directory</button>
+                <button class="settings-tab-btn" id="account-tab-btn" data-tab="account-tab">Account</button>
             </div>
 
             <div class="settings-body">
@@ -197,12 +198,40 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Profile/Account Tab -->
+                <div id="account-tab" class="settings-tab-content" style="display: none;">
+                    <div class="setting-item">
+                        <label>User Profile</label>
+                        <p class="settings-description" style="font-size: 0.9em; margin-bottom: 15px; color: var(--text-color); opacity: 0.8;">Update your account credentials. You must provide your current password to save changes.</p>
+                        
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="profile-email" style="font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; display: block;">Email Address</label>
+                            <input type="email" id="profile-email" class="settings-input" placeholder="New Email">
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="profile-new-password" style="font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; display: block;">New Password (leave blank to keep current)</label>
+                            <input type="password" id="profile-new-password" class="settings-input" placeholder="New Password">
+                        </div>
+                        
+                        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+                        
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label for="profile-current-password" style="font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; display: block;">Current Password (REQUIRED)</label>
+                            <input type="password" id="profile-current-password" class="settings-input" placeholder="Current Password">
+                        </div>
+                        
+                        <div id="profile-msg" style="margin-bottom: 15px; font-size: 0.9em; display: none; padding: 10px; border-radius: 4px;"></div>
+                        
+                        <button id="save-profile-btn" class="console-btn" style="width: 100%; padding: 10px;">Save Changes</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script type="module" src="script.js"></script>
-    <script type="module" src="settings.js"></script>
 </body>
 
 </html>

@@ -7,9 +7,12 @@ description: Use this skill to ensure all new CSS, HTML, and UI elements match t
 You are an expert Frontend Developer and UI/UX Designer. Use this skill whenever you are tasked with creating new UI components, styling `.html` files, or adding rules to `styles.css` within the `Radio-Stream-Player` project.
 
 ## 1. Core Principles
-1.  **Glassmorphism is King:** The core visual identity of this project is frosted glass over a dynamic background. Avoid solid, opaque backgrounds for main containers.
-2.  **CSS Variables Always:** Never hardcode colors. Always use the established custom properties to ensure seamless Light/Dark theme switching.
-3.  **No Frameworks:** We use Vanilla CSS3. Do not suggest or implement Tailwind, Bootstrap, or any other external CSS libraries.
+1.  **Premium Glassmorphism:** The core visual identity is deep frosted glass (20px blur). Avoid solid, opaque backgrounds.
+2.  **Contextual Opacity:**
+    - **Light Mode:** Use higher opacity (e.g., `0.85`) for text readability.
+    - **Dark Mode:** Use lower opacity (e.g., `0.6`) with light text.
+3.  **Haptic Animations:** Use subtle scale-ups (`1.05x`) for hover states on primary interactives.
+4.  **No Frameworks:** Vanilla CSS3 only.
 
 ## 2. Design Tokens & Variables
 Always use these CSS variables defined in `:root` and `.dark-theme`:
@@ -24,17 +27,34 @@ Always use these CSS variables defined in `:root` and `.dark-theme`:
 *   `var(--card-shadow)`: The standard drop shadow for main elements.
 
 ## 3. The Glassmorphism Recipe
-When creating a new main container, card, or modal, apply this exact CSS snippet to achieve the frosted glass look:
+When creating a main container, apply this "Premium" formula:
 
 ```css
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--border-color);
-  border-radius: 16px; /* 16px for main cards, 8px for smaller items like buttons */
-  box-shadow: var(--card-shadow);
+  /* Light Mode Formula */
+  background: rgba(255, 255, 255, 0.85); /* High opacity for text contrast */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3);
 ```
-*Note: Dark mode handles the darker glass variant automatically via existing rules targeting `.dark-theme .radiostream-player`, etc. If creating a brand new top-level component class, ensure you add a `.dark-theme .your-new-class { background: rgba(31, 41, 55, 0.3); }` rule.*
+
+For **Dark Mode**, use:
+```css
+  background: rgba(17, 24, 39, 0.6);
+  color: #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+```
+
+## 4. Form & Interactive Standards
+1.  **Inputs/Selects:** Use `background: rgba(0, 0, 0, 0.2)` (light) or `rgba(0, 0, 0, 0.4)` (dark).
+2.  **Selects:** Must use custom SVG background arrows; never default browser arrows.
+3.  **Focus States:** `box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1)` on primary color borders.
+4.  **Scrollbars:** Always use custom slim scrollbars:
+```css
+.element::-webkit-scrollbar { width: 6px; }
+.element::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+```
 
 ## 4. Responsive Breakpoints
 Always design mobile-first or ensure graceful degradation on small screens. Use these standard breakpoints in `styles.css`:

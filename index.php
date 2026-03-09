@@ -55,8 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login_submit'])) {
 
 // --- View Rendering ---
 
-// If NOT logged in, render the login screen
-if (!isset($_SESSION['user_id'])) {
+// Handle Login Page Trigger
+$showLogin = (isset($_GET['action']) && $_GET['action'] === 'login');
+
+// If action=login is requested AND user is NOT logged in, render the login screen
+if ($showLogin && !isset($_SESSION['user_id'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,7 +70,9 @@ if (!isset($_SESSION['user_id'])) {
     <!-- Basic styling inherited from core-cms admin setup -->
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #121212; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; color: #fff;}
-        .login-container { background: rgba(30,30,40, 0.9); padding: 40px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); width: 100%; max-width: 400px; border: 1px solid rgba(255,255,255,0.1); }
+        .login-container { background: rgba(30,30,40, 0.9); padding: 40px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); width: 100%; max-width: 400px; border: 1px solid rgba(255,255,255,0.1); position: relative; }
+        .close-login { position: absolute; top: 15px; right: 20px; font-size: 28px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; line-height: 1; }
+        .close-login:hover { color: #fff; }
         h1 { font-size: 2em; text-align: center; margin-bottom: 25px; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
@@ -79,13 +84,14 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 <body>
     <div class="login-container">
+        <a href="index.php" class="close-login" title="Cancel">&times;</a>
         <h1>Radio Login</h1>
         <?php if ($error_message): ?>
             <div class="error-message">
                 <?php echo htmlspecialchars($error_message, ENT_QUOTES, 'UTF-8'); ?>
             </div>
         <?php endif; ?>
-        <form action="index.php" method="post">
+        <form action="index.php?action=login" method="post">
             <input type="hidden" name="login_submit" value="1">
             <div class="form-group">
                 <label for="email">Email Address</label>
@@ -104,15 +110,21 @@ if (!isset($_SESSION['user_id'])) {
     exit; 
 } 
 
-// --- User IS Logged in ---
+// --- User IS Logged in or Guest ---
 // Serve the actual Glassmorphism Radio Player HTML UI using template-player.html
 $html = file_get_contents(__DIR__ . '/template-player.html');
 
-// Insert the logout button and login state right after the opening body tag
-$loggedInJs = '<script>window.IS_LOGGED_IN = true;</script>';
-$logoutBtn = '<a href="index.php?action=logout" style="position: absolute; top: 20px; right: 20px; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; z-index: 1000; padding: 5px 10px; background: rgba(0,0,0,0.3); border-radius: 4px;">Logout</a>';
-
-$html = preg_replace('/<body[^>]*>/i', "$0\n" . $loggedInJs . "\n" . $logoutBtn, $html);
+if (isset($_SESSION['user_id'])) {
+    $loggedInJs = '<script>window.IS_LOGGED_IN = true;</script>';
+    $logoutBtn = '<a href="index.php?action=logout" class="theme-btn" style="text-decoration: none; font-size: 14px; margin-left: 10px; display: flex; align-items: center;">Logout</a>';
+    $html = str_replace('</header>', $logoutBtn . '</header>', $html);
+    $html = preg_replace('/<body[^>]*>/i', "$0\n" . $loggedInJs, $html);
+} else {
+    $guestJs = '<script>window.IS_LOGGED_IN = false;</script>';
+    $loginBtn = '<a href="index.php?action=login" class="theme-btn" style="text-decoration: none; font-size: 14px; margin-left: 10px; display: flex; align-items: center;">Login</a>';
+    $html = str_replace('</header>', $loginBtn . '</header>', $html);
+    $html = preg_replace('/<body[^>]*>/i', "$0\n" . $guestJs, $html);
+}
 
 echo $html;
 ?>
