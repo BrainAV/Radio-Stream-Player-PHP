@@ -103,8 +103,9 @@ This document outlines the future direction and planned features for the Radio S
     -   **[ ] PHP-based Stream Proxy:** Port the Cloudflare Worker audio proxy logic to a native PHP endpoint (`api/proxy.php`) for true self-hosted independence.
     -   **[ ] Song History (Premium):** Implement a database-backed history of played tracks for logged-in users.
 -   **[ ] Admin Dashboard (v2.2):**
-    -   Build a dedicated UI for managing default stations, user feedback, and broken stream reports.
-    -   Implement User Management (edit roles, ban/delete users).
+    -   **[x]** Build a dedicated UI for managing default stations and system overview.
+    -   **[x]** Implement User Management (edit roles, ban/delete users).
+    -   **[ ]** Implement UI for managing user feedback and broken stream reports.
 -   **[ ] Search & Filtering:**
     -   Implement a global search bar and filter controls (by Genre/Country) to easily find stations within the larger database.
 -   **[ ] Custom Background Uploads:**

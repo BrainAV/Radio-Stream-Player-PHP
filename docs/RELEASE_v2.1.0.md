@@ -14,6 +14,9 @@ Welcome to **v2.1.0**! This milestone release finalizes our **Core Account Manag
 ### 🤖 Expand Agentic Capabilities
 *   **New Agent Persona (`admin-architect`)**: Introduced a specialized skill to enforce security strictly and help design our future Admin Dashboard and backend control endpoints.
 
+### 🛡️ Admin Dashboard (Phase 1)
+*   **System Admin Control Panel**: We've launched the first iteration of the dedicated Admin Dashboard! Administrators can now safely access `admin.php` to view system-wide stats, modify user roles (escalate users to editors/admins), delete rogue accounts, and globally manage the list of default stations available to all users.
+
 ---
 
 ## 🔄 Improvements & Changes
