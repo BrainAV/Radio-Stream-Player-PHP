@@ -92,7 +92,7 @@
             </div>
             <div class="settings-tabs">
                 <button class="settings-tab-btn active" data-tab="general-tab">General</button>
-                <button class="settings-tab-btn" data-tab="custom-tab">My Stations</button>
+                <button class="settings-tab-btn" data-tab="custom-tab">My Collection</button>
                 <button class="settings-tab-btn" data-tab="directory-tab">Directory</button>
                 <button class="settings-tab-btn" id="account-tab-btn" data-tab="account-tab">Account</button>
             </div>
@@ -147,18 +147,12 @@
                     </div>
                 </div>
 
-                <!-- Custom Stations Tab -->
+                <!-- My Collection Tab -->
                 <div id="custom-tab" class="settings-tab-content" style="display: none;">
                     <div class="setting-item">
-                        <label>Manage Favorites</label>
+                        <label>Manage My Collection</label>
                         <p class="settings-description"
-                            style="font-size: 0.9em; margin-bottom: 5px; color: var(--text-color); opacity: 0.8;">Click
-                            the star icon in the main player to add favorites.</p>
-                        <div id="favorites-list" class="custom-stations-list" style="margin-bottom: 20px;"></div>
-                    </div>
-                    <hr style="border: 0; border-top: 1px solid var(--border-color); margin-bottom: 20px;">
-                    <div class="setting-item">
-                        <label>Manage Custom Stations</label>
+                            style="font-size: 0.9em; margin-bottom: 10px; color: var(--text-color); opacity: 0.8;">Manage your saved stations. Click the star to toggle them in the player's Favorites filter.</p>
                         <div id="custom-stations-list" class="custom-stations-list"></div>
                         <input type="text" id="custom-station-name" class="settings-input" placeholder="Station Name">
                         <input type="text" id="custom-station-genre" class="settings-input"

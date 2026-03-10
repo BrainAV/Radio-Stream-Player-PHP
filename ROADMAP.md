@@ -95,8 +95,8 @@ This document outlines the future direction and planned features for the Radio S
 *The next generation of self-hosted features.*
 
 -   **[ ] Core Account Management (v2.1):**
-    -   **[ ] User Registration:** Implement an AJAX-based registration modal and `api/register.php`.
-    -   **[ ] Account Deletion:** Add a "Delete My Account" feature in the Settings > Account tab (v2.0.x Easy Win).
+    -   **[x] User Registration:** Implement an AJAX-based registration modal and `api/register.php`.
+    -   **[x] Account Deletion:** Add a "Delete My Account" feature in the Settings > Account tab (v2.0.x Easy Win).
     -   **[ ] Email Verification (v2.3):** Implement a double-opt-in system to prevent bot registrations and ensure account security.
 -   **[ ] Backend Evolution & Decentralization:**
     -   **[ ] PHP-based Metadata Extraction:** Port the Cloudflare Worker ICY metadata logic to a native PHP endpoint (`api/metadata.php`) to remove external dependencies.

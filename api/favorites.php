@@ -42,7 +42,7 @@ if (!$pdo) {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         $stmt = $pdo->prepare("
-            SELECT s.id, s.name, s.url, s.genre, s.country, s.type 
+            SELECT s.id, s.name, s.url, s.genre, s.country, s.type, uf.is_favorite 
             FROM stations s
             JOIN user_favorites uf ON s.id = uf.station_id
             WHERE uf.user_id = :user_id
@@ -100,8 +100,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // 3. Link to user favorites (using INSERT IGNORE or ON DUPLICATE)
-        $stmt = $pdo->prepare("INSERT IGNORE INTO user_favorites (user_id, station_id) VALUES (?, ?)");
-        $stmt->execute([$user_id, $station_id]);
+        $is_favorite_val = isset($data['is_favorite']) ? (int)$data['is_favorite'] : 1;
+        $stmt = $pdo->prepare("INSERT INTO user_favorites (user_id, station_id, is_favorite) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE is_favorite = VALUES(is_favorite)");
+        $stmt->execute([$user_id, $station_id, $is_favorite_val]);
 
         $pdo->commit();
 
@@ -144,6 +145,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
             $stmt->execute([$user_id, $station['id']]);
             
             echo json_encode(['status' => 'success', 'message' => 'Favorite removed.']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Station not found.']);
+        }
+    } catch (PDOException $e) {
+        http_response_code(500);
+        echo json_encode(['status' => 'error', 'message' => 'Database error.']);
+    }
+    exit();
+}
+
+// ---------------------------------------------------------
+// PATCH REQUEST: Toggle Favorite Status
+// ---------------------------------------------------------
+if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
+    $json = file_get_contents('php://input');
+    $data = json_decode($json, true);
+
+    if (!$data || !isset($data['url']) || !isset($data['is_favorite'])) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Missing station URL or is_favorite flag.']);
+        exit();
+    }
+
+    $url = filter_var($data['url'], FILTER_SANITIZE_URL);
+    $is_favorite = (int)$data['is_favorite'];
+
+    try {
+        $stmt = $pdo->prepare("SELECT id FROM stations WHERE url = ?");
+        $stmt->execute([$url]);
+        $station = $stmt->fetch();
+
+        if ($station) {
+            $stmt = $pdo->prepare("UPDATE user_favorites SET is_favorite = ? WHERE user_id = ? AND station_id = ?");
+            $stmt->execute([$is_favorite, $user_id, $station['id']]);
+            
+            echo json_encode(['status' => 'success', 'message' => 'Favorite status updated.']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Station not found.']);
         }

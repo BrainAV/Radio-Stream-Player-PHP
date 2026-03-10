@@ -10,6 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- None.
+
+### Changed
+- None.
+
+### Fixed
+- None.
+
+---
+
+## [2.1.0] - 2026-03-09
+
+### Added
 - **Password Reset**: Implemented a secure "Forgot Password" flow utilizing secure tokens (`random_bytes`), native PHP `mail()`, and automated token cleanup. Added "Forgot Password" and "Reset Password" UI modals.
 - **Core Account Management**: Complete User Registration flow (v2.1 preview) featuring an AJAX-powered modal, secure password hashing, duplicate email checking, and basic honeypot bot protection. New accounts are automatically logged in upon creation.
 - **Account Deletion**: Added a "Danger Zone" block to the Settings > Account tab allowing self-registered users to permanently delete their accounts and associated favorites.
@@ -19,10 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Auth Flow Visibility**: The backend `index.php` wrapper now explicitly exposes `USER_ID` and `USER_ROLE` to the frontend `window` object for authenticated users, allowing for conditional rendering of sensitive UI elements (like hiding the delete button from the primary admin).
 
 ### Fixed
-- None.
-
-### Fixed
-- None.
+- **Directory**: Fixed an issue where logged-in users were unable to save stations from the Radio Browser Directory to their account.
+- **My Collection**: Addressed an issue where Custom Stations appeared redundantly beneath the Favorites list for logged-in users by consolidating them and implementing an `is_favorite` database flag.
+- **Admin UI**: Fixed a bug where the Admin icon button wouldn't dynamically appear or disappear when logging in or out as an admin without refreshing the page.
 
 ## [2.0.0] - 2026-03-09
 

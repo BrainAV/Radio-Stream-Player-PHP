@@ -35,7 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['user_role'] = $user['role'];
                     session_regenerate_id(true);
 
-                    echo json_encode(['status' => 'success', 'message' => 'Login successful.']);
+                    echo json_encode([
+                        'status' => 'success', 
+                        'message' => 'Login successful.',
+                        'user_id' => $user['id'],
+                        'role' => $user['role']
+                    ]);
                     exit;
                 } else {
                     echo json_encode(['status' => 'error', 'message' => 'Invalid email or password.']);

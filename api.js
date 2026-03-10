@@ -76,3 +76,18 @@ export async function removeFavorite(url) {
         return { status: "error" };
     }
 }
+
+// Toggle the is_favorite flag for a station in the DB
+export async function toggleFavorite(url, is_favorite) {
+    try {
+        const response = await fetch('api/favorites.php', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url, is_favorite: is_favorite ? 1 : 0 })
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error toggling favorite flag:", error);
+        return { status: "error" };
+    }
+}

@@ -147,52 +147,95 @@ export function initSettings() {
         });
     }
 
-    // Render Custom Stations List
-    async function renderCustomStations() {
+    // Render My Collection List
+    async function renderMyCollection() {
         if (!customStationsList) return;
 
-        let customStations = [];
+        let collection = [];
+        let allStations = [...defaultStations];
+
         if (window.IS_LOGGED_IN) {
-            // For logged in users, we treat all favorites as "their" stations for now
-            // since favorites and customs are unified in the DB link logic.
-            customStations = await fetchUserFavorites();
+            collection = await fetchUserFavorites();
         } else {
-            customStations = JSON.parse(localStorage.getItem('customStations')) || [];
+            const customStations = JSON.parse(localStorage.getItem('customStations')) || [];
+            const favoriteUrls = JSON.parse(localStorage.getItem('favoriteStations')) || [];
+            
+            // Guest collection is: Custom Stations + Any Default Station marked as Favorite
+            let guestCollection = [...customStations];
+            defaultStations.forEach(ds => {
+                if (favoriteUrls.includes(ds.url)) {
+                    // Include default stations but tag them as default so we disable Edit
+                    guestCollection.push({...ds, type: 'default'});
+                }
+            });
+            // Assign is_favorite flag for UI rendering
+            guestCollection = guestCollection.map(station => ({
+                ...station,
+                is_favorite: favoriteUrls.includes(station.url) ? 1 : 0
+            }));
+            
+            collection = guestCollection;
         }
         
         customStationsList.innerHTML = '';
 
-        if (customStations.length === 0) {
-            customStationsList.innerHTML = '<div class="no-stations">No custom stations added.</div>';
+        if (collection.length === 0) {
+            customStationsList.innerHTML = '<div class="no-stations">Your collection is empty. Add stations from the Directory or Custom entries.</div>';
             return;
         }
 
-        // Filter for 'custom' type specifically if logged in, or just show all if guest
-        const displayStations = window.IS_LOGGED_IN ? customStations.filter(s => s.type === 'custom') : customStations;
-
-        if (displayStations.length === 0) {
-            customStationsList.innerHTML = '<div class="no-stations">No custom stations added.</div>';
-            // We don't return here because we might still want to add new ones.
-        }
-
-        displayStations.forEach((station, index) => {
+        collection.forEach((station, index) => {
+            const isFav = station.is_favorite == 1;
+            const canEdit = station.type === 'custom' || (!station.type && !defaultStations.some(d => d.url === station.url));
+            
             const item = document.createElement('div');
             item.className = 'station-item';
             item.innerHTML = `
                 <span class="station-name" title="${station.url}">${station.name} ${station.genre ? `(${station.genre})` : ''}</span>
-                <div class="station-actions">
-                    <button class="edit-btn" data-index="${index}" aria-label="Edit station">✎</button>
+                <div class="station-actions" style="display:flex; gap: 5px;">
+                    <button class="toggle-fav-btn" data-url="${station.url}" data-isfav="${isFav}" aria-label="Toggle favorite" style="color: ${isFav ? 'gold' : 'gray'}; background: none; border: none; cursor: pointer; font-size: 1.2em;">${isFav ? '★' : '☆'}</button>
+                    ${canEdit ? `<button class="edit-btn" data-index="${index}" aria-label="Edit station">✎</button>` : ''}
                     <button class="delete-btn" data-url="${station.url}" data-index="${index}" aria-label="Delete station">&times;</button>
                 </div>
             `;
             customStationsList.appendChild(item);
         });
 
+        // Toggle Favorite listeners
+        customStationsList.querySelectorAll('.toggle-fav-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const url = e.target.dataset.url;
+                const currentIsFav = e.target.dataset.isfav === 'true';
+                const newIsFav = !currentIsFav;
+
+                if (window.IS_LOGGED_IN) {
+                    // Import toggleFavorite at top if not done, or call api
+                    try {
+                         // We need toggleFavorite from api.js
+                         const { toggleFavorite } = await import('./api.js');
+                         await toggleFavorite(url, newIsFav);
+                    } catch(e) { console.error(e); }
+                } else {
+                    let favoriteUrls = JSON.parse(localStorage.getItem('favoriteStations')) || [];
+                    if (newIsFav && !favoriteUrls.includes(url)) {
+                        favoriteUrls.push(url);
+                    } else if (!newIsFav) {
+                        favoriteUrls = favoriteUrls.filter(u => u !== url);
+                    }
+                    localStorage.setItem('favoriteStations', JSON.stringify(favoriteUrls));
+                }
+                
+                populateGenres();
+                renderMyCollection();
+                window.dispatchEvent(new CustomEvent('stationListUpdated'));
+            });
+        });
+
         // Add edit listeners
         customStationsList.querySelectorAll('.edit-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const index = parseInt(e.target.dataset.index, 10);
-                const station = displayStations[index];
+                const station = collection.filter(s => s.type === 'custom' || (!s.type && !defaultStations.some(d => d.url === s.url)))[index] || collection[index];
 
                 nameInput.value = station.name;
                 urlInput.value = station.url;
@@ -212,9 +255,13 @@ export function initSettings() {
                 if (window.IS_LOGGED_IN) {
                     await removeFavorite(urlToRemove);
                 } else {
-                    const stations = JSON.parse(localStorage.getItem('customStations')) || [];
-                    stations.splice(index, 1);
+                    let stations = JSON.parse(localStorage.getItem('customStations')) || [];
+                    stations = stations.filter(s => s.url !== urlToRemove);
                     localStorage.setItem('customStations', JSON.stringify(stations));
+                    
+                    let favoriteUrls = JSON.parse(localStorage.getItem('favoriteStations')) || [];
+                    favoriteUrls = favoriteUrls.filter(u => u !== urlToRemove);
+                    localStorage.setItem('favoriteStations', JSON.stringify(favoriteUrls));
                 }
 
                 // Reset edit state if deleting the item currently being edited
@@ -227,76 +274,22 @@ export function initSettings() {
                 }
 
                 populateGenres();
-                renderCustomStations();
-                renderFavorites();
+                renderMyCollection();
                 window.dispatchEvent(new CustomEvent('stationListUpdated'));
             });
         });
     }
 
-    // Render Favorites List
-    async function renderFavorites() {
-        const favoritesListContainer = document.getElementById('favorites-list');
-        if (!favoritesListContainer) return;
-
-        let favorites = [];
-        let allStations = [...defaultStations];
-
-        if (window.IS_LOGGED_IN) {
-            favorites = await fetchUserFavorites();
-            allStations = [...defaultStations, ...favorites];
-        } else {
-            const favoriteUrls = JSON.parse(localStorage.getItem('favoriteStations')) || [];
-            const customStations = JSON.parse(localStorage.getItem('customStations')) || [];
-            allStations = [...defaultStations, ...customStations];
-            favorites = allStations.filter(s => favoriteUrls.includes(s.url));
-        }
-
-        favoritesListContainer.innerHTML = '';
-
-        if (favorites.length === 0) {
-            favoritesListContainer.innerHTML = '<div class="no-stations">No favorite stations added.</div>';
-            return;
-        }
-
-        favorites.forEach(station => {
-            const item = document.createElement('div');
-            item.className = 'station-item';
-            item.innerHTML = `
-                <span class="station-name" title="${station.url}">★ ${station.name}</span>
-                <div class="station-actions">
-                    <button class="delete-btn remove-fav-btn" data-url="${station.url}" aria-label="Remove from favorites">&times;</button>
-                </div>
-            `;
-            favoritesListContainer.appendChild(item);
-        });
-
-        // Add remove listeners
-        favoritesListContainer.querySelectorAll('.remove-fav-btn').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                const urlToRemove = e.target.dataset.url;
-                
-                if (window.IS_LOGGED_IN) {
-                    await removeFavorite(urlToRemove);
-                } else {
-                    let currentFavorites = JSON.parse(localStorage.getItem('favoriteStations')) || [];
-                    currentFavorites = currentFavorites.filter(url => url !== urlToRemove);
-                    localStorage.setItem('favoriteStations', JSON.stringify(currentFavorites));
-                }
-
-                renderFavorites();
-                renderCustomStations();
-                window.dispatchEvent(new CustomEvent('stationListUpdated'));
-            });
-        });
-    }
-
-    renderFavorites();
-    renderCustomStations();
+    renderMyCollection();
 
     // Listen for updates from player.js (e.g., when a user clicks the star button in main UI)
     window.addEventListener('stationListUpdated', () => {
-        renderFavorites();
+        renderMyCollection();
+    });
+
+    // Listen for updates from player.js (e.g., when a user clicks the star button in main UI)
+    window.addEventListener('stationListUpdated', () => {
+        renderMyCollection();
     });
 
     // Personalization Logic
@@ -403,8 +396,7 @@ export function initSettings() {
                 if (genreInput) genreInput.value = '';
 
                 populateGenres(); 
-                renderCustomStations();
-                renderFavorites();
+                renderMyCollection();
                 // Notify player to refresh list
                 window.dispatchEvent(new CustomEvent('stationListUpdated'));
             }
@@ -558,7 +550,7 @@ export function initSettings() {
 
         // Add event listeners for the "Add" buttons
         rbResultsContainer.querySelectorAll('.rb-add-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.addEventListener('click', async (e) => {
                 const targetBtn = e.target;
                 const name = targetBtn.getAttribute('data-name');
                 const url = targetBtn.getAttribute('data-url');
@@ -572,7 +564,7 @@ export function initSettings() {
                     genre = genre.charAt(0).toUpperCase() + genre.slice(1);
                 }
 
-                addStationFromDirectory(name, url, genre);
+                await addStationFromDirectory(name, url, genre);
 
                 // Visual feedback
                 const originalText = targetBtn.textContent;
@@ -590,21 +582,36 @@ export function initSettings() {
     }
 
     // 4. Add to Custom Stations
-    function addStationFromDirectory(name, url, genre) {
-        const customStations = JSON.parse(localStorage.getItem('customStations')) || [];
-
-        // Avoid duplicate exact URLs
-        const exists = customStations.some(s => s.url === url);
-        if (!exists) {
-            customStations.push({ name, url, genre });
-            localStorage.setItem('customStations', JSON.stringify(customStations));
-
-            // Re-render the custom stations UI
+    async function addStationFromDirectory(name, url, genre) {
+        if (window.IS_LOGGED_IN) {
+            await addFavorite({ name, url, genre });
+            
             populateGenres();
-            renderCustomStations();
-
-            // Notify player to refresh the dropdown list
+            renderMyCollection();
             window.dispatchEvent(new CustomEvent('stationListUpdated'));
+        } else {
+            const customStations = JSON.parse(localStorage.getItem('customStations')) || [];
+            let favoriteUrls = JSON.parse(localStorage.getItem('favoriteStations')) || [];
+
+            // Avoid duplicate exact URLs
+            const exists = customStations.some(s => s.url === url);
+            if (!exists) {
+                customStations.push({ name, url, genre });
+                localStorage.setItem('customStations', JSON.stringify(customStations));
+                
+                // Add to favorites automatically from directory
+                if (!favoriteUrls.includes(url)) {
+                    favoriteUrls.push(url);
+                    localStorage.setItem('favoriteStations', JSON.stringify(favoriteUrls));
+                }
+
+                // Re-render the custom stations UI
+                populateGenres();
+                renderMyCollection();
+
+                // Notify player to refresh the dropdown list
+                window.dispatchEvent(new CustomEvent('stationListUpdated'));
+            }
         }
     }
 
@@ -765,31 +772,59 @@ export function initSettings() {
     const loginErrorMsg = document.getElementById('login-error-msg');
 
     function updateAuthButton() {
-        const header = document.querySelector('.tool-header');
-        if (!header) return;
+        const btnGroup = document.getElementById('header-btn-group');
+        if (!btnGroup) return;
 
-        // Find existing auth button (either login or logout)
         let authBtn = document.getElementById('header-login-btn') || document.getElementById('header-logout-btn');
+        let adminBtn = document.getElementById('header-admin-btn');
         
+        const loginSvg = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>`;
+        const logoutSvg = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>`;
+        const adminSvg = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>`;
+
         if (!authBtn) {
-            // If for some reason it's missing, create it
             authBtn = document.createElement('button');
             authBtn.className = 'theme-btn';
             authBtn.style.fontSize = '14px';
-            authBtn.style.marginLeft = '10px';
             authBtn.style.display = 'flex';
             authBtn.style.alignItems = 'center';
-            header.appendChild(authBtn);
+            // Insert auth btn before settings btn
+            btnGroup.insertBefore(authBtn, document.getElementById('settings-btn'));
+        }
+
+        // Handle Admin Button Visibility
+        if (window.IS_LOGGED_IN && window.USER_ROLE === 'admin') {
+             if (!adminBtn) {
+                 adminBtn = document.createElement('a');
+                 adminBtn.id = 'header-admin-btn';
+                 adminBtn.href = 'admin.php';
+                 adminBtn.className = 'theme-btn';
+                 adminBtn.style.fontSize = '14px';
+                 adminBtn.style.display = 'flex';
+                 adminBtn.style.alignItems = 'center';
+                 adminBtn.style.textDecoration = 'none';
+                 adminBtn.setAttribute('aria-label', 'Admin Control Panel');
+                 adminBtn.title = 'Admin Control Panel';
+                 adminBtn.innerHTML = adminSvg;
+                 // Insert admin btn before auth btn
+                 btnGroup.insertBefore(adminBtn, authBtn);
+             }
+        } else if (adminBtn) {
+             adminBtn.remove();
         }
 
         // Update properties based on state
         if (window.IS_LOGGED_IN) {
             authBtn.id = 'header-logout-btn';
-            authBtn.textContent = 'Logout';
+            authBtn.innerHTML = logoutSvg;
+            authBtn.setAttribute('aria-label', 'Logout');
+            authBtn.title = 'Logout';
             authBtn.onclick = handleLogout;
         } else {
             authBtn.id = 'header-login-btn';
-            authBtn.textContent = 'Login';
+            authBtn.innerHTML = loginSvg;
+            authBtn.setAttribute('aria-label', 'Login');
+            authBtn.title = 'Login';
             authBtn.onclick = () => {
                 if (loginModal) loginModal.style.display = 'flex';
             };
@@ -802,6 +837,8 @@ export function initSettings() {
             const data = await response.json();
             if (data.status === 'success') {
                 window.IS_LOGGED_IN = false;
+                window.USER_ID = null;
+                window.USER_ROLE = null;
                 updateAuthButton();
                 refreshAppData();
             }
@@ -853,6 +890,8 @@ export function initSettings() {
 
                 if (data.status === 'success') {
                     window.IS_LOGGED_IN = true;
+                    window.USER_ID = data.user_id;
+                    window.USER_ROLE = data.role;
                     if (loginModal) loginModal.style.display = 'none';
                     updateAuthButton();
                     refreshAppData();

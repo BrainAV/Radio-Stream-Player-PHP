@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS user_favorites (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     station_id INT NOT NULL,
+    is_favorite BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     UNIQUE KEY (user_id, station_id)
