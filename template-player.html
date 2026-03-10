@@ -20,12 +20,14 @@
 <body>
     <header class="tool-header">
         <h2>Radio Stream Player</h2>
-        <button id="settings-btn" class="theme-btn" aria-label="Open Settings" style="margin-left: auto;">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                <path
-                    d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.16 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
-            </svg>
-        </button>
+        <div id="header-btn-group" style="display: flex; gap: 10px; margin-left: auto;">
+            <button id="settings-btn" class="theme-btn" aria-label="Open Settings">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path
+                        d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.16 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
+                </svg>
+            </button>
+        </div>
     </header>
 
     <main class="main-content">
@@ -226,6 +228,16 @@
                         
                         <button id="save-profile-btn" class="console-btn" style="width: 100%; padding: 10px;">Save Changes</button>
                     </div>
+                    
+                    <div class="setting-item" id="danger-zone-section" style="display: none; border-top: 1px solid rgba(239, 68, 68, 0.3); margin-top: 20px; padding-top: 20px;">
+                        <label style="color: #ef4444;">Danger Zone</label>
+                        <p class="settings-description" style="font-size: 0.9em; margin-bottom: 15px; color: var(--text-color); opacity: 0.8;">Once you delete your account, there is no going back. All your favorites and custom stations will be permanently removed.</p>
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label for="delete-account-password" style="font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; display: block;">Confirm Password to Delete</label>
+                            <input type="password" id="delete-account-password" class="settings-input" placeholder="Current Password">
+                        </div>
+                        <button id="delete-account-btn" class="console-btn" style="width: 100%; padding: 10px; background-color: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.5);">Delete My Account</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -248,7 +260,10 @@
                     </div>
                     
                     <div class="form-group" style="margin-bottom: 20px;">
-                        <label for="login-password" style="font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; display: block;">Password</label>
+                        <label for="login-password" style="font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; display: flex; justify-content: space-between;">
+                            <span>Password</span>
+                            <a href="#" id="open-forgot-pass-link" style="color: var(--primary-color); text-decoration: none;">Forgot?</a>
+                        </label>
                         <input type="password" id="login-password" class="settings-input" placeholder="••••••••">
                     </div>
                     
@@ -256,8 +271,114 @@
                     
                     <button id="auth-login-btn" class="console-btn" style="width: 100%; padding: 12px; font-weight: 600;">Login</button>
                     
-                    <div style="text-align: center; margin-top: 20px; font-size: 0.85em; opacity: 0.5;">
-                        Radio Stream Player v2.0
+                    <div style="text-align: center; margin-top: 20px; font-size: 0.85em; opacity: 0.8;">
+                        Don't have an account? <a href="#" id="open-register-link" style="color: var(--primary-color); text-decoration: underline;">Register here</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgot-password-modal" class="settings-modal" style="display: none;">
+        <div class="settings-content" style="max-width: 400px;">
+            <div class="settings-header">
+                <h3>Reset Password</h3>
+                <button id="close-forgot-pass-btn" class="close-btn">&times;</button>
+            </div>
+            <div class="settings-body" style="padding: 20px;">
+                <div class="setting-item" style="border: none; padding: 0;">
+                    <p class="settings-description" style="margin-bottom: 20px; opacity: 0.8;">Enter your email address and we'll send you a link to reset your password.</p>
+                    
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="forgot-email" style="font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; display: block;">Email Address</label>
+                        <input type="email" id="forgot-email" class="settings-input" placeholder="email@example.com" required>
+                    </div>
+                    
+                    <div id="forgot-msg" style="margin-bottom: 15px; font-size: 0.9em; display: none; padding: 10px; border-radius: 4px;"></div>
+                    
+                    <button id="auth-forgot-btn" class="console-btn" style="width: 100%; padding: 12px; font-weight: 600;">Send Reset Link</button>
+                    
+                    <div style="text-align: center; margin-top: 20px; font-size: 0.85em; opacity: 0.8;">
+                        Remembered it? <a href="#" id="back-to-login-from-forgot-link" style="color: var(--primary-color); text-decoration: underline;">Back to Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal (Triggered by Link) -->
+    <div id="reset-password-modal" class="settings-modal" style="display: none;">
+        <div class="settings-content" style="max-width: 400px;">
+            <div class="settings-header">
+                <h3>Create New Password</h3>
+                <button id="close-reset-pass-btn" class="close-btn">&times;</button>
+            </div>
+            <div class="settings-body" style="padding: 20px;">
+                <div class="setting-item" style="border: none; padding: 0;">
+                    <p class="settings-description" style="margin-bottom: 20px; opacity: 0.8;">Please enter your new password below.</p>
+                    
+                    <input type="hidden" id="reset-token-input">
+                    <input type="hidden" id="reset-email-input">
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="reset-new-password" style="font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; display: block;">New Password * (Min 6 chars)</label>
+                        <input type="password" id="reset-new-password" class="settings-input" placeholder="••••••••" required>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="reset-confirm-password" style="font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; display: block;">Confirm New Password *</label>
+                        <input type="password" id="reset-confirm-password" class="settings-input" placeholder="••••••••" required>
+                    </div>
+                    
+                    <div id="reset-msg" style="margin-bottom: 15px; font-size: 0.9em; display: none; padding: 10px; border-radius: 4px;"></div>
+                    
+                    <button id="auth-reset-btn" class="console-btn" style="width: 100%; padding: 12px; font-weight: 600;">Reset Password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="register-modal" class="settings-modal" style="display: none;">
+        <div class="settings-content" style="max-width: 400px;">
+            <div class="settings-header">
+                <h3>Create Account</h3>
+                <button id="close-register-btn" class="close-btn">&times;</button>
+            </div>
+            <div class="settings-body" style="padding: 20px;">
+                <div class="setting-item" style="border: none; padding: 0;">
+                    <p class="settings-description" style="margin-bottom: 20px; opacity: 0.8;">Join to save custom stations and access your favorites from anywhere.</p>
+                    
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="register-name" style="font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; display: block;">Display Name (Optional)</label>
+                        <input type="text" id="register-name" class="settings-input" placeholder="Your Name">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="register-email" style="font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; display: block;">Email Address *</label>
+                        <input type="email" id="register-email" class="settings-input" placeholder="email@example.com" required>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="register-password" style="font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; display: block;">Password * (Min 6 chars)</label>
+                        <input type="password" id="register-password" class="settings-input" placeholder="••••••••" required>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="register-confirm-password" style="font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; display: block;">Confirm Password *</label>
+                        <input type="password" id="register-confirm-password" class="settings-input" placeholder="••••••••" required>
+                    </div>
+
+                    <!-- Honeypot field for bot protection -->
+                    <input type="text" id="register-website" style="display:none;" tabindex="-1" autocomplete="off">
+                    
+                    <div id="register-error-msg" style="margin-bottom: 15px; font-size: 0.9em; display: none; padding: 10px; border-radius: 4px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171;"></div>
+                    
+                    <button id="auth-register-btn" class="console-btn" style="width: 100%; padding: 12px; font-weight: 600;">Create Account</button>
+                    
+                    <div style="text-align: center; margin-top: 20px; font-size: 0.85em; opacity: 0.8;">
+                        Already have an account? <a href="#" id="back-to-login-link" style="color: var(--primary-color); text-decoration: underline;">Login here</a>
                     </div>
                 </div>
             </div>

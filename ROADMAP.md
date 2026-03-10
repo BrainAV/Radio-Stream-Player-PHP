@@ -94,12 +94,17 @@ This document outlines the future direction and planned features for the Radio S
 
 *The next generation of self-hosted features.*
 
+-   **[ ] Core Account Management (v2.1):**
+    -   **[ ] User Registration:** Implement an AJAX-based registration modal and `api/register.php`.
+    -   **[ ] Account Deletion:** Add a "Delete My Account" feature in the Settings > Account tab (v2.0.x Easy Win).
+    -   **[ ] Email Verification (v2.3):** Implement a double-opt-in system to prevent bot registrations and ensure account security.
 -   **[ ] Backend Evolution & Decentralization:**
     -   **[ ] PHP-based Metadata Extraction:** Port the Cloudflare Worker ICY metadata logic to a native PHP endpoint (`api/metadata.php`) to remove external dependencies.
     -   **[ ] PHP-based Stream Proxy:** Port the Cloudflare Worker audio proxy logic to a native PHP endpoint (`api/proxy.php`) for true self-hosted independence.
     -   **[ ] Song History (Premium):** Implement a database-backed history of played tracks for logged-in users.
--   **[ ] Admin Dashboard:**
+-   **[ ] Admin Dashboard (v2.2):**
     -   Build a dedicated UI for managing default stations, user feedback, and broken stream reports.
+    -   Implement User Management (edit roles, ban/delete users).
 -   **[ ] Search & Filtering:**
     -   Implement a global search bar and filter controls (by Genre/Country) to easily find stations within the larger database.
 -   **[ ] Custom Background Uploads:**

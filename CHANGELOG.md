@@ -10,9 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- None.
+- **Password Reset**: Implemented a secure "Forgot Password" flow utilizing secure tokens (`random_bytes`), native PHP `mail()`, and automated token cleanup. Added "Forgot Password" and "Reset Password" UI modals.
+- **Core Account Management**: Complete User Registration flow (v2.1 preview) featuring an AJAX-powered modal, secure password hashing, duplicate email checking, and basic honeypot bot protection. New accounts are automatically logged in upon creation.
+- **Account Deletion**: Added a "Danger Zone" block to the Settings > Account tab allowing self-registered users to permanently delete their accounts and associated favorites.
+- **Agent Skill (admin-architect)**: Introduced a new persona focused on designing and securing the future Admin Dashboard and administrative endpoints.
 
 ### Changed
+- **Auth Flow Visibility**: The backend `index.php` wrapper now explicitly exposes `USER_ID` and `USER_ROLE` to the frontend `window` object for authenticated users, allowing for conditional rendering of sensitive UI elements (like hiding the delete button from the primary admin).
+
+### Fixed
 - None.
 
 ### Fixed

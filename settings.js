@@ -615,12 +615,22 @@ export function initSettings() {
     const profileCurrPassInput = document.getElementById('profile-current-password');
     const saveProfileBtn = document.getElementById('save-profile-btn');
     const profileMsg = document.getElementById('profile-msg');
+    
+    const dangerZoneSection = document.getElementById('danger-zone-section');
+    const deleteAccountBtn = document.getElementById('delete-account-btn');
+    const deleteAccountPass = document.getElementById('delete-account-password');
 
     // Load current data when opening settings
     window.addEventListener('settingsOpened', async () => {
         if (accountTabBtn) {
             if (window.IS_LOGGED_IN) {
                 accountTabBtn.style.display = 'block';
+                if (window.USER_ID && window.USER_ID !== 1) {
+                    if (dangerZoneSection) dangerZoneSection.style.display = 'block';
+                } else {
+                    if (dangerZoneSection) dangerZoneSection.style.display = 'none';
+                }
+
                 try {
                     const response = await fetch('api/profile.php');
                     const data = await response.json();
@@ -678,6 +688,51 @@ export function initSettings() {
             } finally {
                 saveProfileBtn.disabled = false;
                 saveProfileBtn.textContent = 'Save Changes';
+            }
+        });
+    }
+
+    if (deleteAccountBtn) {
+        deleteAccountBtn.addEventListener('click', async () => {
+            const password = deleteAccountPass.value;
+            if (!password) {
+                showProfileMessage('Confirm your password to delete account.', 'error');
+                return;
+            }
+            if (!confirm("Are you absolutely sure you want to delete your account? This action cannot be undone.")) {
+                return;
+            }
+
+            deleteAccountBtn.disabled = true;
+            deleteAccountBtn.textContent = 'Deleting...';
+
+            try {
+                const response = await fetch('api/profile.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'delete_account', current_password: password })
+                });
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // Log out locally and reset UI
+                    window.IS_LOGGED_IN = false;
+                    window.USER_ID = null;
+                    window.USER_ROLE = null;
+                    updateAuthButton();
+                    refreshAppData();
+                    deleteAccountPass.value = '';
+                    closeSettings();
+                    alert("Your account has been successfully deleted.");
+                } else {
+                    showProfileMessage(data.message || 'Deletion failed.', 'error');
+                    deleteAccountBtn.disabled = false;
+                    deleteAccountBtn.textContent = 'Delete My Account';
+                }
+            } catch (e) {
+                showProfileMessage('Network error. Try again.', 'error');
+                deleteAccountBtn.disabled = false;
+                deleteAccountBtn.textContent = 'Delete My Account';
             }
         });
     }
@@ -822,6 +877,303 @@ export function initSettings() {
 
     // Initialize the button state on load
     updateAuthButton();
+
+    // --- Registration Logic ---
+    const registerModal = document.getElementById('register-modal');
+    const closeRegisterBtn = document.getElementById('close-register-btn');
+    const openRegisterLink = document.getElementById('open-register-link');
+    const backToLoginLink = document.getElementById('back-to-login-link');
+    const authRegisterBtn = document.getElementById('auth-register-btn');
+    const registerNameInput = document.getElementById('register-name');
+    const registerEmailInput = document.getElementById('register-email');
+    const registerPassInput = document.getElementById('register-password');
+    const registerConfirmPassInput = document.getElementById('register-confirm-password');
+    const registerWebsiteHoneypot = document.getElementById('register-website');
+    const registerErrorMsg = document.getElementById('register-error-msg');
+
+    if (openRegisterLink) {
+        openRegisterLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (loginModal) loginModal.style.display = 'none';
+            if (registerModal) registerModal.style.display = 'flex';
+        });
+    }
+
+    if (backToLoginLink) {
+        backToLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (registerModal) registerModal.style.display = 'none';
+            if (loginModal) loginModal.style.display = 'flex';
+        });
+    }
+
+    if (closeRegisterBtn) {
+        closeRegisterBtn.addEventListener('click', () => {
+            if (registerModal) registerModal.style.display = 'none';
+        });
+    }
+
+    if (registerModal) {
+        registerModal.addEventListener('click', (e) => {
+            if (e.target === registerModal) registerModal.style.display = 'none';
+        });
+    }
+
+    function showRegisterError(msg) {
+        if (registerErrorMsg) {
+            registerErrorMsg.textContent = msg;
+            registerErrorMsg.style.display = 'block';
+        }
+    }
+
+    if (authRegisterBtn) {
+        authRegisterBtn.addEventListener('click', async () => {
+            const display_name = registerNameInput.value;
+            const email = registerEmailInput.value;
+            const password = registerPassInput.value;
+            const confirm_password = registerConfirmPassInput.value;
+            const website_url = registerWebsiteHoneypot ? registerWebsiteHoneypot.value : '';
+
+            // Basic frontend validation
+            if (!email || !password || !confirm_password) {
+                showRegisterError('Please fill in all required fields.');
+                return;
+            }
+
+            if (password.length < 6) {
+                showRegisterError('Password must be at least 6 characters.');
+                return;
+            }
+
+            if (password !== confirm_password) {
+                showRegisterError('Passwords do not match.');
+                return;
+            }
+
+            // Hide error state
+            if (registerErrorMsg) registerErrorMsg.style.display = 'none';
+            authRegisterBtn.disabled = true;
+            authRegisterBtn.textContent = 'Creating Account...';
+
+            try {
+                const response = await fetch('api/register.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        display_name,
+                        email,
+                        password,
+                        confirm_password,
+                        website_url
+                    })
+                });
+                
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // Auto-login successful
+                    window.IS_LOGGED_IN = true;
+                    if (data.user) {
+                        window.USER_ID = data.user.id;
+                        window.USER_ROLE = data.user.role;
+                    }
+                    
+                    if (registerModal) registerModal.style.display = 'none';
+                    
+                    // Clear form
+                    registerNameInput.value = '';
+                    registerEmailInput.value = '';
+                    registerPassInput.value = '';
+                    registerConfirmPassInput.value = '';
+                    
+                    updateAuthButton();
+                    refreshAppData();
+                } else {
+                    showRegisterError(data.message || 'Registration failed.');
+                }
+            } catch (e) {
+                showRegisterError('Network error. Please try again later.');
+            } finally {
+                authRegisterBtn.disabled = false;
+                authRegisterBtn.textContent = 'Create Account';
+            }
+        });
+    }
+
+    // --- Password Reset Logic ---
+    const forgotModal = document.getElementById('forgot-password-modal');
+    const openForgotLink = document.getElementById('open-forgot-pass-link');
+    const closeForgotBtn = document.getElementById('close-forgot-pass-btn');
+    const backToLoginFromForgot = document.getElementById('back-to-login-from-forgot-link');
+    const authForgotBtn = document.getElementById('auth-forgot-btn');
+    const forgotEmailInput = document.getElementById('forgot-email');
+    const forgotMsg = document.getElementById('forgot-msg');
+
+    const resetModal = document.getElementById('reset-password-modal');
+    const closeResetBtn = document.getElementById('close-reset-pass-btn');
+    const authResetBtn = document.getElementById('auth-reset-btn');
+    const resetNewPassInput = document.getElementById('reset-new-password');
+    const resetConfirmPassInput = document.getElementById('reset-confirm-password');
+    const resetTokenInput = document.getElementById('reset-token-input');
+    const resetEmailInput = document.getElementById('reset-email-input');
+    const resetMsg = document.getElementById('reset-msg');
+
+    // UI Event Listeners for Forgot Password
+    if (openForgotLink) {
+        openForgotLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (loginModal) loginModal.style.display = 'none';
+            if (forgotModal) forgotModal.style.display = 'flex';
+        });
+    }
+
+    if (backToLoginFromForgot) {
+        backToLoginFromForgot.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (forgotModal) forgotModal.style.display = 'none';
+            if (loginModal) loginModal.style.display = 'flex';
+        });
+    }
+
+    if (closeForgotBtn) {
+        closeForgotBtn.addEventListener('click', () => {
+             if (forgotModal) forgotModal.style.display = 'none';
+        });
+    }
+    
+    // Forgot Password Action
+    if (authForgotBtn) {
+        authForgotBtn.addEventListener('click', async () => {
+            const email = forgotEmailInput.value;
+            if (!email) {
+                showAuthMessage(forgotMsg, 'Please enter your email.', 'error');
+                return;
+            }
+
+            authForgotBtn.disabled = true;
+            authForgotBtn.textContent = 'Sending...';
+            if (forgotMsg) forgotMsg.style.display = 'none';
+
+            try {
+                const response = await fetch('api/forgot-password.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    showAuthMessage(forgotMsg, data.message, 'success');
+                    forgotEmailInput.value = '';
+                } else {
+                    showAuthMessage(forgotMsg, data.message, 'error');
+                }
+            } catch (e) {
+                showAuthMessage(forgotMsg, 'Network error. Try again.', 'error');
+            } finally {
+                authForgotBtn.disabled = false;
+                authForgotBtn.textContent = 'Send Reset Link';
+            }
+        });
+    }
+
+    // Checking for URL Params to auto-open Reset Modal
+    window.addEventListener('load', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('reset_token');
+        const email = urlParams.get('email');
+
+        if (token && email && resetModal) {
+            resetTokenInput.value = token;
+            resetEmailInput.value = email;
+            resetModal.style.display = 'flex';
+
+            // Clean up the URL without reloading the page
+            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.replaceState({path:newUrl}, '', newUrl);
+        }
+    });
+
+    if (closeResetBtn) {
+        closeResetBtn.addEventListener('click', () => {
+            if (resetModal) resetModal.style.display = 'none';
+        });
+    }
+
+    // Reset Password Action
+    if (authResetBtn) {
+        authResetBtn.addEventListener('click', async () => {
+            const password = resetNewPassInput.value;
+            const confirm_password = resetConfirmPassInput.value;
+            const token = resetTokenInput.value;
+            const email = resetEmailInput.value;
+
+            if (!password || !confirm_password) {
+                showAuthMessage(resetMsg, 'Please fill all fields.', 'error');
+                return;
+            }
+            if (password.length < 6) {
+                showAuthMessage(resetMsg, 'Password must be at least 6 characters.', 'error');
+                return;
+            }
+            if (password !== confirm_password) {
+                showAuthMessage(resetMsg, 'Passwords do not match.', 'error');
+                return;
+            }
+
+            authResetBtn.disabled = true;
+            authResetBtn.textContent = 'Resetting...';
+            if (resetMsg) resetMsg.style.display = 'none';
+
+            try {
+                const response = await fetch('api/reset-password.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, token, password, confirm_password })
+                });
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    showAuthMessage(resetMsg, data.message, 'success');
+                    resetNewPassInput.value = '';
+                    resetConfirmPassInput.value = '';
+                    
+                    // After 3 seconds, close reset modal and open login
+                    setTimeout(() => {
+                        resetModal.style.display = 'none';
+                        if (loginModal) {
+                            document.getElementById('login-email').value = email;
+                            loginModal.style.display = 'flex';
+                        }
+                    }, 3000);
+                } else {
+                    showAuthMessage(resetMsg, data.message, 'error');
+                }
+            } catch (e) {
+               showAuthMessage(resetMsg, 'Network error. Try again.', 'error');
+            } finally {
+                authResetBtn.disabled = false;
+                authResetBtn.textContent = 'Reset Password';
+            }
+        });
+    }
+
+    // Helper for auth messages
+    function showAuthMessage(element, msg, type) {
+        if (!element) return;
+        element.textContent = msg;
+        element.style.display = 'block';
+        if (type === 'error') {
+            element.style.background = 'rgba(239, 68, 68, 0.1)';
+            element.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+            element.style.color = '#f87171';
+        } else {
+             element.style.background = 'rgba(16, 185, 129, 0.1)';
+             element.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+             element.style.color = '#34d399';
+        }
+    }
+
 }
 
 function openSettings() {

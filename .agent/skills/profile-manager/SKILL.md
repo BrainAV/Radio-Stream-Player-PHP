@@ -44,6 +44,15 @@ Always start the session with `session_start()` at the top of API files that req
   1. Update `database/schema.sql`.
   2. Update `api/profile.php` to handle the new field in GET and POST requests.
   3. Update `settings.js` to render the new field in the UI.
+- **User Registration**:
+  1. Ensure `user_email` is unique and valid.
+  2. Hash passwords using `PASSWORD_DEFAULT`.
+  3. Assign the default `role` (usually 'editor').
+- **Account Deletion**:
+  1. Verify the current password before proceeding.
+  2. Delete the user record from the `users` table.
+  3. Rely on database `ON DELETE CASCADE` for secondary table cleanup (like favorites).
+  4. Destroy the session and redirect to the home page (or update home page state).
 - **Debugging Auth**:
   1. Check `api/config.php` for DB connectivity.
   2. Verify session variables in `index.php` (login wrapper).
@@ -52,3 +61,4 @@ Always start the session with `session_start()` at the top of API files that req
 ## 🚨 Constraints
 - Do **NOT** use `root` or `admin` user hardcoded in the codebase for DB connections (use `config.php` variables).
 - Do **NOT** bypass `api.js` for data fetching; maintain the service layer abstraction where possible.
+- Registration **MUST** include basic throttle/honeypot protection where applicable to prevent simple bot spam.

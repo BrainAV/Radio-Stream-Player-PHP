@@ -64,6 +64,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $current_pass = $data['current_password'];
+    
+    // ---------------------------------------------------------
+    // ACCOUNT DELETION LOGIC
+    // ---------------------------------------------------------
+    if (isset($data['action']) && $data['action'] === 'delete_account') {
+        if ($user_id == 1) {
+            http_response_code(403);
+            echo json_encode(['status' => 'error', 'message' => 'The primary administrator account cannot be deleted.']);
+            exit();
+        }
+
+        // Verify current password
+        $stmt = $pdo->prepare("SELECT user_pass FROM users WHERE id = ?");
+        $stmt->execute([$user_id]);
+        $user = $stmt->fetch();
+
+        if (!$user || !password_verify($current_pass, $user['user_pass'])) {
+            http_response_code(403);
+            echo json_encode(['status' => 'error', 'message' => 'Incorrect password.']);
+            exit();
+        }
+
+        // Delete user
+        $delStmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
+        $delStmt->execute([$user_id]);
+
+        session_destroy();
+
+        echo json_encode(['status' => 'success', 'message' => 'Account deleted successfully.']);
+        exit();
+    }
+    // ---------------------------------------------------------
+
     $new_email = filter_var($data['new_email'] ?? '', FILTER_SANITIZE_EMAIL);
     $new_pass = $data['new_password'] ?? '';
 
