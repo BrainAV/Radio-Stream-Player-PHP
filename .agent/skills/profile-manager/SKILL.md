@@ -32,6 +32,18 @@ $pdo = get_db_connection();
 // ... use prepared statements
 ```
 
+### 4. Initialization & Lifecycle
+When a module boots up, it should perform an initial read of the state (e.g., `const initialState = stateManager.getState()`) to set its UI to the correct starting values before attaching its subscription.
+
+### 5. Global Lifecycle Events
+For UI components that rely on external data sync (like PHP API calls) rather than just simple state toggles, use Custom Events to trigger broad refreshes across modules:
+1.  **Event Names:** Use standard names like `stationListUpdated` (when favorites/custom stations change) or `settingsOpened`.
+2.  **Usage:** Dispatch the event after a successful API write or auth state change:
+    ```javascript
+    window.dispatchEvent(new CustomEvent('stationListUpdated'));
+    ```
+3.  **Consumption:** Modules (like the Station Dropdown or Settings List) should listen for these events to re-fetch/re-render their content.
+
 ### 2. Frontend-Backend Sync
 When modifying the "Account" tab in the settings modal (`settings.js`), ensure it correctly fetches data from `api/profile.php` and handles the "Guest" state gracefully (e.g., by prompting the user to log in).
 
@@ -62,3 +74,7 @@ Always start the session with `session_start()` at the top of API files that req
 - Do **NOT** use `root` or `admin` user hardcoded in the codebase for DB connections (use `config.php` variables).
 - Do **NOT** bypass `api.js` for data fetching; maintain the service layer abstraction where possible.
 - Registration **MUST** include basic throttle/honeypot protection where applicable to prevent simple bot spam.
+- **UI Refresh After Auth**: After every successful login or logout, you **MUST** call `refreshAppData()` (or its equivalent in `settings.js`) to:
+  1. Trigger a re-fetch of user stations/favorites.
+  2. Dispatch the `stationListUpdated` event to notify other modules (like the player header) to refresh their UI.
+  3. Ensure the `IS_LOGGED_IN` global state is updated immediately.

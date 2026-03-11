@@ -105,11 +105,21 @@ This document outlines the future direction and planned features for the Radio S
 -   **[ ] Admin Dashboard (v2.2):**
     -   **[x]** Build a dedicated UI for managing default stations and system overview.
     -   **[x]** Implement User Management (edit roles, ban/delete users).
+    -   **[ ] Stream Crawler/Finder (Admin Utility):**
+        -   Implement a tool where admins can input a station's website URL and have the backend attempt to scrape/extract the direct audio stream URL (`.mp3`, `.aac`, `/stream`) for easy addition to the database.
+        -   **Quality Detection**: Automatically detect and store stream bitrate/sample rate to provide users with quality selection options (e.g., "High Quality" vs "Data Saver").
     -   **[ ]** Implement UI for managing user feedback and broken stream reports.
+-   **[ ] Dynamic Station & Listing Pages (SEO & Sharing):**
+    -   **Dynamic Routing**: Implement `.htaccess` and PHP routing to enable SEO-friendly, hierarchical URLs for every station in the database: `/[country]/[locale]/[station-name]`.
+    -   **Listing Pages**: Create dynamic index pages that list stations by **Country** and **Genre**, allowing for better discoverability and SEO indexing.
+    -   **Station History**: Implement background metadata polling to store "Recently Played" song history for each station, displayed on their dynamic page.
+    -   **Sharable Links**: Ensure that visiting a station's dynamic URL automatically initializes the player and starts playback for that station.
 -   **[ ] Search & Filtering:**
     -   Implement a global search bar and filter controls (by Genre/Country) to easily find stations within the larger database.
--   **[ ] Custom Background Uploads:**
-    -   Allow users to upload images (WebP) instead of just providing URLs.
+-   **[ ] Personalization & Wallpaper Improvements:**
+    -   **Wallpaper Search**: Integrate with the Unsplash API (or similar) to allow users to search for and apply custom backgrounds directly within the player.
+    -   **Dynamic Preset Management**: Allow logged-in users to save their own custom collections of wallpaper URLs to their profile.
+    -   **[ ] Custom Background Uploads (Local/Cloud).**
 -   **[ ] Monetization:**
     -   **[ ]** Add placeholder ads to the player UI to draft layout and test responsiveness gracefully with the "Glassmorphism" aesthetic.
     -   **[ ]** Integrate Google AdSense to capitalize on high session durations while users leave the player open.

@@ -17,6 +17,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **Settings**: Fixed a critical bug where the "My Collection" tab would not refresh after logging in or out without a full page reload. This was caused by the UI refresh logic calling legacy function names (`renderCustomStations`, `renderFavorites`) instead of the consolidated `renderMyCollection` function.
+- **Agent Skills**: Updated the `state-architect` and `profile-manager` skills to explicitly mandate reactive UI refreshes and the use of global lifecycle events (`stationListUpdated`) after authentication or data changes. Corrected a redundant event listener in `settings.js`.
+- **Developer Guide**: Updated `DEVELOPER_GUIDE.md` to remove the "Future Plan" for state management, as the class-based `StateManager` is now the established core architecture.
+
+### Added
+- **Roadmap**: Added long-term goals for a **Stream Crawler/Finder** with quality detection (High Quality vs Data Saver), and **Dynamic Routing/Listing Pages** for stations, countries, and genres.
+- **Personalization**: Added "Wallpaper Search" and "Dynamic Preset Management" goals to the roadmap.
+- **Documentation**: Created `docs/UNSPLASH_GUIDE.md` to help users/devs format direct image links from Unsplash.
+
+### Changed
+- **Presets**: Replaced the "Abstract" wallpaper preset in `settings.js` with a "Serene Nature" theme for a better glassmorphism fit.
 
 ---
 

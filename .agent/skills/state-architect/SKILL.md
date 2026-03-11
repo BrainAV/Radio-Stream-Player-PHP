@@ -37,3 +37,12 @@ UI elements and the Audio Engine must be "wearing the headset" to listen for cha
 
 ## 4. Initialization
 When a module boots up, it should perform an initial read of the state (e.g., `const initialState = stateManager.getState()`) to set its UI to the correct starting values before attaching its subscription.
+
+## 5. Global Lifecycle Events
+For UI components that rely on external data sync (like PHP API calls) rather than just simple state toggles, use Custom Events to coordinate refreshes across disconnected modules:
+1.  **Event Names:** Use standard names like `stationListUpdated` (when favorites/custom stations change) or `settingsOpened`.
+2.  **Usage:** Dispatch the event after a successful API write or auth state change:
+    ```javascript
+    window.dispatchEvent(new CustomEvent('stationListUpdated'));
+    ```
+3.  **Consumption:** Modules (like the Station Dropdown or Settings List) should listen for these events to re-fetch/re-render their content without needing a page reload.
