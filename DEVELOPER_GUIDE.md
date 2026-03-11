@@ -30,56 +30,25 @@ The project consists of a few key files:
 
 ## 3. Core Architecture & Concepts
 
-### 3.1. Global State Management (`radioStreamState`)
+#### 3.1. Publisher/Subscriber State Management (StateManager)
 
-To manage state across different contexts (main window vs. pop-out) and to persist state if the script were re-initialized, a single global object `radioStreamState` is attached to the `window` object. It is defined and exported from `player.js`.
-
-```javascript
-const radioStreamState = window.radioStreamState || {
-    audio: null,
-    isPlaying: false,
-    currentStation: null,
-    volume: 0.5,
-    audioContext: null,
-    // ... other audio nodes
-    vuStyle: 1
-};
-window.radioStreamState = radioStreamState;
-```
-
-- **Purpose**: It acts as a singleton, holding all critical application state like the current station, volume, playback status, and references to the `AudioContext` and its nodes.
-- **Limitation**: This is a simple approach. For larger applications, this could become difficult to manage. Future work could involve refactoring this into a more robust state management pattern (e.g., a class-based service or a pub/sub model).
-
-### 3.1.1. Future Refactoring Plan: Class-Based State Service
-
-To address the limitations of the global state object and align with the long-term roadmap, the state management will be upgraded to a class-based service. This will improve encapsulation, scalability, and maintainability.
+The application uses a centralized `StateManager` (Pub/Sub pattern) located in `state.js`. This class manages all critical application state in a reactive way, ensuring that UI components automatically update when state mutations occur.
 
 **Key Concepts:**
 
-1.  **Encapsulation**: The state will be held privately within a `StateManager` class. Direct mutation from outside the class will be prevented.
-2.  **Controlled Mutations**: The class will expose public methods (e.g., `setPlaying(status)`, `setVolume(level)`) as the only way to modify the state. This creates a single, predictable source of truth for state changes.
-3.  **Reactivity (Pub/Sub)**: The `StateManager` will implement a simple publish-subscribe pattern.
-    -   A `subscribe(callback)` method will allow different modules (like the UI) to listen for state changes.
-    -   When the state is modified via a setter method, a private `notify()` method will be called, which in turn executes all registered subscriber callbacks.
+1.  **Encapsulation**: The state is held privately within the `StateManager` class. Direct mutation from outside the class is prevented.
+2.  **Controlled Mutations**: The class exposes public methods (e.g., `setPlaying(status)`, `setVolume(level)`, `setStation(url)`) as the only way to modify the state.
+3.  **Reactivity (Pub/Sub)**: Modules (like the UI or Audio Engine) `subscribe` to the state manager. When state changes, all subscribers are notified and can update accordingly:
 
-**Implementation Steps:**
-
-1.  **Create `state.js`**: A new file will house the `StateManager` class. A single, shared instance (singleton) of this class will be created and exported.
-
-    ```javascript
-    // Example structure for state.js
-    class StateManager {
-        #state;
-        #subscribers;
-        // ... constructor, getters, setters, subscribe, notify
+```javascript
+stateManager.subscribe((newState, oldState) => {
+    if (newState.isPlaying !== oldState.isPlaying) {
+        // Update UI play/pause icon
     }
-    export const stateManager = new StateManager({ /* initial state */ });
-    ```
+});
+```
 
-2.  **Refactor Modules**:
-    -   In `player.js`, `visualizer.js`, and `script.js`, replace the import and use of the global `radioStreamState` with the new `stateManager` instance.
-    -   Update code that directly modifies state (e.g., `state.isPlaying = true`) to use the new setter methods (e.g., `stateManager.setPlaying(true)`).
-    -   Refactor UI update logic. Instead of manually updating the DOM after every action, the UI components will `subscribe` to the `stateManager`. The subscription callback will receive the new state and update the DOM accordingly, ensuring the UI is always in sync with the state.
+4.  **Singleton**: A single, shared instance of `StateManager` is exported and used across all modules (`player.js`, `visualizer.js`, `settings.js`).
 
 ### 3.2. Web Audio API Graph
 

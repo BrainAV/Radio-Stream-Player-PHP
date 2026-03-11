@@ -287,11 +287,6 @@ export function initSettings() {
         renderMyCollection();
     });
 
-    // Listen for updates from player.js (e.g., when a user clicks the star button in main UI)
-    window.addEventListener('stationListUpdated', () => {
-        renderMyCollection();
-    });
-
     // Personalization Logic
     if (bgUrlInput && setBgBtn && clearBgBtn) {
         // Background Presets
@@ -847,10 +842,9 @@ export function initSettings() {
         }
     }
 
-    function refreshAppData() {
-        populateGenres();
-        renderCustomStations();
-        renderFavorites();
+    async function refreshAppData() {
+        await populateGenres();
+        await renderMyCollection();
         window.dispatchEvent(new CustomEvent('stationListUpdated'));
         window.dispatchEvent(new CustomEvent('settingsOpened'));
     }

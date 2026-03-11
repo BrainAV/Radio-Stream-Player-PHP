@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - None.
 
 ### Fixed
-- None.
+- **Settings**: Fixed a critical bug where the "My Collection" tab would not refresh after logging in or out without a full page reload. This was caused by the UI refresh logic calling legacy function names (`renderCustomStations`, `renderFavorites`) instead of the consolidated `renderMyCollection` function.
 
 ---
 
