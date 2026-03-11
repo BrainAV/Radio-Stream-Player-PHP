@@ -61,7 +61,7 @@ The player is designed to be fully accessible and keyboard-friendly:
 - **`Previous Track Media Key`**: Skips to the previous station in the current list.
 - **`Tab`**: Standard browser focus navigation through all UI elements.
 
-## 🚀 Installation & Setup (v2.1.0)
+## 🚀 Installation & Setup (v2.1.1)
 
 This project is cPanel-compatible and requires a standard LAMP/LEMP stack (Linux, Apache/Nginx, MySQL, PHP).
 
@@ -85,4 +85,4 @@ python -m http.server
 Then, navigate to `http://localhost:8000` in your browser. Note that account features require a live PHP/DB environment.
 
 ---
-*Developed by the BrainAV team. v2.1.0 - The PHP Awakening.*
+*Developed by the BrainAV team. v2.1.1 - The PHP Awakening.*
