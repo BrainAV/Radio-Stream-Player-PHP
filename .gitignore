@@ -1,0 +1,21 @@
+# FreeFileSync lock files
+*.ffs_lock
+sync.ffs_lock
+
+# PHP config with credentials — never commit
+api/config.php
+
+# OS & editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Node (if ever used for tooling)
+node_modules/
+npm-debug.log
+
+# Logs
+*.log
