@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Quick Wins & UX Improvements**
+    - **Header Home Link** — Wrapped the "Radio Stream Player" header title in a link back to `/` for standard navigation convenience.
+    - **Station Auto-Play** — The player now automatically starts playback when a new station is selected from the dropdown, reducing user friction.
+    - **Dynamic Browser Title** — The browser tab title now dynamically updates to show the currently playing track or station name.
+    - **Integrated Ad Layout** — Moved the primary ad unit inside the player card as a native Bottom Row. This ensures a cohesive "Glassmorphism" look and prevents layout shifts.
+    - **Desktop Centering Fix** — Restored vertical centering for the player on desktop, particularly for admins and premium users where ads are suppressed.
+    - **Donations Link** — Added a "Support the Project" section to the General settings tab with a direct PayPal link (`https://www.paypal.com/paypalme/jasonbrain`).
 - **SEO Foundation** — Added `sitemap.xml` (root URL only; includes roadmap comments for future dynamic station/country/genre pages), `robots.txt` (blocks `/api/`, `/admin.php`, `/popout.php`, `/database/`, tooling dirs), `<meta name="description">`, and `<link rel="canonical" href="https://radio.djay.ca/">` to `template-player.html`. Submitted sitemap to Google Search Console via the `djay.ca` Domain Property (which auto-covers all subdomains including `radio.djay.ca`).
 - **Mobile UX Overhaul** — Comprehensive improvements to the mobile experience in `styles.css`:
     - **iOS wallpaper fix** — `background-attachment: fixed` replaced with a `position: fixed` pseudo-element workaround on `≤ 768px`. Eliminates the iOS Safari wallpaper flash/scroll bug.

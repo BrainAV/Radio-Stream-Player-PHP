@@ -281,6 +281,8 @@ export function initPlayer() {
 
     stationSelect.addEventListener('change', () => {
         stateManager.setStation(stationSelect.value);
+        // Auto-play on selection
+        stateManager.setPlaying(true);
     });
 
     volumeSlider.addEventListener('input', () => {
@@ -400,6 +402,7 @@ export function initPlayer() {
 
             if (data.title) {
                 nowPlayingTrack.textContent = data.title;
+                document.title = `${data.title} | Radio Stream Player`;
                 if (nowPlayingTrack.scrollWidth > nowPlayingTrack.parentElement.clientWidth) {
                     nowPlayingTrack.classList.add('marquee-active');
                 } else {
@@ -408,6 +411,7 @@ export function initPlayer() {
             } else {
                 const stationName = stationSelect.options[stationSelect.selectedIndex]?.text.replace(/^★\s/, '') || 'Live Stream';
                 nowPlayingTrack.textContent = stationName;
+                document.title = `Now Playing: ${stationName} | Radio Stream Player`;
                 nowPlayingTrack.classList.remove('marquee-active');
             }
         } catch (error) {
@@ -441,6 +445,7 @@ export function initPlayer() {
             fetchMetadata(streamUrl);
         } else {
             nowPlayingTrack.textContent = "Ready to play...";
+            document.title = "Radio Stream Player";
             nowPlayingTrack.classList.remove('marquee-active');
             updateMediaSession(state);
         }

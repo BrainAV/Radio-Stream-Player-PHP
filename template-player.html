@@ -14,7 +14,9 @@
 
 <body>
     <header class="tool-header">
-        <h2>Radio Stream Player</h2>
+        <a href="/" class="header-home-link">
+            <h2>Radio Stream Player</h2>
+        </a>
         <div id="header-btn-group" style="display: flex; gap: 10px; margin-left: auto;">
             <button id="settings-btn" class="theme-btn" aria-label="Open Settings">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
@@ -27,7 +29,8 @@
 
     <main class="main-content">
         <div class="radiostream-player">
-            <div class="vu-meters">
+            <div class="player-main-body">
+                <div class="vu-meters">
                 <div class="vu-meter" id="left-vu"></div>
                 <div class="vu-meter" id="right-vu"></div>
             </div>
@@ -70,27 +73,29 @@
                                 d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
                         </svg>
                     </button>
-                </div>
+                </div> <!-- End control-bar -->
+                
                 <div class="popout-notice" id="popout-notice" style="display: none;">
                     Player is running in a pop-out window.
                 </div>
-            </div>
+            </div> <!-- End player-content -->
+        </div> <!-- End player-main-body -->
+            
+            <!-- Integrated Ad Space -->
+            <section id="ad-space-main" class="ad-row" style="display: none;">
+                <div class="ad-placeholder">
+                    <ins class="adsbygoogle"
+                         style="display:block; width:100%;"
+                         data-ad-client="ca-pub-0633259514526906"
+                         data-ad-slot="5986925744"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </section>
         </div>
-        
-        <!-- Ad Space (Main Horizontal) -->
-        <section id="ad-space-main" class="ad-container" style="display: none;">
-            <div class="ad-placeholder">
-                <ins class="adsbygoogle"
-                     style="display:block; width:100%;"
-                     data-ad-client="ca-pub-0633259514526906"
-                     data-ad-slot="5986925744"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        </section>
     </main>
 
     <!-- Settings Modal -->
@@ -158,6 +163,18 @@
                                 GitHub Repository
                             </a>
                         </div>
+                    </div>
+                    <div class="setting-item">
+                        <label>Support the Project</label>
+                        <p class="settings-description" style="font-size: 0.9em; margin-bottom: 10px; color: var(--text-color); opacity: 0.8;">
+                            If you enjoy the player, consider supporting its development!
+                        </p>
+                        <a href="https://www.paypal.com/paypalme/jasonbrain" target="_blank" class="donation-btn">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="margin-right: 8px;">
+                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/>
+                            </svg>
+                            Donate via PayPal
+                        </a>
                     </div>
                 </div>
 

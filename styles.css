@@ -82,9 +82,9 @@ body.popout-body .ad-placeholder {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Changed from center to prevent top-clipping on desktop with ads */
+    justify-content: center; /* Restore vertical centering */
     align-items: center;
-    padding: 60px 10px 20px 10px; /* Increased top padding for desktop breathing room */
+    padding: 20px 10px; /* Symmetrical padding */
     overflow: auto; /* Allow internal scroll if content is ever taller than viewport */
 }
 
@@ -131,6 +131,15 @@ body.popout-body .ad-placeholder {
     font-weight: 600;
 }
 
+.header-home-link {
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.header-home-link:hover {
+    opacity: 0.8;
+}
+
 .theme-btn {
     background: var(--console-bg);
     border: 1px solid var(--border-color);
@@ -171,8 +180,35 @@ body.popout-body .ad-placeholder {
     border: 1px solid var(--border-color);
     transition: all 0.3s ease;
     display: flex;
+    flex-direction: column; /* Changed to column to accommodate integrated ad row */
+    padding: 0; /* Remove padding here, move it to children */
+    overflow: hidden; /* Ensure ad row doesn't break rounded corners */
+}
+
+.player-main-body {
+    display: flex;
+    flex-direction: row;
+    padding: 25px;
     gap: 20px;
     align-items: stretch;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.ad-row {
+    width: 100%;
+    border-top: 1px solid var(--border-color);
+    background: rgba(0, 0, 0, 0.05);
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ad-row .ad-placeholder {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .player-content {
@@ -683,6 +719,29 @@ select option {
     pointer-events: none;
 }
 
+.donation-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #0070ba; /* PayPal Blue */
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.donation-btn:hover {
+    background-color: #005ea6;
+}
+
+.donation-btn:active {
+    transform: scale(0.98);
+}
+
 .console-btn .icon {
     width: 24px;
     height: 24px;
@@ -747,8 +806,11 @@ select option {
    ============================================ */
 @media (max-width: 768px) {
     .radiostream-player {
-        padding: 20px;
         width: 95%;
+    }
+
+    .player-main-body {
+        padding: 20px;
     }
 
     .console-btn {
@@ -762,8 +824,8 @@ select option {
     }
 
     /* Tablet: tighten ad spacing */
-    .ad-container {
-        margin-top: 16px;
+    .ad-row {
+        padding: 5px 0;
     }
 }
 
@@ -782,10 +844,15 @@ select option {
     /* --- Player Card Layout --- */
     .radiostream-player {
         flex-direction: column;
-        padding: 16px;
         min-width: 0;
         width: 100%; /* Changed from width: calc(100% - 24px) to fix asymmetric margin */
         margin: 0; /* Remove auto-margin on mobile */
+        gap: 0;
+    }
+
+    .player-main-body {
+        flex-direction: column;
+        padding: 16px;
         gap: 12px;
     }
 

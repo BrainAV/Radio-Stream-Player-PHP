@@ -63,8 +63,8 @@ This document outlines the future direction and planned features for the Radio S
 
 ### Player UX
 - **Nav Site Icon** — Replace or augment the "Radio Stream Player" text title in the header nav with an SVG icon (headphones or retro radio theme) consistent with the existing icon-only controls (settings gear, login, admin). Should scale cleanly at the same size as the other nav icons.
-- **Nav Title → Home Link** — Wrap the "Radio Stream Player" header title (or the new site icon) in an `<a href="/">` so clicking it navigates back to the homepage. Standard UX expectation for any site logo/brand mark.
-- **Station Selection → Auto-Play** — Selecting a station from the dropdown should immediately begin playback without requiring a separate press of the Play button. Removes friction and mirrors the expectation of a radio dial.
+- ✅ **Nav Title → Home Link** — Wrapped the "Radio Stream Player" header title in an `<a href="/">`. Standard UX expectation.
+- ✅ **Station Selection → Auto-Play** — Selecting a station from the dropdown immediately begins playback. Removes friction.
 - **Play/Pause Button State Sync** — The play/pause button icon should always accurately reflect the actual audio element play state (playing vs. paused/stopped), including edge cases: stream error/disconnect, browser auto-play blocking, and popout vs. main window state. Drives from the StateManager so all subscribers (button, OS media session, VU meter) update atomically.
 - **Stream Bitrate Display** — Show detected stream bitrate (kbps) in the player UI during playback, or as a color-coded badge (e.g. green = high quality, yellow = mid, red = low). Could also surface in Admin station management.
 - **Password Show/Hide Toggle** — Add an eye icon to the login password field to toggle visibility. Improves accessibility, especially for users who need to confirm their password visually.
@@ -87,8 +87,14 @@ This document outlines the future direction and planned features for the Radio S
 ### Monetization & Support
 - **Premium Subscription** — Choose a payment processor (Stripe or PayPal) and implement a subscription flow to upgrade users to premium (ad-free + premium features). Define the full premium feature set before implementation.
 - **Premium Feature List** — Define and document exactly what premium unlocks: ad-free experience, song history, higher-resolution metadata polling, recording, etc.
-- **Donations Link** — Add a small, tasteful donations icon/link (e.g. Ko-fi, Buy Me a Coffee) in the player footer or settings panel for users who want to support the project without a subscription.
+- ✅ **Donations Link** — Added a tasteful PayPal link in the General settings tab.
 
 ### Advanced / Premium Features
 - **In-Browser Recording** — Allow users to record streams at the browser level (Web Audio API → MediaRecorder → download as MP3/WAV). No server storage required. Premium feature.
 - **Cloud Drive Recording (Future)** — Explore allowing users to connect their personal Google Drive and route recordings directly to their cloud storage. Avoids server-side storage costs entirely.
+
+### 🆕 New Ideas (Pending Refinement)
+- ✅ **Dynamic Browser Title** — Implemented dynamic title updates using "Now Playing" info.
+- **Persist Playback State** — Save current station and play state (playing/paused) to `localStorage` so the player resumes exactly where it left off after a page refresh.
+- **Integrated Ad Layout** — Modify `#ad-space-main` to remove outer padding and place it inside the player card as a new row, ensuring it feels like a native part of the "Glassmorphism" UI rather than an external block.
+

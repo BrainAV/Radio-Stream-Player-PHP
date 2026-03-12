@@ -94,7 +94,7 @@ if ($pdo) {
 
     // Show Ad Container if ads are active
     if ($userRole !== 'admin' && !$isPremium && !empty($config['adsense_id'])) {
-        $html = str_replace('id="ad-space-main" class="ad-container" style="display: none;"', 'id="ad-space-main" class="ad-container"', $html);
+        $html = str_replace('id="ad-space-main" class="ad-row" style="display: none;"', 'id="ad-space-main" class="ad-row"', $html);
     }
 }
 
