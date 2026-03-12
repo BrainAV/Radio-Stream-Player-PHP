@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **AdSense Auto Ads disabled** — switched from Auto Ads to manually placed ad slots only (`#ad-space-main` and `#ad-space-popout`). Keeps ad placement intentional and prevents Google from injecting ads into arbitrary positions in the UI.
+
 ---
 
 ## [2.2.0] - 2026-03-11
