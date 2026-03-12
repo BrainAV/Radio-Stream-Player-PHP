@@ -34,7 +34,8 @@ A sleek, modern, and feature-rich full-stack radio stream player built with PHP,
 - **Backend Streaming Proxy**: Natively bypasses "Mixed Content" warnings by routing insecure HTTP radio streams through a secure proxy.
 - **Live Metadata Extraction**: Displays real-time "Now Playing" track and artist information fetched directly from the streams.
 - **Media Integration**: Displays station info on your OS lock screen and supports hardware media keys (Play/Pause/Next/Prev).
-- **Pop-out Player**: Open the player in a separate, compact window for easy multitasking.
+- **Pop-out Player**: Open the player in a separate, compact window for easy multitasking. Background, station list, and filter settings are all synced from the main player.
+- **Monetization-Aware**: AdSense ad slots are automatically disabled for `admin` and `premium` users without a page refresh.
 - **Accessible**: Built with accessibility in mind, featuring screen reader support and full keyboard navigation.
 - **Responsive Design**: Looks and works great on both desktop and mobile devices.
 - **Session-Aware**: Remembers your selected theme and state across browser sessions.
@@ -61,7 +62,7 @@ The player is designed to be fully accessible and keyboard-friendly:
 - **`Previous Track Media Key`**: Skips to the previous station in the current list.
 - **`Tab`**: Standard browser focus navigation through all UI elements.
 
-## 🚀 Installation & Setup (v2.1.1)
+## 🚀 Installation & Setup (v2.2.0)
 
 This project is cPanel-compatible and requires a standard LAMP/LEMP stack (Linux, Apache/Nginx, MySQL, PHP).
 
@@ -85,4 +86,4 @@ python -m http.server
 Then, navigate to `http://localhost:8000` in your browser. Note that account features require a live PHP/DB environment.
 
 ---
-*Developed by the BrainAV team. v2.1.1 - The PHP Awakening.*
+*Developed by the BrainAV team. v2.2.0 - Monetization & Pop-out Evolution.*

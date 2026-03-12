@@ -1,125 +1,75 @@
 # Project Roadmap
 
-This document outlines the future direction and planned features for the Radio Stream Player. The goals are divided into short-term, mid-term, and long-term milestones.
+This document outlines the future direction and planned features for the Radio Stream Player. The goals are divided into versioned milestones.
 
 ---
 
-## 🎯 Short-Term Goals (v1.1)
+## ✅ Completed Milestones
 
-*These are improvements focused on code quality, accessibility, and minor feature additions.*
+### v1.x — Foundation & UX
+- Code refactoring: modular `player.js` / `visualizer.js` / `settings.js` split.
+- Accessibility (A11y): ARIA labels, keyboard nav, focus-visible states.
+- Glassmorphism UI redesign with SVG controls, compact layout, pop-out player.
+- Custom Stations, Favorites system, localStorage persistence.
+- Custom Backgrounds with URL input and curated presets.
+- Stream Metadata display via Cloudflare Worker proxy (ICY metadata polling, marquee).
+- Radio Browser Directory integration (search by tag, name, country).
+- Agent tooling: `.agent/skills` architecture with `station-curator`, `ui-consistency`, `audio-engineer`, `a11y-auditor`, `release-manager`, `documentation-sentinel`.
 
--   **[x] Code Refactoring:**
-    -   Modularize `script.js` by separating the core player logic from the VU meter visualization logic. This will improve maintainability and make it easier to add new visualizers.
--   **[x] Accessibility (A11y) Enhancements:**
-    -   Add `aria-label` attributes to all interactive controls (buttons, sliders) for better screen reader support.
-    -   Ensure full keyboard navigability for all player functions.
-    -   Implement focus-visible states for better keyboard navigation feedback.
--   **[x] UI/UX Improvements:**
-    -   **[x]** Add a visual indicator or tooltip to the "Cycle VU Meter" button to show the name of the current style.
-    -   **[x]** Improve the pop-out window closing mechanism to be more robust.
--   **[x] Content:**
-    -   **[x]** Add more high-quality radio streams to the default list.
+### v2.0 — The PHP Awakening
+- Migrated to self-hosted PHP/MySQL/LAMP stack from static GitHub Pages.
+- Non-intrusive AJAX login/logout modal (music never stops during auth).
+- Dynamic station management via SQL database (replaces `stations.js`).
+- User registration (`api/register.php`) and account deletion.
 
----
-
-## 🚀 Mid-Term Goals (v1.2)
-
-*These goals focus on adding significant new user-facing features.*
-
--   **[x] UI/UX Enhancements:**
-    -   **[x]** Redesign the header to reduce its vertical height, improving usability on smaller screens and mobile devices.
-    -   **[x]** Modernize the player's look and feel with an updated visual design:
-        -   **[x]** Implement a "Glassmorphism" (frosted glass) effect for the main player card.
-        -   **[x]** Replace text-based controls (Play/Pause, Pop-out) with modern SVG icons.
-        -   **[x]** Redesign the volume slider for a more modern appearance.
-        -   **[x]** Re-organize player controls into a more compact, horizontal layout.
-        -   **[x]** Apply the modern look and feel to the pop-out player for a consistent UX.
--   **[x] Custom Stations:**
-    -   **[x]** Implement a feature allowing users to add their own radio stream URLs.
-    -   **[x]** Use `localStorage` to save user-added stations so they persist between sessions.
-    -   **[x] Favorites System:**
-        -   **[x]** Allow users to mark stations as "favorites" for quick access.
--   **[x] Personalization:**
-    -   **[x] Custom Backgrounds:**
-        -   **[x]** Allow users to input a URL to set as the player background.
-        -   **[x]** Save the preference in `localStorage`.
-        -   **[x]** Provide curated background presets.
--   **[x] Community & Feedback:**
-    -   **[x] Station Submission:**
-        -   **[x]** Add a mechanism (e.g., link to Google Form or GitHub Issue) for users to suggest new radio stations to be added to the default list.
-    -   **[x] Issue Reporting:**
-        -   **[x]** Add a "Report Broken Stream" button that allows users to flag stations that are offline or malfunctioning.
--   **[x] Stream Metadata Display:**
-    -   **[x]** Leverage the Cloudflare Worker proxy (`api.djay.ca`) to parse ICY metadata headers from the stream without causing audio artifacts in the frontend.
-    -   **[x]** Implement frontend polling (`player.js`) and UI updates (scrolling marquee) to display the currently playing song and artist.
--   **[x] Radio Browser Directory Integration:**
-    -   **[x]** Add a searchable directory using the `radio-browser.info` public API.
-    -   **[x]** Build a UI in the Settings modal (or a new panel) to search by tag, name, or country.
-    -   **[x]** Leverage the existing Cloudflare Proxy natively to tunnel any `http://` streams returned by the API securely. 
-    -   **[x]** Allow users to easily add searched stations to their "Custom Stations" or "Favorites".
+### v2.1 — Account & Community
+- Full user account management (profile editing, email/password update).
+- Admin Dashboard with User Management (roles, ban, delete).
 
 ---
 
-## 🤖 Agent Tooling & Workflow (v1.4+)
+## 🚀 v2.2 Milestone: Monetization & Pop-out Evolution
 
-*These goals focus on enhancing the AI assistant's context and capabilities.*
+### ✅ Completed in v2.2
+- **Admin Dashboard** — Dedicated UI for station and user management.
+- **Webmaster Config** — `site_config` DB table; Admin → Site Config tab for GA4, AdSense ID, custom head scripts.
+- **Premium User Tier** — `is_premium` flag on users table; Admin can toggle per-user.
+- **Role-Based Ads** — AdSense disabled server-side for `admin` and `is_premium` users in both `index.php` and `popout.php`.
+- **Ad Slots Wired** — Live AdSense client + slot IDs set in `template-player.html` (responsive) and `popout.html` (300×50 fixed banner).
+- **Pop-out Player Overhaul:**
+    - Inherits user background via `?bg=` URL param.
+    - Auto-starts playback on open.
+    - Station list is DB-aware (uses session cookie → `api/favorites.php`); respects `favoritesOnly` and genre filters.
+    - Served by `popout.php` for server-side ad injection.
 
--   **[x] Initial Skill Foundation:**
-    -   **[x]** Implement `.agent/skills` directory architecture.
-    -   **[x]** Create `station-curator` skill for automated stream validation.
-    -   **[x]** Create `ui-consistency` skill to enforce Glassmorphism tokens.
--   **[x] Specialized Development Personas:**
-    -   **[x] `audio-engineer`, `a11y-auditor`, and `release-manager` workflows.**
-    -   **[x] `documentation-sentinel` skill to preserve project history and integrity.**
+### 🔲 Remaining for v2.2
+- **AdSense Ad Slot Review** — Verify both ad units are approved and serving in AdSense console, adjust slot IDs or formats if needed.
+- **Webmaster Settings (Admin)** — Dynamic management of tracking codes via Admin → Site Config (partial — needs UI polish).
+- **Stream Crawler/Finder (Admin Utility)** — Tool to extract direct stream URLs from a station website; auto-detect bitrate/quality.
+- **Broken Stream Reports UI** — Admin interface for reviewing user-flagged stations.
 
----
-
-## 🏗️ v2.0 Milestone: The PHP Awakening (COMPLETED)
-
-*Major architectural transition to a full-stack PHP/MySQL environment.*
-
--   **[x] Migration to Self-Hosted Backend (PHP/SQL):**
-    -   **[x]** Migrated away from static GitHub Pages hosting to a full LAMP/LEMP stack environment.
-    -   **[x] Goal achieved:** Enabled advanced features like user accounts, server-side station management, and a robust AJAX-powered API.
-    -   **[x] Implementation:** Developed a PHP backend with a PDO/MySQL database to store stations and user preferences.
--   **[x] Non-Intrusive Auth Flow:**
-    -   **[x]** Implemented AJAX login/logout modals to ensure music playback never stops during authentication.
--   **[x] Station Management Evolution:**
-    -   **[x]** Transitioned from hardcoded `stations.js` to a dynamic SQL database backend.
-    -   **[x]** Consolidated all station sources (Custom, Directory, Default) into a single, unified database schema.
+### ⚠️ Known Quirks (v2.2)
+- **Pop-out Ad Rendering** — The `#ad-space-popout` 300×50 banner may require the user to open the popup slightly wider than `320px` on some browsers/OS combinations before AdSense fully renders. Root cause: AdSense's available-width detection varies by browser viewport reporting. Workaround: window is pre-sized to `320×390`; users can resize if needed. Investigation ongoing for v2.3.
+- **Pop-out `IS_PREMIUM` Sync** — `window.IS_PREMIUM` in the pop-out window is not synced after the main window's auth state changes (e.g., admin logs in after pop-out is already open). Pop-out ads will only hide on fresh open. Acceptable limitation for v2.2.
 
 ---
 
-## 🔭 Future Evolution (v2.1+)
+## 🔭 v2.3+ Future Goals
 
-*The next generation of self-hosted features.*
+### Backend Independence
+- **PHP Metadata Proxy** — Port Cloudflare Worker ICY metadata logic to `api/metadata.php`.
+- **PHP Stream Proxy** — Port Cloudflare Worker audio proxy to `api/proxy.php` for full self-hosting.
 
--   **[ ] Core Account Management (v2.1):**
-    -   **[x] User Registration:** Implement an AJAX-based registration modal and `api/register.php`.
-    -   **[x] Account Deletion:** Add a "Delete My Account" feature in the Settings > Account tab (v2.0.x Easy Win).
-    -   **[ ] Email Verification (v2.3):** Implement a double-opt-in system to prevent bot registrations and ensure account security.
--   **[ ] Backend Evolution & Decentralization:**
-    -   **[ ] PHP-based Metadata Extraction:** Port the Cloudflare Worker ICY metadata logic to a native PHP endpoint (`api/metadata.php`) to remove external dependencies.
-    -   **[ ] PHP-based Stream Proxy:** Port the Cloudflare Worker audio proxy logic to a native PHP endpoint (`api/proxy.php`) for true self-hosted independence.
-    -   **[ ] Song History (Premium):** Implement a database-backed history of played tracks for logged-in users.
--   **[ ] Admin Dashboard (v2.2):**
-    -   **[x]** Build a dedicated UI for managing default stations and system overview.
-    -   **[x]** Implement User Management (edit roles, ban/delete users).
-    -   **[ ] Stream Crawler/Finder (Admin Utility):**
-        -   Implement a tool where admins can input a station's website URL and have the backend attempt to scrape/extract the direct audio stream URL (`.mp3`, `.aac`, `/stream`) for easy addition to the database.
-        -   **Quality Detection**: Automatically detect and store stream bitrate/sample rate to provide users with quality selection options (e.g., "High Quality" vs "Data Saver").
-    -   **[ ]** Implement UI for managing user feedback and broken stream reports.
--   **[ ] Dynamic Station & Listing Pages (SEO & Sharing):**
-    -   **Dynamic Routing**: Implement `.htaccess` and PHP routing to enable SEO-friendly, hierarchical URLs for every station in the database: `/[country]/[locale]/[station-name]`.
-    -   **Listing Pages**: Create dynamic index pages that list stations by **Country** and **Genre**, allowing for better discoverability and SEO indexing.
-    -   **Station History**: Implement background metadata polling to store "Recently Played" song history for each station, displayed on their dynamic page.
-    -   **Sharable Links**: Ensure that visiting a station's dynamic URL automatically initializes the player and starts playback for that station.
--   **[ ] Search & Filtering:**
-    -   Implement a global search bar and filter controls (by Genre/Country) to easily find stations within the larger database.
--   **[ ] Personalization & Wallpaper Improvements:**
-    -   **Wallpaper Search**: Integrate with the Unsplash API (or similar) to allow users to search for and apply custom backgrounds directly within the player.
-    -   **Dynamic Preset Management**: Allow logged-in users to save their own custom collections of wallpaper URLs to their profile.
-    -   **[ ] Custom Background Uploads (Local/Cloud).**
--   **[ ] Monetization:**
-    -   **[ ]** Add placeholder ads to the player UI to draft layout and test responsiveness gracefully with the "Glassmorphism" aesthetic.
-    -   **[ ]** Integrate Google AdSense to capitalize on high session durations while users leave the player open.
+### User Features
+- **Song History (Premium)** — DB-backed track history for logged-in users.
+- **Email Verification** — Double opt-in at registration to prevent bot accounts.
+- **Custom Background Uploads** — Allow users to upload images (local/cloud storage).
+- **Wallpaper Search** — Unsplash API integration for searching backgrounds inside the player.
+
+### Discovery & SEO
+- **Dynamic Station Pages** — `.htaccess` + PHP routing for `/[country]/[genre]/[station-name]` URLs.
+- **Listing Pages** — Index pages by Country and Genre for SEO discoverability.
+- **Global Search & Filters** — Search bar + Genre/Country filter controls for the full station database.
+
+### Monetization
+- **Premium Subscription** — Stripe or PayPal integration to let users upgrade and remove ads.

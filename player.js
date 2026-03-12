@@ -358,9 +358,10 @@ export function initPlayer() {
             }
 
             const themeClass = document.documentElement.classList.contains('dark-theme') ? 'dark' : 'light';
-            const popoutUrl = `popout.html?station=${encodeURIComponent(st.currentStation)}&theme=${themeClass}`;
+            const savedBg = localStorage.getItem('customBackground') || '';
+            const popoutUrl = `popout.php?station=${encodeURIComponent(st.currentStation)}&theme=${themeClass}&bg=${encodeURIComponent(savedBg)}`;
             
-            const newWindow = window.open(popoutUrl, 'RadioStreamPopout', 'width=300,height=278');
+            const newWindow = window.open(popoutUrl, 'RadioStreamPopout', 'width=320,height=390');
             stateManager.setPopoutWindow(newWindow);
 
             const popoutCheckInterval = setInterval(() => {

@@ -14,7 +14,21 @@ $html = file_get_contents(__DIR__ . '/template-player.html');
 if (isset($_SESSION['user_id'])) {
     $userId = intval($_SESSION['user_id']);
     $userRole = $_SESSION['user_role'] ?? 'editor';
-    $loggedInJs = "<script>window.IS_LOGGED_IN = true; window.USER_ID = {$userId}; window.USER_ROLE = '{$userRole}';</script>";
+    
+    // Fetch user details including premium status
+    $isPremium = 0;
+    $pdo = get_db_connection();
+    if ($pdo) {
+        $stmt = $pdo->prepare("SELECT is_premium FROM users WHERE id = ?");
+        $stmt->execute([$userId]);
+        $user = $stmt->fetch();
+        if ($user) {
+            $isPremium = intval($user['is_premium']);
+        }
+    }
+
+    $isPremiumJs = $isPremium ? 'true' : 'false';
+    $loggedInJs = "<script>window.IS_LOGGED_IN = true; window.USER_ID = {$userId}; window.USER_ROLE = '{$userRole}'; window.IS_PREMIUM = {$isPremiumJs};</script>";
     
     $adminBtn = '';
     if ($userRole === 'admin') {
@@ -34,7 +48,9 @@ if (isset($_SESSION['user_id'])) {
     $html = preg_replace('/<\/div>\s*<\/header>/i', "\n" . $adminBtn . "\n" . $logoutBtn . "\n        </div>\n    </header>", $html);
     $html = preg_replace('/<body[^>]*>/i', "$0\n" . $loggedInJs, $html);
 } else {
-    $guestJs = '<script>window.IS_LOGGED_IN = false; window.USER_ID = null; window.USER_ROLE = null;</script>';
+    $guestJs = '<script>window.IS_LOGGED_IN = false; window.USER_ID = null; window.USER_ROLE = null; window.IS_PREMIUM = false;</script>';
+    $isPremium = 0; // Guests are not premium
+    $userRole = null;
     $loginBtn = '<button id="header-login-btn" class="theme-btn" style="font-size: 14px; display: flex; align-items: center;" aria-label="Login" title="Login">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
             <path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/>
@@ -42,6 +58,44 @@ if (isset($_SESSION['user_id'])) {
     </button>';
     $html = preg_replace('/<\/div>\s*<\/header>/i', "\n" . $loginBtn . "\n        </div>\n    </header>", $html);
     $html = preg_replace('/<body[^>]*>/i', "$0\n" . $guestJs, $html);
+}
+
+// --- Fetch Site Configuration & Inject Scripts ---
+$pdo = get_db_connection();
+if ($pdo) {
+    $stmt = $pdo->query("SELECT config_key, config_value FROM site_config");
+    $config = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+
+    $headScripts = "";
+    
+    // Google Tag (gtag.js)
+    if (!empty($config['google_tag_id'])) {
+        $tagId = htmlspecialchars($config['google_tag_id']);
+        $headScripts .= "<!-- Google tag (gtag.js) -->\n";
+        $headScripts .= "<script async src=\"https://www.googletagmanager.com/gtag/js?id={$tagId}\"></script>\n";
+        $headScripts .= "<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag('js', new Date());\n  gtag('config', '{$tagId}');\n</script>\n";
+    }
+
+    // AdSense (only if NOT admin and NOT premium)
+    if ($userRole !== 'admin' && !$isPremium && !empty($config['adsense_id'])) {
+        $adsenseId = htmlspecialchars($config['adsense_id']);
+        $headScripts .= "<!-- AdSense -->\n";
+        $headScripts .= "<script async src=\"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={$adsenseId}\" crossorigin=\"anonymous\"></script>\n";
+    }
+
+    // Custom Head Code
+    if (!empty($config['custom_head_code'])) {
+        $headScripts .= $config['custom_head_code'] . "\n";
+    }
+
+    if (!empty($headScripts)) {
+        $html = preg_replace('/<\/head>/i', $headScripts . "</head>", $html);
+    }
+
+    // Show Ad Container if ads are active
+    if ($userRole !== 'admin' && !$isPremium && !empty($config['adsense_id'])) {
+        $html = str_replace('id="ad-space-main" class="ad-container" style="display: none;"', 'id="ad-space-main" class="ad-container"', $html);
+    }
 }
 
 echo $html;

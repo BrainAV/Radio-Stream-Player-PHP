@@ -5,15 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Radio Stream Player - Pop-out</title>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T93274MPPZ"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', 'G-T93274MPPZ');
-    </script>
+    <!-- GA tag and AdSense are injected by popout.php from Site Config -->
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -45,7 +37,27 @@
         </div>
     </div>
 
+    <!-- Ad Space (Popout - 300x50 Mobile Banner) -->
+    <section id="ad-space-popout" class="ad-container" style="display: none; margin-top: 8px;">
+        <div class="ad-placeholder" style="min-height: 50px; padding: 0;">
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:300px;height:50px"
+                 data-ad-client="ca-pub-0633259514526906"
+                 data-ad-slot="6258388483"></ins>
+        </div>
+    </section>
+
     <script type="module" src="popout-script.js"></script>
+
+    <!-- Push ad after page + AdSense library have both loaded -->
+    <script>
+        window.addEventListener('load', function () {
+            var adSection = document.getElementById('ad-space-popout');
+            if (adSection && adSection.style.display !== 'none') {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -33,20 +33,48 @@ body {
     /* Keeps the background static during scroll */
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
+    overflow: hidden; /* Prevent page-level scrolling - player is a full-page, single-screen app */
     transition: background-color 0.3s, color 0.3s;
-    /* Safe area insets for notched/island devices (iPhone X+) */
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* Popout window overrides: undo the main player's overflow:hidden so the ad */
+/* section below the player card is visible without clipping.                 */
+body.popout-body {
+    overflow-x: hidden; /* hide horizontal scroll */
+    overflow-y: auto;   /* allow vertical scroll if needed */
+}
+
+/* Override main-player ad-container sizing for the popout's constrained width */
+body.popout-body .ad-container {
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    margin-top: 8px;
+}
+
+body.popout-body .ad-placeholder {
+    padding: 0;
+    display: block; /* remove flex so the ins can fill 100% width naturally */
 }
 
 .main-content {
     /* Add a subtle overlay to ensure text is always readable */
     background-color: rgba(0, 0, 0, 0.2);
-    min-height: 100vh;
+    height: 100vh; /* Exact viewport height - padding included via box-sizing */
+    box-sizing: border-box;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: center; /* Default: centered for desktop */
     align-items: center;
-    padding: 20px;
-    min-height: 80vh;
+    padding: 20px 10px;
+    overflow: auto; /* Allow internal scroll if content is ever taller than viewport */
+}
+
+/* Mobile specific alignment: Top-aligned */
+@media (max-width: 600px) {
+    .main-content {
+        justify-content: flex-start;
+    }
 }
 
 .tool-header {
@@ -1509,3 +1537,52 @@ select option {
     background: var(--primary-color);
     color: white;
 }
+
+/* Ad Container Styling */
+.ad-container {
+    margin-top: 30px;
+    width: 90%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    /* Glassmorphism effect */
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.dark-theme .ad-container {
+    background: rgba(31, 41, 55, 0.25);
+}
+
+.ad-placeholder {
+    padding: 15px;
+    text-align: center;
+    position: relative;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.ad-placeholder p {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.5;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+}
+
+/* Optimization for mobile - hide ads on very small screens if they break layout */
+@media (max-width: 350px) {
+    .ad-container {
+        display: none !important;
+    }
+}

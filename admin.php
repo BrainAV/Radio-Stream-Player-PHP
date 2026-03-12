@@ -38,6 +38,7 @@ $userRole = $_SESSION['user_role'];
                 <button class="admin-nav-item active" data-target="dashboard-view">Dashboard</button>
                 <button class="admin-nav-item" data-target="users-view">Users</button>
                 <button class="admin-nav-item" data-target="stations-view">Stations</button>
+                <button class="admin-nav-item" data-target="settings-view">Site Config</button>
                 <a href="index.php" class="admin-nav-item return-btn">Back to Player</a>
             </nav>
         </aside>
@@ -133,6 +134,33 @@ $userRole = $_SESSION['user_role'];
                     </table>
                 </div>
             </section>
+
+            <!-- Site Settings View -->
+            <section id="settings-view" class="admin-view" style="display: none;">
+                <header class="admin-header">
+                    <h1>Site Configuration</h1>
+                </header>
+                <div class="glass-panel" style="padding: 25px;">
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="config-google-tag" style="display: block; margin-bottom: 8px; font-weight: 600; color: white;">Google Analytics Tag ID (G-XXXXXXXXXX)</label>
+                        <input type="text" id="config-google-tag" class="settings-input" placeholder="e.g. G-T93274MPPZ">
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="config-adsense-id" style="display: block; margin-bottom: 8px; font-weight: 600; color: white;">AdSense Client ID (ca-pub-XXXXXXXXXXXXXXXX)</label>
+                        <input type="text" id="config-adsense-id" class="settings-input" placeholder="e.g. ca-pub-0633259514526906">
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="config-custom-head" style="display: block; margin-bottom: 8px; font-weight: 600; color: white;">Custom Head Code (HTML/Scripts)</label>
+                        <textarea id="config-custom-head" class="settings-input" style="height: 120px; font-family: monospace; font-size: 13px;" placeholder="Paste supplemental tracking scripts or meta tags here..."></textarea>
+                    </div>
+                    
+                    <div id="settings-msg" style="margin-bottom: 20px; font-size: 0.9em; display: none; padding: 10px; border-radius: 4px;"></div>
+                    
+                    <button id="save-settings-btn" class="console-btn" style="padding: 12px 25px;">Save Configuration</button>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -143,17 +171,21 @@ $userRole = $_SESSION['user_role'];
                 <h3>Edit User Role</h3>
                 <button id="close-edit-user-btn" class="close-btn">&times;</button>
             </div>
-            <div class="settings-body" style="padding: 20px;">
+            <div class="settings-body" style="padding: 20px; color: white;">
                 <input type="hidden" id="edit-user-id">
-                <p>Editing user: <strong id="edit-user-display"></strong></p>
+                <p style="margin-bottom: 10px;">Editing user: <strong id="edit-user-display" style="color: var(--primary-color);"></strong></p>
                 
                 <div class="form-group" style="margin-top: 15px; margin-bottom: 20px;">
-                    <label for="edit-user-role" style="font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; display: block;">Role</label>
                     <select id="edit-user-role" class="settings-input">
                         <option value="user">User</option>
                         <option value="editor">Editor</option>
                         <option value="admin">Admin</option>
                     </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="edit-user-premium" style="width: 18px; height: 18px; cursor: pointer;">
+                    <label for="edit-user-premium" style="font-size: 0.9em; cursor: pointer; color: #eee;">Premium User (Ad-Free)</label>
                 </div>
                 
                 <div id="edit-user-msg" style="margin-bottom: 15px; font-size: 0.9em; display: none; padding: 10px; border-radius: 4px;"></div>

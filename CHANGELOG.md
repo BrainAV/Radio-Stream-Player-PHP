@@ -9,14 +9,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+---
+
+## [2.2.0] - 2026-03-11
+
 ### Added
-- None.
+- **Monetization & Ad Strategy:**
+    - Role-based ad disabling (automatically hidden for `admin` role and `is_premium` users).
+    - Premium User tier support via new `is_premium` database flag.
+    - Glassmorphism-styled ad container (`#ad-space-main`) below the player card in `template-player.html`.
+    - **Pop-out Ad Space:** Created `popout.php` as a PHP entry point for the popout window. Added `#ad-space-popout` (300×50 mobile banner) below the player card. Ads are hidden for `admin` and `is_premium` users via the same server-side session check used in `index.php`.
+    - **Live Ad Slots:** Wired real AdSense client ID (`ca-pub-0633259514526906`) and slot IDs (`5986925744` main, `6258388483` popout) into `template-player.html` and `popout.html`.
+- **Webmaster Configuration:**
+    - Centralized management of Google Tag (GA4), AdSense ID, and custom head scripts via the database (`site_config` table).
+    - New "Site Config" tab in the Admin Dashboard for dynamic site settings.
+- **Admin Dashboard:**
+    - User Management now supports toggling "Premium" status.
+    - New API endpoint `api/admin/settings.php` for site configuration.
+- **Database Migration**: Added `database/update_v2.2_monetization.sql` for easy upgrades.
+- **Pop-out Player Enhancements:**
+    - Pop-out inherits user's active background wallpaper via `?bg=` URL parameter passed from `player.js`.
+    - Pop-out auto-starts playback on open.
+    - Pop-out station list is now DB-aware: uses `fetchUserFavorites()` with the shared PHP session cookie for logged-in users; falls back to `localStorage` for guests.
+    - Pop-out respects the `favoritesOnly` and genre filters from Settings.
+    - Favorites marked with `★` in the pop-out dropdown.
+    - Pop-out entry point changed from `popout.html` → `popout.php` for server-side ad injection.
 
 ### Changed
 - **Settings**: Replaced obsolete "Suggest a Station" and "Report a Stream" links with a unified GitHub repository link and icon.
+- **Pop-out window size**: Updated from `300×278` to `320×390` to accommodate the ad banner and account for browser window chrome.
 
 ### Fixed
-- None.
+- **Admin UI Accessibility**: Fixed contrast issues (black on black text) in User Edit modals and Settings labels.
+- **Layout & Alignment**:
+    - Fixed ad container appearing to the right of the player on wide screens.
+    - Optimized mobile layout by removing large top gaps and top-aligning content.
+    - Fixed page-level scrolling regression on home page; restored full-page no-scroll layout (`height: 100vh` + `box-sizing: border-box` on `.main-content`, `overflow: hidden` on `body`).
+- **Ad Rendering:**
+    - Fixed `TagError: No slot size for availableWidth=0` on main player — added `width: 100%` to the `<ins>` element so the AdSense library can measure a non-zero width inside the flex `.ad-placeholder` container.
+    - Fixed pop-out ad not rendering: removed duplicate hardcoded GA tag from `popout.html` (now managed by `popout.php`), moved `adsbygoogle.push()` to a `window.load` listener to ensure the async AdSense library is ready before initialization.
+    - Fixed pop-out ad clipped by `overflow: hidden` — added `body.popout-body` CSS overrides (`overflow-x: hidden; overflow-y: auto`) and `.ad-container`/`.ad-placeholder` width overrides to remove the main player's `width: 90%` centering constraint inside the narrow popup window.
+- **Auth & Ad Sync:**
+    - Fixed ads not hiding immediately after AJAX login as admin/premium — added `updateAdVisibility()` to `settings.js`, wired to login/logout/register handlers.
+    - Fixed `api/auth.php` not returning `is_premium` in login response — SQL query and JSON response now include it, enabling instant client-side ad state sync.
 
 ---
 

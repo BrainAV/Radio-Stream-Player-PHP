@@ -1,4 +1,4 @@
-import { stations, fetchStations } from './api.js';
+import { stations, fetchStations, fetchUserFavorites } from './api.js';
 
 const stationSelect = document.getElementById('station-select');
 const playPauseBtn = document.getElementById('play-pause-btn');
@@ -141,16 +141,64 @@ window.addEventListener('beforeunload', () => {
 
 // --- Initialization ---
 
-function init() {
-    // Merge default and custom stations
-    const customStations = JSON.parse(localStorage.getItem('customStations')) || [];
-    const allStations = [...stations, ...customStations];
+async function init() {
+    // --- Build Station List (mirrors main player logic) ---
+    // Since popout.html is same-origin, the PHP session cookie is included
+    // automatically in any fetch() to api/favorites.php. If the user is
+    // logged in their full DB-backed list is returned; guests get a 401
+    // which we catch and fall back to localStorage.
 
-    // Populate stations
+    let favorites = []; // list of URLs that are "favourited"
+    let customStations = [];
+
+    try {
+        const dbStations = await fetchUserFavorites();
+        if (dbStations && dbStations.length > 0) {
+            // Logged-in path: DB has the full merged list
+            favorites = dbStations.map(s => s.url);
+            customStations = dbStations.filter(s => s.type === 'custom');
+        }
+        // If dbStations is empty array the user may be a guest or just has
+        // no saved stations — fall through to localStorage below.
+    } catch (e) {
+        // Unauthenticated (401) or network error — use localStorage
+    }
+
+    if (favorites.length === 0) {
+        // Guest path: read from localStorage
+        favorites = JSON.parse(localStorage.getItem('favoriteStations')) || [];
+        customStations = JSON.parse(localStorage.getItem('customStations')) || [];
+    }
+
+    let allStations = [...stations, ...customStations];
+
+    // Remove duplicates (a custom station URL that already appears in defaults)
+    const seenUrls = new Set();
+    allStations = allStations.filter(s => {
+        if (seenUrls.has(s.url)) return false;
+        seenUrls.add(s.url);
+        return true;
+    });
+
+    // Apply "Show Favorites Only" filter (shared via localStorage)
+    const showFavoritesOnly = localStorage.getItem('favoritesOnly') === 'true';
+    if (showFavoritesOnly) {
+        allStations = allStations.filter(s => favorites.includes(s.url));
+    }
+
+    // Apply Genre filter (shared via localStorage)
+    const selectedGenre = localStorage.getItem('selectedGenre') || 'all';
+    if (selectedGenre !== 'all') {
+        allStations = allStations.filter(s => s.genre === selectedGenre);
+    }
+
+    // Populate the station dropdown
+    stationSelect.innerHTML = '';
     allStations.forEach(station => {
         const option = document.createElement('option');
         option.value = station.url;
-        option.textContent = station.name;
+        const isFav = favorites.includes(station.url);
+        option.textContent = (isFav ? '★ ' : '') + station.name;
         stationSelect.appendChild(option);
     });
 
@@ -162,6 +210,12 @@ function init() {
     // Apply theme
     if (theme === 'dark') {
         document.documentElement.classList.add('dark-theme');
+    }
+
+    // Apply shared background from main player (passed via ?bg= param)
+    const bgParam = params.get('bg');
+    if (bgParam) {
+        document.body.style.backgroundImage = `url('${bgParam}')`;
     }
 
     // Set initial station and volume
@@ -181,11 +235,14 @@ function init() {
     updateVolumeSliderTrack(initialVolume);
     updateNowPlaying();
     updatePlayPauseIcon(false);
+
+    // Auto-start playback — the popout opens ready to listen
+    togglePlay();
 }
 
 async function start() {
     await fetchStations();
-    init();
+    await init();
 }
 
 start();

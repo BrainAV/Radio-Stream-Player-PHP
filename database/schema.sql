@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS users (
   user_pass varchar(255) NOT NULL,
   display_name varchar(250) NOT NULL,
   role varchar(50) NOT NULL DEFAULT 'editor',
+  is_premium TINYINT(1) NOT NULL DEFAULT 0,
   avatar varchar(255) DEFAULT NULL,
   created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
@@ -47,6 +48,19 @@ CREATE TABLE IF NOT EXISTS password_resets (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE IF NOT EXISTS site_config (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    config_key VARCHAR(100) NOT NULL UNIQUE,
+    config_value TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Seed default site configuration
+INSERT IGNORE INTO site_config (config_key, config_value) VALUES
+('google_tag_id', 'G-T93274MPPZ'),
+('adsense_id', 'ca-pub-0633259514526906'),
+('custom_head_code', '');
 
 
 -- Seed default admin user (Password: admin123)

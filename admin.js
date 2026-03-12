@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (targetId === 'dashboard-view') loadStats();
             if (targetId === 'users-view') loadUsers();
             if (targetId === 'stations-view') loadStations();
+            if (targetId === 'settings-view') loadSettings();
         });
     });
 
@@ -39,6 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getRoleBadge(role) {
         return `<span class="badge badge-${role.toLowerCase()}">${role}</span>`;
+    }
+
+    function getPremiumBadge(isPremium) {
+        if (!isPremium || isPremium == 0) return '';
+        return `<span class="badge" style="background: linear-gradient(135.41deg, #FFD700 0%, #FFA500 100%); color: #000; font-weight: bold; margin-left: 5px;">PREMIUM</span>`;
     }
 
     // --- Dashboard Load ---
@@ -82,10 +88,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         <td>${user.id}</td>
                         <td>${user.user_email}</td>
                         <td>${user.display_name}</td>
-                        <td>${getRoleBadge(user.role)}</td>
+                        <td>${getRoleBadge(user.role)}${getPremiumBadge(user.is_premium)}</td>
                         <td>${formatDate(user.created_at)}</td>
                         <td style="display: flex; gap: 5px;">
-                            <button class="console-btn btn-small edit-user-btn" data-id="${user.id}" data-role="${user.role}" data-email="${user.user_email}">Edit Role</button>
+                            <button class="console-btn btn-small edit-user-btn" data-id="${user.id}" data-role="${user.role}" data-email="${user.user_email}" data-premium="${user.is_premium}">Edit</button>
                             ${!isProtected ? `<button class="console-btn btn-small btn-danger delete-user-btn" data-id="${user.id}" data-email="${user.user_email}">Delete</button>` : `<span style="font-size: 0.8em; opacity: 0.5; padding: 4px;">Protected</span>`}
                         </td>
                     `;
@@ -111,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const saveEditBtn = document.getElementById('save-user-role-btn');
         const editIdInput = document.getElementById('edit-user-id');
         const editRoleInput = document.getElementById('edit-user-role');
+        const editPremiumInput = document.getElementById('edit-user-premium');
         const editDisplay = document.getElementById('edit-user-display');
         const editMsg = document.getElementById('edit-user-msg');
 
@@ -119,9 +126,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const id = e.target.getAttribute('data-id');
                 const role = e.target.getAttribute('data-role');
                 const email = e.target.getAttribute('data-email');
+                const isPremium = e.target.getAttribute('data-premium') == 1;
                 
                 editIdInput.value = id;
                 editRoleInput.value = role;
+                editPremiumInput.checked = isPremium;
                 editDisplay.textContent = email;
                 editMsg.style.display = 'none';
 
@@ -150,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
             saveEditBtn.addEventListener('click', async () => {
                 const userId = editIdInput.value;
                 const newRole = editRoleInput.value;
+                const isPremium = editPremiumInput.checked ? 1 : 0;
 
                 saveEditBtn.disabled = true;
                 saveEditBtn.textContent = 'Saving...';
@@ -158,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const res = await fetch('api/admin/users.php', {
                          method: 'PUT',
                          headers: { 'Content-Type': 'application/json' },
-                         body: JSON.stringify({ id: userId, role: newRole })
+                         body: JSON.stringify({ id: userId, role: newRole, is_premium: isPremium })
                     });
                     const data = await res.json();
                     
@@ -386,6 +396,62 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Site Configuration ---
+    const configGoogleTag = document.getElementById('config-google-tag');
+    const configAdSenseId = document.getElementById('config-adsense-id');
+    const configCustomHead = document.getElementById('config-custom-head');
+    const saveSettingsBtn = document.getElementById('save-settings-btn');
+    const settingsMsg = document.getElementById('settings-msg');
+
+    async function loadSettings() {
+        if (!configGoogleTag) return;
+        try {
+            const res = await fetch('api/admin/settings.php');
+            const data = await res.json();
+            if (data.status === 'success') {
+                configGoogleTag.value = data.data.google_tag_id || '';
+                configAdSenseId.value = data.data.adsense_id || '';
+                configCustomHead.value = data.data.custom_head_code || '';
+            }
+        } catch (e) {
+            console.error('Failed to load settings', e);
+        }
+    }
+
+    if (saveSettingsBtn) {
+        saveSettingsBtn.addEventListener('click', async () => {
+            const settings = {
+                google_tag_id: configGoogleTag.value.trim(),
+                adsense_id: configAdSenseId.value.trim(),
+                custom_head_code: configCustomHead.value.trim()
+            };
+
+            saveSettingsBtn.disabled = true;
+            saveSettingsBtn.textContent = 'Saving...';
+            settingsMsg.style.display = 'none';
+
+            try {
+                const res = await fetch('api/admin/settings.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ settings: settings })
+                });
+                const data = await res.json();
+                
+                settingsMsg.textContent = data.message;
+                settingsMsg.style.display = 'block';
+                settingsMsg.style.backgroundColor = data.status === 'success' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(239, 68, 68, 0.2)';
+                settingsMsg.style.color = data.status === 'success' ? '#34d399' : '#ef4444';
+            } catch (e) {
+                settingsMsg.textContent = 'Network error.';
+                settingsMsg.style.display = 'block';
+                settingsMsg.style.color = '#ef4444';
+            } finally {
+                saveSettingsBtn.disabled = false;
+                saveSettingsBtn.textContent = 'Save Configuration';
+            }
+        });
+    }
 
     // Initial load
     loadStats();

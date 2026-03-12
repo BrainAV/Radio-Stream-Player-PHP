@@ -826,6 +826,17 @@ export function initSettings() {
         }
     }
 
+    // Hide or show #ad-space-main based on current auth state.
+    // Needed because ads are injected server-side at page-load;
+    // AJAX login/logout can't re-render PHP, so we update the DOM directly.
+    function updateAdVisibility() {
+        const adSection = document.getElementById('ad-space-main');
+        if (!adSection) return;
+
+        const isPrivileged = window.USER_ROLE === 'admin' || window.IS_PREMIUM === true;
+        adSection.style.display = isPrivileged ? 'none' : '';
+    }
+
     async function handleLogout() {
         try {
             const response = await fetch('api/auth.php?action=logout');
@@ -834,7 +845,9 @@ export function initSettings() {
                 window.IS_LOGGED_IN = false;
                 window.USER_ID = null;
                 window.USER_ROLE = null;
+                window.IS_PREMIUM = false;
                 updateAuthButton();
+                updateAdVisibility(); // restore ads for guests
                 refreshAppData();
             }
         } catch (e) {
@@ -886,8 +899,10 @@ export function initSettings() {
                     window.IS_LOGGED_IN = true;
                     window.USER_ID = data.user_id;
                     window.USER_ROLE = data.role;
+                    window.IS_PREMIUM = data.is_premium === true || data.is_premium === 1;
                     if (loginModal) loginModal.style.display = 'none';
                     updateAuthButton();
+                    updateAdVisibility(); // hide ads immediately for admin/premium
                     refreshAppData();
                 } else {
                     showLoginError(data.message || 'Login failed.');
@@ -1009,6 +1024,7 @@ export function initSettings() {
                     if (data.user) {
                         window.USER_ID = data.user.id;
                         window.USER_ROLE = data.user.role;
+                        window.IS_PREMIUM = data.user.is_premium === true || data.user.is_premium === 1;
                     }
                     
                     if (registerModal) registerModal.style.display = 'none';
@@ -1020,6 +1036,7 @@ export function initSettings() {
                     registerConfirmPassInput.value = '';
                     
                     updateAuthButton();
+                    updateAdVisibility(); // hide ads if new user is somehow privileged
                     refreshAppData();
                 } else {
                     showRegisterError(data.message || 'Registration failed.');
