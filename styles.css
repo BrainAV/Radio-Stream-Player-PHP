@@ -82,9 +82,9 @@ body.popout-body .ad-placeholder {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Default: centered for desktop */
+    justify-content: flex-start; /* Changed from center to prevent top-clipping on desktop with ads */
     align-items: center;
-    padding: 20px 10px;
+    padding: 60px 10px 20px 10px; /* Increased top padding for desktop breathing room */
     overflow: auto; /* Allow internal scroll if content is ever taller than viewport */
 }
 
@@ -239,13 +239,13 @@ body.popout-body .ad-placeholder {
 
 /* Base VU Meter Styles */
 .vu-meter {
-    background: var(--console-bg);
+    background: rgba(0, 0, 0, 0.15); /* Darker, translucent idle state for depth */
     border-radius: 8px;
     height: 100%;
     width: 30px;
     position: relative;
     overflow: hidden;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), 0 1px 0 rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border-color);
     display: flex;
     align-items: center;
@@ -261,7 +261,8 @@ body.popout-body .ad-placeholder {
     position: absolute;
     bottom: 0;
     width: 100%;
-    background: #00ff00;
+    background: linear-gradient(to top, rgba(0, 255, 0, 0.8), rgba(0, 255, 0, 1));
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
     transition: height 0.1s ease, background 0.1s ease;
 }
 
@@ -283,21 +284,22 @@ body.popout-body .ad-placeholder {
 .led-segment {
     width: 100%;
     flex: 1;
-    min-height: 3px;
+    min-height: 2px;
     background: #00ff00;
-    border-radius: 1px;
-    opacity: 0.1;
+    border-radius: 2px; /* Slightly rounder segments */
+    opacity: 0.05; /* Dimmer idle state for better contrast when lit */
     transition: opacity 0.1s ease, background 0.1s ease;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 /* Circular VU Style */
 .vu-circular .vu-meter {
     width: 35px;
     height: 100%;
-    border-radius: 0;
-    background: var(--console-bg);
+    border-radius: 50%; /* Make it a circle */
+    background: rgba(0, 0, 0, 0.15);
     border: 1px solid var(--border-color);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -327,8 +329,9 @@ body.popout-body .ad-placeholder {
 /* Waveform VU Style */
 .vu-waveform .vu-meter {
     width: 60px;
-    background: transparent;
+    background: rgba(0, 0, 0, 0.1); /* Subtle wash so it's not totally empty */
     border: 1px solid var(--border-color);
+    border-radius: 6px;
 }
 
 .vu-waveform .vu-meters {
@@ -345,7 +348,10 @@ body.popout-body .ad-placeholder {
 /* Spectrum VU Style */
 .vu-spectrum .vu-meter {
     width: 60px;
+    background: rgba(0, 0, 0, 0.1);
     padding: 2px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
 }
 
 .vu-spectrum .vu-meters {
@@ -374,11 +380,12 @@ body.popout-body .ad-placeholder {
 .vu-retro .vu-meter {
     width: 35px;
     height: 80px;
-    background: radial-gradient(ellipse at center bottom, var(--console-bg) 40%, var(--border-color) 80%);
+    background: radial-gradient(ellipse at center bottom, rgba(0, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0.4) 100%);
     border-radius: 35px 35px 0 0;
     overflow: visible;
     position: relative;
     border: 1px solid var(--border-color);
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .vu-retro .vu-meters {
@@ -777,7 +784,8 @@ select option {
         flex-direction: column;
         padding: 16px;
         min-width: 0;
-        width: calc(100% - 24px);
+        width: 100%; /* Changed from width: calc(100% - 24px) to fix asymmetric margin */
+        margin: 0; /* Remove auto-margin on mobile */
         gap: 12px;
     }
 
@@ -786,10 +794,10 @@ select option {
     }
 
     .main-content {
-        padding: 12px;
+        padding: 16px; /* Standardize mobile padding */
         padding-top: max(16px, env(safe-area-inset-top));
         padding-bottom: max(16px, env(safe-area-inset-bottom));
-        align-items: flex-start;
+        align-items: center; /* Center player card horizontally */
         /* Allow the whole page to scroll so the ad below is reachable */
         overflow: visible;
         height: auto;
@@ -1016,7 +1024,7 @@ select option {
     /* --- Ad Container: tighter on mobile --- */
     .ad-container {
         margin-top: 12px;
-        width: calc(100% - 24px);
+        width: 100%; /* Match standardized player card width */
         border-radius: 12px;
     }
 
