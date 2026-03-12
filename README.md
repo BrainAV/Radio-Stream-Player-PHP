@@ -1,89 +1,230 @@
-# Radio Stream Player
+<div align="center">
 
-![GitHub](https://img.shields.io/github/license/BrainAV/Radio-Stream-Player-PHP)
-![GitHub last commit](https://img.shields.io/github/last-commit/BrainAV/Radio-Stream-Player-PHP)
-![GitHub issues](https://img.shields.io/github/issues/BrainAV/Radio-Stream-Player-PHP)
-![GitHub stars](https://img.shields.io/github/stars/BrainAV/Radio-Stream-Player-PHP?style=social)
+# 📻 Radio Stream Player
 
-A sleek, modern, and feature-rich full-stack radio stream player built with PHP, MySQL, and vanilla JavaScript. Version 2.0 represents the official transition to a self-hosted backend, enabling cloud-synced accounts while maintaining the premium Glassmorphism aesthetic.
+### A self-hosted, full-stack internet radio player with user accounts, audio visualizations, and a Glassmorphism UI.
 
-**[🔴 Live Demo](https://radio.djay.ca/)**
+[![License](https://img.shields.io/github/license/BrainAV/Radio-Stream-Player-PHP?style=flat-square)](LICENSE)
+[![Version](https://img.shields.io/badge/version-v2.2.0-blue?style=flat-square)](CHANGELOG.md)
+[![Last Commit](https://img.shields.io/github/last-commit/BrainAV/Radio-Stream-Player-PHP?style=flat-square)](https://github.com/BrainAV/Radio-Stream-Player-PHP/commits/main)
+[![Issues](https://img.shields.io/github/issues/BrainAV/Radio-Stream-Player-PHP?style=flat-square)](https://github.com/BrainAV/Radio-Stream-Player-PHP/issues)
+[![Stars](https://img.shields.io/github/stars/BrainAV/Radio-Stream-Player-PHP?style=social)](https://github.com/BrainAV/Radio-Stream-Player-PHP)
+
+**[🔴 Live Demo — radio.djay.ca](https://radio.djay.ca/)**
 
 > [!NOTE]
-> The live demo is securely hosted via HTTPS! It utilizes a custom Cloudflare Worker proxy (`api.djay.ca`) to seamlessly tunnel legacy HTTP radio streams and extract real-time track metadata without triggering browser security warnings.
+> The live demo uses a Cloudflare Worker proxy (`api.djay.ca`) to tunnel legacy HTTP streams over HTTPS and extract real-time ICY metadata without browser security warnings.
 
-## ✨ Features
+</div>
 
-- **PHP/MySQL Backend (v2.0)**: Version 2.0 introduces secure user accounts with persistent, cloud-synced favorites and custom stations.
-- **Non-Intrusive Auth**: A custom AJAX-powered login modal allows you to sign in or sign out without stopping the music or reloading the page.
-- **Multiple Stations**: Comes pre-loaded with a selection of high-quality electronic music radio streams.
-- **Radio Browser Directory**: Integrated public API to natively search and add tens of thousands of community-driven radio stations.
-- **Custom Stations**: Add your own radio stream URLs. Manage your private collection and "Favorites" in a dedicated UI.
-- **Dynamic Audio Visualization**: Real-time VU meters powered by the Web Audio API. 
-- **Multiple VU Meter Styles**: Cycle through seven different visualizer styles:
-  - Classic (Vertical Bars)
-  - LED (Segmented Display)
-  - Circular (Radial Progress)
-  - Waveform (Oscilloscope)
-  - Spectrum (Frequency Bars)
-  - Retro (Analog Needle)
-  - Neon (Glowing Bars)
-- **Light & Dark Themes**: Automatically detects the user's system preference and allows manual toggling.
-- **Personalization**: Customize the player with your own background images or choose from curated presets.
-- **Favorites System**: Save your top stations for quick access, now synced to your user account.
-- **Backend Streaming Proxy**: Natively bypasses "Mixed Content" warnings by routing insecure HTTP radio streams through a secure proxy.
-- **Live Metadata Extraction**: Displays real-time "Now Playing" track and artist information fetched directly from the streams.
-- **Media Integration**: Displays station info on your OS lock screen and supports hardware media keys (Play/Pause/Next/Prev).
-- **Pop-out Player**: Open the player in a separate, compact window for easy multitasking. Background, station list, and filter settings are all synced from the main player.
-- **Monetization-Aware**: AdSense ad slots are automatically disabled for `admin` and `premium` users without a page refresh.
-- **Accessible**: Built with accessibility in mind, featuring screen reader support and full keyboard navigation.
-- **Responsive Design**: Looks and works great on both desktop and mobile devices.
-- **Session-Aware**: Remembers your selected theme and state across browser sessions.
+---
 
-## 🛠️ Technologies Used
+## ✨ Feature Highlights
 
-- **PHP 8.x**: Back-end API and session management.
-- **MySQL 5.7+**: Reliable storage for stations and users.
-- **HTML5 & CSS3**: For the structure and "Glassmorphism" styling.
-- **Vanilla JavaScript (ES6+)**: For all player logic and a robust Pub/Sub State Manager.
-- **Web Audio API**: For high-performance audio processing and visualizations.
+### 🎵 Player & Audio
+| Feature | Description |
+|---|---|
+| **7 VU Meter Styles** | Classic Bars, LED, Circular, Waveform, Spectrum, Retro Needle, Neon Glow |
+| **Live Metadata** | Real-time "Now Playing" track & artist info via ICY metadata polling |
+| **Media Keys** | OS lock screen integration + hardware Play/Pause/Next/Prev support |
+| **Pop-out Player** | Compact floating window — syncs background, station list, and filters from the main player. Auto-starts playback. |
+| **Streaming Proxy** | Routes `http://` streams through a secure proxy, eliminating Mixed Content warnings |
 
-## 🔌 Powered By
+### 👤 User Accounts & Personalization
+| Feature | Description |
+|---|---|
+| **AJAX Auth** | Login/register/logout without stopping playback or reloading the page |
+| **Cloud Favorites** | Favorites and custom stations sync to your account via the PHP/MySQL backend |
+| **Custom Backgrounds** | Set any image URL as your wallpaper or choose from curated presets |
+| **Light & Dark Themes** | Auto-detects system preference; manually toggleable |
+| **Genre & Favorites Filter** | Filter your station list by genre or show favorites only — persists across sessions |
 
-- **[Radio Browser API](https://www.radio-browser.info/)**: Provides the massive, community-driven database of global radio stations.
-- **[Cloudflare Workers](https://workers.cloudflare.com/)**: Enables our secure backend streaming proxy and ICY metadata extraction for the demo environment.
+### 🔍 Station Discovery
+| Feature | Description |
+|---|---|
+| **Radio Browser API** | Search 30,000+ community-driven stations by name, tag, or country |
+| **Custom Stations** | Add and manage your own private stream URLs |
+| **Add to Favorites** | One-click add from search results to your personal library |
+
+### 🛡️ Admin Dashboard
+| Feature | Description |
+|---|---|
+| **User Management** | Edit roles, toggle premium status, ban or delete users |
+| **Site Config** | Manage Google Tag (GA4), AdSense ID, and custom head scripts from a UI |
+| **Premium Tier** | Mark users as premium to suppress ads server-side |
+| **Role-Based Ads** | AdSense automatically disabled for `admin` and `is_premium` users — no refresh required |
+
+---
+
+## 🏗️ Architecture Overview
+
+```
+Browser (Vanilla JS + Web Audio API)
+    │
+    ├── player.js       — Core player state, playback engine, pub/sub StateManager
+    ├── settings.js     — Auth modals, user settings, favorites, genre filters
+    ├── visualizer.js   — 7 VU meter styles via Web Audio API AnalyserNode
+    └── api.js          — Fetch wrappers for all PHP API endpoints
+          │
+          ▼
+PHP / MySQL Backend (LAMP/LEMP)
+    │
+    ├── index.php           — Entry point; injects session data, ad scripts, user role
+    ├── popout.php          — Pop-out entry point; same server-side ad injection pattern
+    ├── api/auth.php        — AJAX login / logout / session management
+    ├── api/favorites.php   — User favorites CRUD
+    ├── api/stations.php    — Default & custom station management
+    ├── api/admin/          — Admin-only endpoints (users, settings)
+    └── database/schema.sql — Full MySQL schema
+          │
+          ▼
+Cloudflare Worker (api.djay.ca) — optional, for demo/HTTPS deployment
+    ├── Audio proxy     — Tunnels http:// streams over HTTPS
+    └── ICY metadata    — Extracts Now Playing info from stream headers
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Backend** | PHP 8.x, PDO/MySQL |
+| **Database** | MySQL 5.7+ / MariaDB |
+| **Frontend** | Vanilla JavaScript (ES6+), HTML5, CSS3 |
+| **Audio** | Web Audio API (AnalyserNode, GainNode) |
+| **Auth** | PHP Sessions + AJAX (no JWT, no framework) |
+| **Proxy** | Cloudflare Workers (optional, for demo) |
+| **Directory** | [Radio Browser API](https://www.radio-browser.info/) |
+
+---
+
+## 🚀 Installation
+
+### Prerequisites
+- PHP 8.0+
+- MySQL 5.7+ or MariaDB
+- A standard LAMP / LEMP web server (Apache or Nginx)
+- cPanel-compatible hosting **or** a VPS — this is a standard PHP project, no Composer/Node required
+
+### Setup
+
+**1. Clone the repository**
+```bash
+git clone https://github.com/BrainAV/Radio-Stream-Player-PHP.git .
+```
+
+**2. Database**
+```bash
+# Create a MySQL database and user, then import the schema:
+mysql -u youruser -p yourdb < database/schema.sql
+```
+
+**3. Configure credentials**
+
+Copy and edit the config file:
+```bash
+cp api/config.example.php api/config.php
+```
+Then set your DB host, name, username, and password in `api/config.php`.
+
+**4. Deploy**
+
+Upload to your web root. `index.php` is the entry point — no `.htaccess` rewrites required for basic usage.
+
+**5. First-time Admin Setup**
+
+After deploying, register a user account, then manually set `role = 'admin'` in the `users` table:
+```sql
+UPDATE users SET role = 'admin' WHERE user_email = 'you@example.com';
+```
+Then access the Admin Dashboard at `/admin.php`.
+
+### Optional: Upgrade from v2.1.x
+
+Run the migration script to add monetization tables:
+```sql
+source database/update_v2.2_monetization.sql
+```
+
+### Local Development (no PHP)
+
+To test the frontend UI only:
+```bash
+python -m http.server 8000
+# Then open http://localhost:8000
+```
+> Account features, favorites, and admin require a live PHP/MySQL environment.
+
+---
+
+## 📁 Project Structure
+
+```
+Radio-Stream-Player-PHP/
+├── index.php               # Main entry point (serves template-player.html with session data)
+├── popout.php              # Pop-out window entry point
+├── admin.php               # Admin dashboard entry point
+├── template-player.html    # Main player HTML template
+├── popout.html             # Pop-out player HTML
+├── styles.css              # All styles — Glassmorphism design system
+│
+├── player.js               # Core player: audio engine, StateManager, media keys
+├── settings.js             # Settings modal: auth, favorites, custom stations, filters
+├── visualizer.js           # Web Audio API VU meter (7 styles)
+├── api.js                  # Frontend fetch wrappers
+├── admin.js                # Admin dashboard logic
+├── popout-script.js        # Pop-out player logic
+│
+├── api/
+│   ├── config.php          # DB credentials (not committed — add to .gitignore)
+│   ├── auth.php            # Login/logout AJAX handler
+│   ├── favorites.php       # Favorites CRUD
+│   ├── stations.php        # Station management
+│   ├── register.php        # User registration
+│   └── admin/
+│       ├── users.php       # Admin: user management
+│       └── settings.php    # Admin: site config (GA4, AdSense, custom scripts)
+│
+├── database/
+│   ├── schema.sql                      # Full MySQL schema (fresh install)
+│   └── update_v2.2_monetization.sql    # Migration: adds is_premium, site_config table
+│
+└── docs/
+    ├── DEVELOPER_GUIDE.md      # Architecture & contribution guide
+    ├── RELEASE_v2.2.0.md       # Release notes
+    └── UNSPLASH_GUIDE.md       # Background image formatting guide
+```
+
+---
 
 ## ⌨️ Keyboard Shortcuts
 
-The player is designed to be fully accessible and keyboard-friendly:
-
-- **`Spacebar` / `Play/Pause Media Key`**: Toggle Play/Pause.
-- **`Next Track Media Key`**: Skips to the next station in the current list.
-- **`Previous Track Media Key`**: Skips to the previous station in the current list.
-- **`Tab`**: Standard browser focus navigation through all UI elements.
-
-## 🚀 Installation & Setup (v2.2.0)
-
-This project is cPanel-compatible and requires a standard LAMP/LEMP stack (Linux, Apache/Nginx, MySQL, PHP).
-
-1.  **Clone the Repo**:
-    ```bash
-    git clone https://github.com/BrainAV/Radio-Stream-Player-PHP.git .
-    ```
-2.  **Database Setup**:
-    - Create a MySQL database and user.
-    - Import the SQL schema located in `/database/schema.sql`.
-    - Set your credentials in `api/config.php`.
-3.  **Deploy**:
-    - Upload to your web root and ensure `index.php` is the entry point.
-
-### Local Development fallback
-If you want to test the frontend UI without PHP, you can run a simple mock server:
-```bash
-# For Python 3
-python -m http.server
-```
-Then, navigate to `http://localhost:8000` in your browser. Note that account features require a live PHP/DB environment.
+| Key | Action |
+|---|---|
+| `Space` / Play/Pause Media Key | Toggle playback |
+| `Next Track` Media Key | Next station |
+| `Prev Track` Media Key | Previous station |
+| `Tab` | Navigate all controls |
 
 ---
-*Developed by the BrainAV team. v2.2.0 - Monetization & Pop-out Evolution.*
+
+## 📋 Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for the full version history.
+
+Latest: **[v2.2.0](docs/RELEASE_v2.2.0.md)** — Monetization & Pop-out Evolution
+
+---
+
+## 🤝 Contributing
+
+Issues and PRs are welcome. For significant changes, please open an issue first to discuss the approach.
+
+---
+
+<div align="center">
+
+Built by the **BrainAV** team &nbsp;•&nbsp; [Live Demo](https://radio.djay.ca/) &nbsp;•&nbsp; [Changelog](CHANGELOG.md) &nbsp;•&nbsp; [Roadmap](ROADMAP.md)
+
+</div>
