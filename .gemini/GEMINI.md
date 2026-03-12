@@ -12,7 +12,7 @@ This file is your **Command Center** for the PHP-based Radio Stream Player.
 ## ⚡ Quick Sync & Workflow
 
 ### 1. Start of Session (The "Quick Sync")
-> "Please read all the project context files (`ROADMAP.md`, `README.md`, `CHANGELOG.md`, `DEVELOPER_GUIDE.md`, and the contents of the `.gemini` folder) to get in sync with the current state of the PHP-based repository."
+> "Please read all the project context files (`ROADMAP.md`, `README.md`, `CHANGELOG.md`, `DEVELOPER_GUIDE.md`, and the contents of the `.gemini` folder) to get in sync. **CRITICAL: You MUST read and strictly adhere to all [Agent Skills](.agent/skills/) before performing any specialized work like cutting a release, editing the UI, or modifying the audio engine.**"
 
 ### 2. PHP/DB Development
 > "Let's implement a new API endpoint in `api/` to handle [X]."
