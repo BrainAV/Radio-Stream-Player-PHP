@@ -9,8 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Favicon** — Added headphones favicon (`favicon.png`) to all pages: main player (`template-player.html`), Admin Dashboard (`admin.php`), and Pop-out (`popout.html`).
+- **`.gitignore`** — Added project `.gitignore` covering `*.ffs_lock` (FreeFileSync), `api/config.php` (credentials), OS junk, and editor files.
+
 ### Changed
 - **AdSense Auto Ads disabled** — switched from Auto Ads to manually placed ad slots only (`#ad-space-main` and `#ad-space-popout`). Keeps ad placement intentional and prevents Google from injecting ads into arbitrary positions in the UI.
+- **Admin → Site Config UI polished** — reorganized the flat form into three distinct glass panels (📊 Analytics / 💰 Advertising / ⚙️ Advanced) with descriptive hint text under each field and a "Changes take effect on next page load" note.
+- **README rewritten** — full rewrite with hero section, centered badges, feature tables by category, ASCII architecture diagram, tech stack table, detailed install guide (prerequisites, first-admin setup, upgrade path), project file tree, and Contributing section.
+
+### Fixed
+- **Ads not hiding after AJAX login** — `updateAdVisibility()` added to `settings.js`, wired into login/logout/register handlers so admins and premium users see ads disappear immediately without a page refresh.
+- **`api/auth.php` missing `is_premium`** — login response now includes `is_premium` boolean so the client-side ad state is always in sync after authentication.
 
 ---
 
