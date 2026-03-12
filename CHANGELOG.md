@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **SEO Foundation** — Added `sitemap.xml` (root URL only; includes roadmap comments for future dynamic station/country/genre pages), `robots.txt` (blocks `/api/`, `/admin.php`, `/popout.php`, `/database/`, tooling dirs), `<meta name="description">`, and `<link rel="canonical" href="https://radio.djay.ca/">` to `template-player.html`. Submitted sitemap to Google Search Console via the `djay.ca` Domain Property (which auto-covers all subdomains including `radio.djay.ca`).
 - **Favicon** — Added headphones favicon (`favicon.png`) to all pages: main player (`template-player.html`), Admin Dashboard (`admin.php`), and Pop-out (`popout.html`).
 - **`.gitignore`** — Added project `.gitignore` covering `*.ffs_lock` (FreeFileSync), `api/config.php` (credentials), OS junk, and editor files.
 

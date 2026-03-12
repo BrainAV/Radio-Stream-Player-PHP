@@ -1,0 +1,26 @@
+# radio.djay.ca — robots.txt
+# https://radio.djay.ca/
+
+User-agent: *
+
+# Block private/admin areas from indexing
+Disallow: /admin.php
+Disallow: /popout.php
+
+# Block all backend API endpoints (not content pages)
+Disallow: /api/
+
+# Block database migration scripts
+Disallow: /database/
+
+# Block agent/tooling directories (not web-accessible, but just in case)
+Disallow: /.agent/
+Disallow: /.gemini/
+Disallow: /docs/
+
+# Future: If dynamic routing is implemented (e.g., /ca/trance/etn-fm),
+# those paths will be crawlable by default. Only add Disallow rules if
+# specific route prefixes should be private (e.g., /admin/ clean URL).
+
+# Sitemap location
+Sitemap: https://radio.djay.ca/sitemap.xml

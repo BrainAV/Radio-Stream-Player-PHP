@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Radio Stream Player — Sitemap
+    https://radio.djay.ca/
+
+    CURRENT SCOPE (v2.2):
+    - Only the root player page is listed. Admin, popout, and API paths are intentionally excluded.
+
+    FUTURE SCOPE (v2.3+ Roadmap — Dynamic Station Pages):
+    When /[country]/[genre]/[station-name] routing is implemented, this sitemap should be
+    replaced with a PHP-generated sitemap (e.g., sitemap.php) that queries the stations
+    table and outputs dynamic <url> entries for every public station page.
+
+    Example future entries:
+    <url>
+        <loc>https://radio.djay.ca/ca/trance/etn-fm</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    Similarly, country and genre listing pages will need entries:
+    <url>
+        <loc>https://radio.djay.ca/ca/</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    See ROADMAP.md § Discovery & SEO for the full plan.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    <!-- Main Player (public entry point) -->
+    <url>
+        <loc>https://radio.djay.ca/</loc>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+</urlset>
