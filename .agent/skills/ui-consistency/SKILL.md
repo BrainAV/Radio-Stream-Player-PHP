@@ -56,18 +56,80 @@ For **Dark Mode**, use:
 .element::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
 ```
 
-## 4. Responsive Breakpoints
-Always design mobile-first or ensure graceful degradation on small screens. Use these standard breakpoints in `styles.css`:
+## 5. Responsive Breakpoints (3-tier system)
 
-*   **Tablet (`max-width: 768px`)**:
-    *   Slightly reduce padding.
-    *   Ensure buttons have a minimum touch target size (e.g., `min-width: 44px; min-height: 44px;`).
-*   **Mobile (`max-width: 500px`)**:
-    *   Convert horizontal flex layouts (`flex-direction: row`) to stacked layouts (`flex-direction: column`).
-    *   Set container widths to `100%` (or `calc(100% - 24px)` with padding).
-    *   Reduce header font sizes slightly.
+The project uses three breakpoints. Always design desktop-first; use these media queries to adapt downward.
 
-## 5. Accessibility (A11y)
-*   **Touch Targets:** Ensure all clickable elements (buttons, links) are easily tappable.
+| Breakpoint | Target | Key Rules |
+|---|---|---|
+| `max-width: 768px` | Tablet | Reduce padding, enforce 44px touch targets, tighten ad margin |
+| `max-width: 500px` | Mobile (primary) | Full layout overhaul — see §6 below |
+| `max-width: 350px` | Very small | Hide ads, maximum compression |
+
+## 6. Mobile-First Rules (≤ 500px)
+
+These patterns are **mandatory** for all mobile UI work:
+
+### Layout
+- Player card: `flex-direction: column`, `width: calc(100% - 24px)`, no horizontal centering constraint.
+- `.main-content`: `height: auto; min-height: 100vh; overflow: visible` — allows the ad below the fold to be scrolled to.
+- `body`: `overflow: auto` — overrides the desktop `overflow: hidden` so mobile users can scroll.
+
+### iOS-Specific Gotchas
+- **`background-attachment: fixed` is broken on iOS Safari** — it causes the wallpaper to flash white or scroll with content. Fix:
+  ```css
+  @media (max-width: 768px) {
+      body { background-attachment: scroll; }
+      body::before {
+          content: '';
+          position: fixed; inset: 0; z-index: -1;
+          background-image: inherit;
+          background-size: cover; background-position: center;
+      }
+  }
+  ```
+- **Safe area insets** — Always account for the iPhone notch/Dynamic Island and home indicator:
+  ```css
+  padding-top: max(16px, env(safe-area-inset-top));
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+  ```
+  Apply to: `.tool-header`, `.main-content`, `.settings-content` (bottom sheet).
+
+### Touch Targets & Feedback
+- **Minimum touch target:** `min-width: 48px; min-height: 48px` on all interactive buttons.
+- **Tap feedback (`:active` state):** Every tappable element must have a visible response:
+  ```css
+  .console-btn:active, .theme-btn:active {
+      transform: scale(0.93);
+      opacity: 0.85;
+      transition: transform 0.08s ease, opacity 0.08s ease;
+  }
+  ```
+- **Play button on mobile:** Use `border-radius: 50%` to make it a circle — easier to tap and visually distinct.
+
+### VU Meters on Mobile
+- VU meters switch from vertical (desktop side-panel, 80px wide) to horizontal strip (full-width, 64px tall).
+- Use `flex: 1` on `.vu-meter` inside the mobile breakpoint so bar/LED/neon styles stretch full-width instead of fixed pixel widths.
+- Waveform and Spectrum meters: `height: 48px`, `flex: 1`.
+- Circular and Retro meters: `width: 60px; height: 60px` (centered, not stretched).
+
+### Scrollbar suppression on mobile
+```css
+body::-webkit-scrollbar { display: none; }
+body { -ms-overflow-style: none; scrollbar-width: none; }
+```
+Also apply to `.main-content` — the page scrolls but no scrollbar is visible, keeping the UI clean.
+
+## 7. Modals on Mobile
+- Settings/Login modals become **bottom sheets** on mobile (`≤ 500px`):
+  - `align-items: flex-end` on the overlay
+  - `border-radius: 20px 20px 0 0` on `.settings-content`
+  - `max-height: 85vh`, `animation: slideUp 0.3s ease-out`
+  - `padding-bottom: calc(16px + env(safe-area-inset-bottom))` for home indicator clearance
+
+## 8. Accessibility (A11y)
+*   **Touch Targets:** Ensure all clickable elements (buttons, links) are easily tappable (`min 48×48px` on mobile).
 *   **ARIA Labels:** If a button only uses an icon (SVG) without text, it *must* have an `aria-label` attribute describing its function.
 *   **Focus States:** Rely on the established `:focus-visible` styles; do not remove outlines without providing a clear visual alternative for keyboard users.

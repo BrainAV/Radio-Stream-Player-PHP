@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **SEO Foundation** — Added `sitemap.xml` (root URL only; includes roadmap comments for future dynamic station/country/genre pages), `robots.txt` (blocks `/api/`, `/admin.php`, `/popout.php`, `/database/`, tooling dirs), `<meta name="description">`, and `<link rel="canonical" href="https://radio.djay.ca/">` to `template-player.html`. Submitted sitemap to Google Search Console via the `djay.ca` Domain Property (which auto-covers all subdomains including `radio.djay.ca`).
+- **Mobile UX Overhaul** — Comprehensive improvements to the mobile experience in `styles.css`:
+    - **iOS wallpaper fix** — `background-attachment: fixed` replaced with a `position: fixed` pseudo-element workaround on `≤ 768px`. Eliminates the iOS Safari wallpaper flash/scroll bug.
+    - **Touch tap feedback** — All `.console-btn` and `.theme-btn` now scale to `0.93` on `:active` for instant visual tap confirmation.
+    - **Safe area insets** — Header and main content now respect iPhone notch/Dynamic Island/home indicator via `env(safe-area-inset-*)` on all four sides.
+    - **VU meters** — Switched from fixed-pixel widths to `flex: 1` on mobile so Classic, LED, Neon, Waveform, and Spectrum bars stretch full-width. Height increased to `64px` strip (up from `50px`). Circular and Retro bumped to `60×60px`.
+    - **Now Playing** — Track text increased to `1.15em / font-weight: 600` for better readability at arm's length.
+    - **Play button** — Rounded to `border-radius: 50%` (circle) on mobile, minimum touch target `52×52px`.
+    - **Volume slider thumb** — Enlarged to `26px` for easier dragging on touchscreens.
+    - **Ad container** — `margin-top` reduced to `12px`, tighter padding, full-width on mobile.
+    - **Scroll behaviour** — `body` and `.main-content` set to `overflow: auto` + `height: auto` on mobile so the ad below the player is reachable. Scrollbars hidden via `scrollbar-width: none` for a clean look.
 - **Favicon** — Added headphones favicon (`favicon.png`) to all pages: main player (`template-player.html`), Admin Dashboard (`admin.php`), and Pop-out (`popout.html`).
 - **`.gitignore`** — Added project `.gitignore` covering `*.ffs_lock` (FreeFileSync), `api/config.php` (credentials), OS junk, and editor files.
 

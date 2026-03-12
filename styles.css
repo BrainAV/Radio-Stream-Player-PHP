@@ -37,6 +37,24 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
+/* iOS / Mobile Safari: background-attachment:fixed is broken on iOS — it causes the
+   background to move with scroll or flash white. Fix: use scroll + a fixed pseudo-element
+   that acts as the wallpaper layer behind everything. */
+@media (max-width: 768px) {
+    body {
+        background-attachment: scroll;
+    }
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background-image: inherit;
+        background-size: cover;
+        background-position: center;
+    }
+}
+
 /* Popout window overrides: undo the main player's overflow:hidden so the ad */
 /* section below the player card is visible without clipping.                 */
 body.popout-body {
@@ -77,11 +95,23 @@ body.popout-body .ad-placeholder {
     }
 }
 
+/* Hide scrollbar on the main content area (mobile) — keep it functional but invisible */
+.main-content::-webkit-scrollbar {
+    display: none;
+}
+.main-content {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
 .tool-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 8px 25px;
+    /* Safe area: leave room for iOS notch/Dynamic Island on left/right */
+    padding-left: max(25px, env(safe-area-inset-left));
+    padding-right: max(25px, env(safe-area-inset-right));
     /* Glassmorphism effect */
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
@@ -113,6 +143,14 @@ body.popout-body .ad-placeholder {
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
+}
+
+/* Touch tap feedback — provides immediate visual response on mobile */
+.theme-btn:active,
+.console-btn:active {
+    transform: scale(0.93);
+    opacity: 0.85;
+    transition: transform 0.08s ease, opacity 0.08s ease;
 }
 
 .radiostream-player {
@@ -715,12 +753,24 @@ select option {
         min-width: 44px;
         min-height: 44px;
     }
+
+    /* Tablet: tighten ad spacing */
+    .ad-container {
+        margin-top: 16px;
+    }
 }
 
 /* ============================================
    Mobile Responsive Styles (≤ 500px)
    ============================================ */
 @media (max-width: 500px) {
+
+    /* --- Body: allow scroll on mobile so ad below player is reachable --- */
+    body {
+        overflow: auto;
+        /* Override the desktop overflow:hidden — on mobile the ad pushes content
+           below the fold and users need to scroll to see it */
+    }
 
     /* --- Player Card Layout --- */
     .radiostream-player {
@@ -737,31 +787,41 @@ select option {
 
     .main-content {
         padding: 12px;
+        padding-top: max(16px, env(safe-area-inset-top));
+        padding-bottom: max(16px, env(safe-area-inset-bottom));
         align-items: flex-start;
-        padding-top: 20px;
+        /* Allow the whole page to scroll so the ad below is reachable */
+        overflow: visible;
+        height: auto;
+        min-height: 100vh;
     }
 
-    /* --- Header --- */
+    /* --- Header: compact + notch-aware --- */
     .tool-header {
-        padding: 8px 16px;
+        padding: 6px 16px;
+        padding-left: max(16px, env(safe-area-inset-left));
+        padding-right: max(16px, env(safe-area-inset-right));
     }
 
     .tool-header h2 {
-        font-size: 1.05rem;
+        font-size: 1.0rem;
     }
 
-    /* --- VU Meters (horizontal on mobile) --- */
+    /* --- VU Meters: prominent horizontal strip on mobile --- */
     .vu-meters {
         flex-direction: row;
         width: 100%;
         justify-content: center;
-        height: 50px;
+        height: 64px;  /* taller than before — more visual impact */
+        gap: 8px;
     }
 
-    /* Mobile Classic Style */
+    /* Mobile Classic Style — wider bars for a punchy horizontal look */
     .vu-classic .vu-meter {
-        width: 60px;
-        height: 20px;
+        flex: 1;
+        height: 24px;
+        width: auto;
+        border-radius: 4px;
     }
 
     .vu-classic .vu-level {
@@ -769,22 +829,27 @@ select option {
         width: 0%;
         bottom: auto;
         left: 0;
+        border-radius: 4px;
     }
 
     /* Mobile LED Style */
     .vu-led .vu-meter {
-        width: 80px;
-        height: 20px;
+        flex: 1;
+        width: auto;
+        height: 24px;
+        border-radius: 4px;
     }
 
     .vu-led .led-container {
         flex-direction: row;
         align-items: center;
+        height: 100%;
     }
 
     .vu-led .led-segment {
         width: 3px;
         height: 100%;
+        flex: 1;
     }
 
     /* Mobile Circular Style */
@@ -795,30 +860,32 @@ select option {
     }
 
     .vu-circular .vu-meter {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
     }
 
     /* Mobile Waveform Style */
     .vu-waveform .vu-meters {
         width: 100%;
-        gap: 20px;
+        gap: 12px;
     }
 
     .vu-waveform .vu-meter {
-        width: 80px;
-        height: 40px;
+        flex: 1;
+        width: auto;
+        height: 48px;
     }
 
     /* Mobile Spectrum Style */
     .vu-spectrum .vu-meters {
         width: 100%;
-        gap: 20px;
+        gap: 12px;
     }
 
     .vu-spectrum .vu-meter {
-        width: 80px;
-        height: 40px;
+        flex: 1;
+        width: auto;
+        height: 48px;
     }
 
     .vu-spectrum .spectrum-container {
@@ -837,8 +904,8 @@ select option {
     }
 
     .vu-retro .vu-meter {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
     }
 
     .vu-retro .retro-scale {
@@ -846,13 +913,15 @@ select option {
     }
 
     .vu-retro .retro-needle {
-        height: 20px;
+        height: 24px;
     }
 
-    /* Mobile Neon Style */
+    /* Mobile Neon Style — wide glowing horizontal bar */
     .vu-neon .vu-meter {
-        width: 60px;
-        height: 20px;
+        flex: 1;
+        width: auto;
+        height: 24px;
+        border-radius: 4px;
     }
 
     .vu-neon .neon-level {
@@ -860,6 +929,22 @@ select option {
         width: 0%;
         bottom: auto;
         left: 0;
+        border-radius: 4px;
+    }
+
+    /* --- Now Playing: more prominent on mobile --- */
+    .now-playing-container {
+        padding: 10px 14px;
+    }
+
+    .now-playing-label {
+        font-size: 0.7em;
+        letter-spacing: 0.8px;
+    }
+
+    .now-playing-track {
+        font-size: 1.15em;
+        font-weight: 600;
     }
 
     /* --- Control Bar: Stacked Layout --- */
@@ -876,15 +961,16 @@ select option {
 
     .station-selector select {
         font-size: 0.95rem;
-        padding: 12px 10px;
+        padding: 13px 10px;
     }
 
-    /* Play button */
+    /* Play button — bigger, rounder, more tappable */
     #play-pause-btn {
         order: 2;
-        min-width: 48px;
-        min-height: 48px;
-        padding: 12px;
+        min-width: 52px;
+        min-height: 52px;
+        padding: 14px;
+        border-radius: 50%;
     }
 
     /* Volume slider expands to fill remaining space (row 2) */
@@ -899,21 +985,21 @@ select option {
     }
 
     .volume-control input[type="range"]::-webkit-slider-thumb {
-        width: 24px;
-        height: 24px;
-        margin-top: -8px;
+        width: 26px;
+        height: 26px;
+        margin-top: -9px;
     }
 
     .volume-control input[type="range"]::-moz-range-thumb {
-        width: 24px;
-        height: 24px;
+        width: 26px;
+        height: 26px;
     }
 
     /* Favorite button: larger touch target */
     #favorite-btn {
-        min-width: 48px;
-        min-height: 48px;
-        padding: 12px;
+        min-width: 52px;
+        min-height: 52px;
+        padding: 13px;
     }
 
     /* Hide popout button — not useful on mobile browsers */
@@ -927,17 +1013,16 @@ select option {
         min-height: 48px;
     }
 
-    /* --- Now Playing --- */
-    .now-playing-container {
-        padding: 8px 12px;
+    /* --- Ad Container: tighter on mobile --- */
+    .ad-container {
+        margin-top: 12px;
+        width: calc(100% - 24px);
+        border-radius: 12px;
     }
 
-    .now-playing-track {
-        font-size: 1.05em;
-    }
-
-    .now-playing-label {
-        font-size: 0.75em;
+    .ad-placeholder {
+        padding: 10px;
+        min-height: 60px;
     }
 
     /* --- Settings Modal: Bottom Sheet --- */
@@ -987,7 +1072,7 @@ select option {
         padding: 10px 15px;
     }
 
-    /* Background presets already handled below */
+    /* Background presets: 2-column grid */
 }
 
 /* Bottom sheet slide-up animation for mobile settings */
@@ -1580,9 +1665,24 @@ select option {
     font-weight: 600;
 }
 
-/* Optimization for mobile - hide ads on very small screens if they break layout */
+/* Hide ads on very small screens where they would break layout */
 @media (max-width: 350px) {
     .ad-container {
         display: none !important;
+    }
+}
+
+/* ============================================
+   Mobile-first scrollbar utility
+   Already hidden on .main-content above;
+   also suppress on the body on mobile
+   ============================================ */
+@media (max-width: 500px) {
+    body::-webkit-scrollbar {
+        display: none;
+    }
+    body {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
 }
