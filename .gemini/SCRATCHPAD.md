@@ -1,0 +1,14 @@
+
+- can we show the stream bitrate
+- CIDC only left side is showing in VU meter, is that mono ?
+- compare localstore list with users db list and import one by one or all
+- give logged in users ability to hide un-favorited system stations. (added favorites stay, system stations hide, another incentive to register user)    
+- decide on payment system to remove ads, and get premium features
+- build premium feature list
+- radio station pages that are dynamic, and seo, with basic, logged in, and pro level features / benefits / access. 
+- for recording, server space is no good, so it has to be done in browser level and saved that way, or we allow users (not the host) to connect their personal google account and cloud drive space and we route the recording to their cloud drive space somehow. 
+- admin dashboard, user management, add premium user toggle, add site config tab, add api/admin/settings.php
+- do radio streams offer song feeds like rss? Or are we extracting using chron to update the database song history when users are not listening. Set a standard low budget song history per station, per user, and admin/premium level listing.
+- sharing dynamic routes for stations, countries, genres, and user profiles. 
+- donations link / icon
+- 
