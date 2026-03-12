@@ -67,6 +67,7 @@ This document outlines the future direction and planned features for the Radio S
 - **Wallpaper Search** — Unsplash API integration for searching backgrounds inside the player.
 
 ### Discovery & SEO
+- **Clean URLs (Remove `.php` Extension)** — Add Apache `.htaccess` rewrite rules so all public-facing pages use clean paths: `admin.php` → `admin/`, `popout.php` → `popout/`, `index.php` remains the root `/`. Improves professionalism and is a prerequisite for the dynamic station routing below.
 - **Dynamic Station Pages** — `.htaccess` + PHP routing for `/[country]/[genre]/[station-name]` URLs.
 - **Listing Pages** — Index pages by Country and Genre for SEO discoverability.
 - **Global Search & Filters** — Search bar + Genre/Country filter controls for the full station database.
