@@ -44,7 +44,7 @@ This document outlines the future direction and planned features for the Radio S
 
 ### 🔲 Remaining for v2.2
 - **AdSense Ad Slot Review** — Verify both ad units are approved and serving in AdSense console, adjust slot IDs or formats if needed.
-- **Webmaster Settings (Admin)** — Dynamic management of tracking codes via Admin → Site Config (partial — needs UI polish).
+- ~~**Webmaster Settings (Admin)**~~ ✅ — Site Config tab fully implemented: GA4, AdSense ID, and custom head code manageable via Admin dashboard. Changes are server-injected on next page load.
 - **Stream Crawler/Finder (Admin Utility)** — Tool to extract direct stream URLs from a station website; auto-detect bitrate/quality.
 - **Broken Stream Reports UI** — Admin interface for reviewing user-flagged stations.
 

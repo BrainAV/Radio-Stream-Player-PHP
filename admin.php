@@ -140,25 +140,41 @@ $userRole = $_SESSION['user_role'];
                 <header class="admin-header">
                     <h1>Site Configuration</h1>
                 </header>
-                <div class="glass-panel" style="padding: 25px;">
+
+                <!-- Analytics Section -->
+                <div class="glass-panel" style="padding: 25px; margin-bottom: 20px;">
+                    <h3 style="margin: 0 0 18px; font-size: 1em; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.6; color: white;">📊 Analytics</h3>
                     <div class="form-group" style="margin-bottom: 20px;">
-                        <label for="config-google-tag" style="display: block; margin-bottom: 8px; font-weight: 600; color: white;">Google Analytics Tag ID (G-XXXXXXXXXX)</label>
+                        <label for="config-google-tag" style="display: block; margin-bottom: 6px; font-weight: 600; color: white;">Google Analytics Tag ID</label>
                         <input type="text" id="config-google-tag" class="settings-input" placeholder="e.g. G-T93274MPPZ">
+                        <p style="margin: 6px 0 0; font-size: 0.82em; opacity: 0.55;">The measurement ID from your Google Analytics 4 property. Injected as a <code>gtag.js</code> script into every page's <code>&lt;head&gt;</code>.</p>
                     </div>
-                    
-                    <div class="form-group" style="margin-bottom: 20px;">
-                        <label for="config-adsense-id" style="display: block; margin-bottom: 8px; font-weight: 600; color: white;">AdSense Client ID (ca-pub-XXXXXXXXXXXXXXXX)</label>
+                </div>
+
+                <!-- Advertising Section -->
+                <div class="glass-panel" style="padding: 25px; margin-bottom: 20px;">
+                    <h3 style="margin: 0 0 18px; font-size: 1em; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.6; color: white;">💰 Advertising</h3>
+                    <div class="form-group" style="margin-bottom: 6px;">
+                        <label for="config-adsense-id" style="display: block; margin-bottom: 6px; font-weight: 600; color: white;">AdSense Client ID</label>
                         <input type="text" id="config-adsense-id" class="settings-input" placeholder="e.g. ca-pub-0633259514526906">
+                        <p style="margin: 6px 0 0; font-size: 0.82em; opacity: 0.55;">Your publisher ID from Google AdSense. When set, the AdSense library is injected into the page head and ad containers are revealed for non-admin, non-premium users. Admins and premium users never see ads.</p>
                     </div>
-                    
-                    <div class="form-group" style="margin-bottom: 20px;">
-                        <label for="config-custom-head" style="display: block; margin-bottom: 8px; font-weight: 600; color: white;">Custom Head Code (HTML/Scripts)</label>
-                        <textarea id="config-custom-head" class="settings-input" style="height: 120px; font-family: monospace; font-size: 13px;" placeholder="Paste supplemental tracking scripts or meta tags here..."></textarea>
+                </div>
+
+                <!-- Advanced Section -->
+                <div class="glass-panel" style="padding: 25px; margin-bottom: 20px;">
+                    <h3 style="margin: 0 0 18px; font-size: 1em; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.6; color: white;">⚙️ Advanced</h3>
+                    <div class="form-group" style="margin-bottom: 6px;">
+                        <label for="config-custom-head" style="display: block; margin-bottom: 6px; font-weight: 600; color: white;">Custom Head Code</label>
+                        <textarea id="config-custom-head" class="settings-input" style="height: 130px; font-family: monospace; font-size: 13px;" placeholder="<!-- Paste supplemental tracking scripts, meta tags, or verification tags here -->"></textarea>
+                        <p style="margin: 6px 0 0; font-size: 0.82em; opacity: 0.55;">Raw HTML injected into <code>&lt;head&gt;</code> on every page. Use for third-party pixels, Search Console verification tags, or custom stylesheets.</p>
                     </div>
-                    
-                    <div id="settings-msg" style="margin-bottom: 20px; font-size: 0.9em; display: none; padding: 10px; border-radius: 4px;"></div>
-                    
-                    <button id="save-settings-btn" class="console-btn" style="padding: 12px 25px;">Save Configuration</button>
+                </div>
+
+                <div id="settings-msg" style="margin-bottom: 16px; font-size: 0.9em; display: none; padding: 10px 14px; border-radius: 6px;"></div>
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <button id="save-settings-btn" class="console-btn" style="padding: 12px 28px;">Save Configuration</button>
+                    <span style="font-size: 0.82em; opacity: 0.5;">Changes take effect on the next page load.</span>
                 </div>
             </section>
         </main>
