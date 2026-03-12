@@ -74,7 +74,22 @@ Always start the session with `session_start()` at the top of API files that req
 - Do **NOT** use `root` or `admin` user hardcoded in the codebase for DB connections (use `config.php` variables).
 - Do **NOT** bypass `api.js` for data fetching; maintain the service layer abstraction where possible.
 - Registration **MUST** include basic throttle/honeypot protection where applicable to prevent simple bot spam.
-- **UI Refresh After Auth**: After every successful login or logout, you **MUST** call `refreshAppData()` (or its equivalent in `settings.js`) to:
-  1. Trigger a re-fetch of user stations/favorites.
-  2. Dispatch the `stationListUpdated` event to notify other modules (like the player header) to refresh their UI.
-  3. Ensure the `IS_LOGGED_IN` global state is updated immediately.
+- **UI Refresh After Auth**: After every successful login or logout, you **MUST** call the following in this order in `settings.js`:
+  1. Update global state: `window.IS_LOGGED_IN`, `window.USER_ID`, `window.USER_ROLE`, `window.IS_PREMIUM`.
+  2. Call `updateAdVisibility()` — hides or restores `#ad-space-main` immediately for admin/premium users **without a page refresh**. Omitting this causes ads to remain visible for admins until they manually reload the page.
+  3. Call `updateAuthButton()` — updates the login/logout button in the header.
+  4. Call `refreshAppData()` — re-fetches station/favorites data and dispatches `stationListUpdated`.
+  
+  ```javascript
+  // Correct login success sequence — DO NOT change the order
+  window.IS_LOGGED_IN = true;
+  window.USER_ID = data.user_id;
+  window.USER_ROLE = data.role;
+  window.IS_PREMIUM = data.is_premium === true || data.is_premium === 1;
+  if (loginModal) loginModal.style.display = 'none';
+  updateAuthButton();
+  updateAdVisibility(); // ← MUST be here — not optional
+  refreshAppData();
+  ```
+  
+- **`api/auth.php` login response MUST include `is_premium`**: The PHP login endpoint must return `"is_premium": true/false` alongside `role` and `user_id` so the client can set `window.IS_PREMIUM` immediately. Without this, `updateAdVisibility()` cannot function correctly.
