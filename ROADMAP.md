@@ -62,6 +62,8 @@ This document outlines the future direction and planned features for the Radio S
 - **PHP Stream Proxy** — Port Cloudflare Worker audio proxy to `api/proxy.php` for full self-hosting.
 
 ### Player UX
+- **Station Selection → Auto-Play** — Selecting a station from the dropdown should immediately begin playback without requiring a separate press of the Play button. Removes friction and mirrors the expectation of a radio dial.
+- **Play/Pause Button State Sync** — The play/pause button icon should always accurately reflect the actual audio element play state (playing vs. paused/stopped), including edge cases: stream error/disconnect, browser auto-play blocking, and popout vs. main window state. Drives from the StateManager so all subscribers (button, OS media session, VU meter) update atomically.
 - **Stream Bitrate Display** — Show detected stream bitrate (kbps) in the player UI during playback, or as a color-coded badge (e.g. green = high quality, yellow = mid, red = low). Could also surface in Admin station management.
 - **Password Show/Hide Toggle** — Add an eye icon to the login password field to toggle visibility. Improves accessibility, especially for users who need to confirm their password visually.
 
