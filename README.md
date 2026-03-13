@@ -5,7 +5,7 @@
 ### A self-hosted, full-stack internet radio player with user accounts, audio visualizations, and a Glassmorphism UI.
 
 [![License](https://img.shields.io/github/license/BrainAV/Radio-Stream-Player-PHP?style=flat-square)](LICENSE)
-[![Version](https://img.shields.io/badge/version-v2.2.1-blue?style=flat-square)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-v2.2.2-blue?style=flat-square)](CHANGELOG.md)
 [![Last Commit](https://img.shields.io/github/last-commit/BrainAV/Radio-Stream-Player-PHP?style=flat-square)](https://github.com/BrainAV/Radio-Stream-Player-PHP/commits/main)
 [![Issues](https://img.shields.io/github/issues/BrainAV/Radio-Stream-Player-PHP?style=flat-square)](https://github.com/BrainAV/Radio-Stream-Player-PHP/issues)
 [![Stars](https://img.shields.io/github/stars/BrainAV/Radio-Stream-Player-PHP?style=social)](https://github.com/BrainAV/Radio-Stream-Player-PHP)

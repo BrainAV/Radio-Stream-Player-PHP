@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS stations (
     url VARCHAR(512) NOT NULL,
     genre VARCHAR(100) DEFAULT 'Unknown',
     country VARCHAR(100) DEFAULT 'Unknown',
+    bitrate INT DEFAULT NULL,
     type ENUM('default', 'custom', 'sponsored', 'directory') DEFAULT 'default',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -70,14 +71,14 @@ INSERT IGNORE INTO users (user_email, user_pass, display_name, role) VALUES
 
 
 -- Seed data for Default Stations
-INSERT IGNORE INTO stations (name, url, genre, country, type) VALUES
-('CIDC Z103.5 FM', 'https://buf-streamb1-ais-relay1.streamb.live/SB00222/playlist.m3u8', 'Top 40', 'Canada', 'default'),
-('ETN-FM Trance', 'https://stream.pcradio.ru/etnfm_trance-hi', 'Trance', 'Canada', 'default'),
-('Psyndora Psytrance', 'https://cast.magicstreams.gr/sc/psyndora/stream', 'Psytrance', 'Greece', 'default'),
-('DMT-FM', 'https://dc1.serverse.com/proxy/ywycfrxn/stream', 'Psytrance', 'UK', 'default'),
-('BOM Psytrance Radio', 'https://strm112.1.fm/psytrance_mobile_mp3?aw_0_req.gdpr=true', 'Psytrance', 'Switzerland', 'default'),
-('Melodic House Radio', 'https://stream1-technolovers.radiohost.de/melodic-house-techno', 'Melodic House', 'Germany', 'default'),
-('Party~Vibe | Psychedelic Trance Radio', 'https://www.partyvibe.com:8062/;listen.pls?sid=1', 'Psytrance', 'UK', 'default'),
-('Radiozora - Psytrance', 'https://trance.out.airtime.pro/trance_a', 'Psytrance', 'Hungary', 'default'),
-('Hirsch Radio Psytrance', 'https://hirschmilch.de:7501/psytrance.mp3', 'Psytrance', 'Germany', 'default'),
-('Hirsch Radio Progressive', 'https://hirschmilch.de:7501/progressive.mp3', 'Progressive', 'Germany', 'default');
+INSERT IGNORE INTO stations (name, url, genre, country, bitrate, type) VALUES
+('CIDC Z103.5 FM', 'https://buf-streamb1-ais-relay1.streamb.live/SB00222/playlist.m3u8', 'Top 40', 'Canada', NULL, 'default'),
+('ETN-FM Trance', 'https://stream.pcradio.ru/etnfm_trance-hi', 'Trance', 'Canada', 192, 'default'),
+('Psyndora Psytrance', 'https://cast.magicstreams.gr/sc/psyndora/stream', 'Psytrance', 'Greece', 128, 'default'),
+('DMT-FM', 'https://dc1.serverse.com/proxy/ywycfrxn/stream', 'Psytrance', 'UK', 128, 'default'),
+('BOM Psytrance Radio', 'https://strm112.1.fm/psytrance_mobile_mp3?aw_0_req.gdpr=true', 'Psytrance', 'Switzerland', 128, 'default'),
+('Melodic House Radio', 'https://stream1-technolovers.radiohost.de/melodic-house-techno', 'Melodic House', 'Germany', 128, 'default'),
+('Party~Vibe | Psychedelic Trance Radio', 'https://www.partyvibe.com:8062/;listen.pls?sid=1', 'Psytrance', 'UK', NULL, 'default'),
+('Radiozora - Psytrance', 'https://trance.out.airtime.pro/trance_a', 'Psytrance', 'Hungary', 128, 'default'),
+('Hirsch Radio Psytrance', 'https://hirschmilch.de:7501/psytrance.mp3', 'Psytrance', 'Germany', 192, 'default'),
+('Hirsch Radio Progressive', 'https://hirschmilch.de:7501/progressive.mp3', 'Progressive', 'Germany', 192, 'default');

@@ -206,8 +206,17 @@ function updateVUMeters() {
     analyserLeft.getByteFrequencyData(frequencyDataLeft);
     analyserRight.getByteFrequencyData(frequencyDataRight);
 
-    const levelLeft = calculateRMSLevel(dataArrayLeft);
-    const levelRight = calculateRMSLevel(dataArrayRight);
+    let levelLeft = calculateRMSLevel(dataArrayLeft);
+    let levelRight = calculateRMSLevel(dataArrayRight);
+
+    // Mono detection: if right channel is silent (~0) but left is active (>1%), 
+    // it's likely a mono stream being played through a stereo AnalyserNode.
+    // Mirror the left data to the right for a balanced visualization.
+    if (levelLeft > 1.0 && levelRight < 0.2) {
+        levelRight = levelLeft;
+        dataArrayRight.set(dataArrayLeft);
+        frequencyDataRight.set(frequencyDataLeft);
+    }
 
     const currentStyle = VU_STYLES[state.vuStyle];
     switch (currentStyle) {

@@ -19,6 +19,7 @@ const genreSelect = document.getElementById('genre-select');
 const nameInput = document.getElementById('custom-station-name');
 const genreInput = document.getElementById('custom-station-genre');
 const urlInput = document.getElementById('custom-station-url');
+const bitrateInput = document.getElementById('custom-station-bitrate');
 const customStationsList = document.getElementById('custom-stations-list');
 const bgUrlInput = document.getElementById('bg-url-input');
 const setBgBtn = document.getElementById('set-bg-btn');
@@ -266,12 +267,15 @@ export function initSettings() {
                 const index = parseInt(e.target.dataset.index, 10);
                 const station = collection.filter(s => s.type === 'custom' || (!s.type && !defaultStations.some(d => d.url === s.url)))[index] || collection[index];
 
-                nameInput.value = station.name;
-                urlInput.value = station.url;
+                if (nameInput) nameInput.value = station.name || '';
+                if (urlInput) urlInput.value = station.url || '';
                 if (genreInput) genreInput.value = station.genre || '';
-
-                addStationBtn.textContent = 'Save';
-                addStationBtn.dataset.editingIndex = index;
+                if (bitrateInput) bitrateInput.value = station.bitrate || '';
+                
+                if (addStationBtn) {
+                    addStationBtn.textContent = 'Update';
+                    addStationBtn.dataset.editingIndex = index;
+                }
             });
         });
 
@@ -298,6 +302,7 @@ export function initSettings() {
                     nameInput.value = '';
                     urlInput.value = '';
                     if (genreInput) genreInput.value = '';
+                    if (bitrateInput) bitrateInput.value = '';
                     delete addStationBtn.dataset.editingIndex;
                     addStationBtn.textContent = 'Add';
                 }
@@ -390,25 +395,26 @@ export function initSettings() {
         addStationBtn.addEventListener('click', async () => {
             const name = nameInput.value.trim();
             const url = urlInput.value.trim();
-            const genre = genreInput ? genreInput.value.trim() : '';
+            const genre = genreInput ? genreInput.value.trim() : 'Radio';
+            const bitrate = bitrateInput ? parseInt(bitrateInput.value, 10) : null;
 
             if (name && url) {
                 if (window.IS_LOGGED_IN) {
-                    // Save to DB
-                    await addFavorite({ name, url, genre });
+                    // Save to DB (addFavorite is imported at top level)
+                    await addFavorite({ name, url, genre, bitrate });
                 } else {
                     // Save to localStorage
                     const customStations = JSON.parse(localStorage.getItem('customStations')) || [];
 
                     if (addStationBtn.dataset.editingIndex !== undefined) {
                         const index = parseInt(addStationBtn.dataset.editingIndex, 10);
-                        customStations[index] = { name, url, genre };
+                        customStations[index] = { name, url, genre, bitrate };
                         delete addStationBtn.dataset.editingIndex;
                         addStationBtn.textContent = 'Add';
                     } else {
-                        customStations.push({ name, url, genre });
+                        customStations.push({ name, url, genre, bitrate });
                         // still submit for community indexing if guest
-                        submitCustomStation(name, url, genre, '');
+                        submitCustomStation(name, url, genre, '', bitrate);
                     }
 
                     localStorage.setItem('customStations', JSON.stringify(customStations));
@@ -418,6 +424,7 @@ export function initSettings() {
                 nameInput.value = '';
                 urlInput.value = '';
                 if (genreInput) genreInput.value = '';
+                if (bitrateInput) bitrateInput.value = '';
 
                 populateGenres(); 
                 renderMyCollection();
@@ -587,7 +594,7 @@ export function initSettings() {
                     <div class="rb-result-name" title="${station.name}">${station.name}</div>
                     <div class="rb-result-meta" title="${metaString}">${metaString}</div>
                 </div>
-                <button class="rb-add-btn" data-url="${station.url_resolved}" data-name="${station.name}" data-tags="${station.tags}">Add</button>
+                <button class="rb-add-btn" data-url="${station.url_resolved}" data-name="${station.name}" data-tags="${station.tags}" data-bitrate="${station.bitrate || ''}">Add</button>
             `;
             rbResultsContainer.appendChild(item);
         });
@@ -598,6 +605,7 @@ export function initSettings() {
                 const targetBtn = e.target;
                 const name = targetBtn.getAttribute('data-name');
                 const url = targetBtn.getAttribute('data-url');
+                const bitrate = targetBtn.getAttribute('data-bitrate');
 
                 // Get the first tag as the genre (or default to 'Radio')
                 const allTags = targetBtn.getAttribute('data-tags');
@@ -608,7 +616,7 @@ export function initSettings() {
                     genre = genre.charAt(0).toUpperCase() + genre.slice(1);
                 }
 
-                await addStationFromDirectory(name, url, genre);
+                await addStationFromDirectory(name, url, genre, bitrate);
 
                 // Visual feedback
                 const originalText = targetBtn.textContent;
@@ -626,9 +634,9 @@ export function initSettings() {
     }
 
     // 4. Add to Custom Stations
-    async function addStationFromDirectory(name, url, genre) {
+    async function addStationFromDirectory(name, url, genre, bitrate = null) {
         if (window.IS_LOGGED_IN) {
-            await addFavorite({ name, url, genre });
+            await addFavorite({ name, url, genre, bitrate: bitrate ? parseInt(bitrate, 10) : null });
             
             populateGenres();
             renderMyCollection();
@@ -640,7 +648,7 @@ export function initSettings() {
             // Avoid duplicate exact URLs
             const exists = customStations.some(s => s.url === url);
             if (!exists) {
-                customStations.push({ name, url, genre });
+                customStations.push({ name, url, genre, bitrate: bitrate ? parseInt(bitrate, 10) : null });
                 localStorage.setItem('customStations', JSON.stringify(customStations));
                 
                 // Add to favorites automatically from directory

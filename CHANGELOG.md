@@ -10,14 +10,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **Password Visibility Toggle** — Added an interactive eye icon to all password fields (Login, Registration, Account Settings, and Password Reset) to toggle between hidden and visible text. Improves accessibility and reduces input errors.
-- **Settings UI Polish** — Reorganized the settings modal into 4 core tabs (General, Appearance, Collection, Directory) to focus purely on player configuration. Fixed "layout jumping" and added mobile horizontal scrolling for tabs.
-- **Dedicated Info & Support Button** — Moved "Info & Support" to a dedicated header button for easier access to project details and donation links.
-- **Dedicated Account Button** — Moved "Account" settings to a dedicated header button (for logged-in users). Includes a fix for dynamic button visibility ensuring the icon appears immediately after login without requiring a page refresh.
+
+## [2.2.2] - 2026-03-13
+
+### Added
+- **Deferred Metadata Polling** — Optimized stream startup by prioritizing audio bandwidth. Metadata and bitrate sniffing are now deferred until after the audio buffer has stabilized, significantly reducing playback start delay and connection contention.
+- **Stream Diagnostics & Resiliency** — The player now identifies specific HTTP errors (like 502 Bad Gateway or 404 Not Found) when a stream fails to load via the proxy. Error messages are displayed in the "Now Playing" area to inform the user if the issue is server-side.
+- **Exponential Backoff Reconnection** — Improved the stream drop recovery logic with a multi-attempt retry system (up to 5 attempts) that increases wait time between retries (2s to 10s).
+- **Bitrate Persistence & Fallback** — Added a `bitrate` column to the `stations` database. The player now uses this stored metadata as a fallback if the live metadata proxy doesn't return a bitrate, ensuring the quality badge is shown more consistently.
+- **Header-Based Bitrate Detection** — Implemented logic to extract bitrate directly from HTTP stream headers (e.g., `icy-br`) when real-time JSON metadata is unavailable.
+- **Directory Search Bitrate Preservation** — Stations added through the Global Station Directory search now correctly preserve and display their bitrate information.
+- **Manual Bitrate Support** — Added a bitrate field to the manual "Add New Station" form in settings.
 
 ### Changed
+- **Balanced Mono Visualization** — Implemented an "Auto-Mirror" feature in the VU meter engine. If a station broadcasts in mono (one channel silent), the visualizer automatically mirrors the active channel's data to the silent one, preventing one-sided VU displays.
 
 ### Fixed
+- **Bitrate Display Reliability** — Normalized bitrate detection logic to handle various proxy response formats and ensured the badge correctly updates or clears during station transitions.
+- **Settings Logic Integrity** — Fixed critical syntax errors and redundant dynamic imports in `settings.js` that were interfering with station management.
+- **API Metadata Sync** — Updated the Favorites API to correctly synchronize and persist bitrate data for cloud-synced accounts.
 
 ---
 

@@ -42,7 +42,7 @@ if (!$pdo) {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         $stmt = $pdo->prepare("
-            SELECT s.id, s.name, s.url, s.genre, s.country, s.type, uf.is_favorite 
+            SELECT s.id, s.name, s.url, s.genre, s.country, s.bitrate, s.type, uf.is_favorite 
             FROM stations s
             JOIN user_favorites uf ON s.id = uf.station_id
             WHERE uf.user_id = :user_id
@@ -81,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = filter_var($data['name'] ?? 'Unknown Station', FILTER_SANITIZE_STRING);
     $genre = filter_var($data['genre'] ?? 'Unknown', FILTER_SANITIZE_STRING);
     $country = filter_var($data['country'] ?? 'Unknown', FILTER_SANITIZE_STRING);
+    $bitrate = filter_var($data['bitrate'] ?? null, FILTER_VALIDATE_INT);
 
     try {
         $pdo->beginTransaction();
@@ -94,8 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $station_id = $station['id'];
         } else {
             // 2. Insert as new custom station if not found
-            $stmt = $pdo->prepare("INSERT INTO stations (name, url, genre, country, type) VALUES (?, ?, ?, ?, 'custom')");
-            $stmt->execute([$name, $url, $genre, $country]);
+            $stmt = $pdo->prepare("INSERT INTO stations (name, url, genre, country, bitrate, type) VALUES (?, ?, ?, ?, ?, 'custom')");
+            $stmt->execute([$name, $url, $genre, $country, $bitrate]);
             $station_id = $pdo->lastInsertId();
         }
 
