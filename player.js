@@ -123,10 +123,16 @@ export function initPlayer() {
         const allStations = [...defaultStations, ...customStations];
 
         const showFavoritesOnly = localStorage.getItem('favoritesOnly') === 'true';
+        const declutterMode = localStorage.getItem('declutterMode') === 'true';
         let filteredStations = allStations;
 
         if (showFavoritesOnly) {
             filteredStations = filteredStations.filter(s => favorites.includes(s.url));
+        } else if (declutterMode) {
+            // Hide system stations (default type) if they aren't in favorites
+            filteredStations = filteredStations.filter(s => 
+                s.type !== 'default' || favorites.includes(s.url)
+            );
         }
 
         const selectedGenre = localStorage.getItem('selectedGenre') || 'all';

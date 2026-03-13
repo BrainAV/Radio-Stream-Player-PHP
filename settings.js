@@ -15,6 +15,7 @@ const vuStyleSelect = document.getElementById('vu-style-select');
 const themeSelect = document.getElementById('theme-select');
 const addStationBtn = document.getElementById('add-station-btn');
 const favoritesOnlyCheck = document.getElementById('favorites-only-check');
+const declutterModeCheck = document.getElementById('declutter-mode-check');
 const genreSelect = document.getElementById('genre-select');
 const nameInput = document.getElementById('custom-station-name');
 const genreInput = document.getElementById('custom-station-genre');
@@ -133,6 +134,17 @@ export function initSettings() {
         favoritesOnlyCheck.addEventListener('change', (e) => {
             localStorage.setItem('favoritesOnly', e.target.checked);
             if (favoriteBtn) favoriteBtn.disabled = e.target.checked;
+            window.dispatchEvent(new CustomEvent('stationListUpdated'));
+        });
+    }
+
+    // Declutter Mode Logic
+    if (declutterModeCheck) {
+        const savedDeclutter = localStorage.getItem('declutterMode') === 'true';
+        declutterModeCheck.checked = savedDeclutter;
+
+        declutterModeCheck.addEventListener('change', (e) => {
+            localStorage.setItem('declutterMode', e.target.checked);
             window.dispatchEvent(new CustomEvent('stationListUpdated'));
         });
     }

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Declutter Mode** — Added a new "Declutter Mode" toggle in Settings. When enabled, the player hides any default system stations that haven't been favorited by the user, while keeping custom added stations visible. This allows users to focus on their personal collection without losing access to their custom shortcuts.
 
 ## [2.2.2] - 2026-03-13
 
