@@ -23,7 +23,7 @@ $dbHost = $_ENV['DB_HOST'] ?? 'localhost';
 $dbPort = $_ENV['DB_PORT'] ?? '3306';
 $dbName = $_ENV['DB_NAME'] ?? 'jasonbra_radio';
 $dbUser = $_ENV['DB_USER'] ?? 'jasonbra_radio';
-$dbPass = $_ENV['DB_PASS'] ?? 'j^!gDTWGGMh]_$wC'; // Set to '' for local testing
+$dbPass = $_ENV['DB_PASS'] ?? 'CHANGEME'; // Set to '' for local testing
 
 function get_db_connection()
 {
