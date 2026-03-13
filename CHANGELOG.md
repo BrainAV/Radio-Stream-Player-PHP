@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+### Changed
+### Fixed
+
+## [2.2.3] - 2026-03-13
+
+### Added
 - **Declutter Mode** — Added a new "Declutter Mode" toggle in Settings. When enabled, the player hides any default system stations that haven't been favorited by the user, while keeping custom added stations visible. This allows users to focus on their personal collection without losing access to their custom shortcuts.
 - **Responsive Admin Dashboard** — Re-engineered the Admin Control Panel for full mobile compatibility. Features a sliding menu sidebar on small screens, stackable card-based table layouts with labeled fields, and touch-optimized form controls.
 - **Persistence & State Recovery** — The player now automatically restores the last selected station and volume level upon page reload, utilizing the centralized `StateManager` for consistent cross-session persistence.
