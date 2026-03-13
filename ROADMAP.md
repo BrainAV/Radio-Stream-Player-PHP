@@ -67,6 +67,9 @@ This document outlines the future direction and planned features for the Radio S
 - **PHP Metadata Proxy** — Port Cloudflare Worker ICY metadata logic to `api/metadata.php`.
 - **PHP Stream Proxy** — Port Cloudflare Worker audio proxy to `api/proxy.php` for full self-hosting.
 
+### Security & DevOps
+- **Secrets Management & Hardening** — Remove hardcoded credentials (DB password, API keys) from `api/config.php` and migrate to environment variables via `.env`. Implement `api/config.php.example` and strictly enforce `.gitignore` to prevent credential leakage in the repository.
+
 ### Player UX
 - **Nav Site Icon** — Replace or augment the "Radio Stream Player" text title in the header nav with an SVG icon (headphones or retro radio theme) consistent with the existing icon-only controls.
 - **Play/Pause Button State Sync** — The play/pause button icon should always accurately reflect the actual audio element play state (playing vs. paused/stopped), including edge cases: stream error/disconnect, browser auto-play blocking, and popout vs. main window state. Drives from the StateManager so all subscribers (button, OS media session, VU meter) update atomically.

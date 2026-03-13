@@ -1,0 +1,30 @@
+<?php
+// Secure Database Configuration utilizing PDO (Example Template)
+// Copy this to config.php and fill in your credentials
+
+// Database connection details
+$dbHost = 'localhost';
+$dbPort = '3306';
+$dbName = 'YOUR_DB_NAME';
+$dbUser = 'YOUR_DB_USER';
+$dbPass = 'YOUR_DB_PASS';
+
+function get_db_connection()
+{
+    global $dbHost, $dbPort, $dbName, $dbUser, $dbPass;
+
+    $dsn = "mysql:host=$dbHost;port=$dbPort;dbname=$dbName;charset=utf8mb4";
+    $options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+    ];
+
+    try {
+        $pdo = new PDO($dsn, $dbUser, $dbPass, $options);
+        return $pdo;
+    } catch (\PDOException $e) {
+        return null;
+    }
+}
+?>
