@@ -95,6 +95,11 @@ export function initPlayer() {
                  if (popoutNotice) popoutNotice.style.display = 'none';
              }
         }
+
+        // Bitrate Changed
+        if (newState.currentBitrate !== oldState.currentBitrate) {
+            updateBitrateBadge(newState.currentBitrate);
+        }
     });
 
 
@@ -136,6 +141,7 @@ export function initPlayer() {
             option.textContent = (isFav ? '★ ' : '') + station.name;
             option.dataset.genre = station.genre || '';
             option.dataset.country = station.country || '';
+            option.dataset.bitrate = station.bitrate || '';
             stationSelect.appendChild(option);
         });
 
@@ -164,6 +170,31 @@ export function initPlayer() {
         const progress = value * 100;
         const bg = `linear-gradient(to right, var(--primary-color) ${progress}%, var(--border-color) ${progress}%)`;
         volumeSlider.style.background = bg;
+    }
+
+    function updateBitrateBadge(bitrate) {
+        const badge = document.getElementById('bitrate-badge');
+        if (!badge) return;
+
+        if (bitrate && bitrate > 0) {
+            badge.textContent = `${bitrate} kbps`;
+            badge.style.display = 'block';
+            
+            // Apply quality colors
+            badge.classList.remove('bitrate-high', 'bitrate-mid', 'bitrate-low');
+            if (bitrate >= 192) {
+                badge.classList.add('bitrate-high');
+                badge.title = 'High Quality Stream';
+            } else if (bitrate >= 128) {
+                badge.classList.add('bitrate-mid');
+                badge.title = 'Standard Quality Stream';
+            } else {
+                badge.classList.add('bitrate-low');
+                badge.title = 'Low Quality / Mobile Stream';
+            }
+        } else {
+            badge.style.display = 'none';
+        }
     }
 
     async function updateFavoriteBtnState(currentUrl, cachedFavorites = null) {
@@ -232,19 +263,66 @@ export function initPlayer() {
     
     // --- Audio Event Listeners (Auto-Reconnect) ---
     let reconnectTimeout = null;
+    let reconnectAttempts = 0;
+    const MAX_RECONNECT_ATTEMPTS = 5;
 
-    function handleStreamDrop() {
+    async function checkStreamStatus(url) {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
+            
+            const response = await fetch(url, { 
+                method: 'GET', // Using GET but with a small range to avoid downloading the whole stream
+                headers: { 'Range': 'bytes=0-0' },
+                signal: controller.signal 
+            });
+            clearTimeout(timeoutId);
+            return response.status;
+        } catch (err) {
+            console.error("Status check failed:", err);
+            return 0; // Network error
+        }
+    }
+
+    async function handleStreamDrop(explicitError = null) {
         const state = stateManager.getState();
         if (!state.isPlaying) return;
 
+        if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
+            console.log("Max reconnect attempts reached.");
+            if (nowPlayingTrack) {
+                nowPlayingTrack.textContent = "Stream disconnected. Tap Play to retry.";
+                nowPlayingTrack.classList.remove('marquee-active');
+            }
+            stateManager.setPlaying(false);
+            reconnectAttempts = 0;
+            return;
+        }
+
+        reconnectAttempts++;
+        const delay = Math.min(reconnectAttempts * 2000, 10000); // Backoff: 2s, 4s, 6s... max 10s
+
         if (nowPlayingTrack) {
-            nowPlayingTrack.textContent = "Reconnecting...";
+            nowPlayingTrack.textContent = `Stream dropped. Retrying... (${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})`;
             nowPlayingTrack.classList.remove('marquee-active');
         }
 
         if (reconnectTimeout) clearTimeout(reconnectTimeout);
 
-        console.log("Stream dropped. Attempting to reconnect in 3 seconds...");
+        console.log(`Stream dropped. Attempting to reconnect in ${delay/1000} seconds... (Attempt ${reconnectAttempts})`);
+        
+        // Diagnostic check
+        const proxiedUrl = getProxiedAudioUrl(state.currentStation);
+        const status = await checkStreamStatus(proxiedUrl);
+        
+        if (status === 502) {
+            if (nowPlayingTrack) nowPlayingTrack.textContent = "Station Offline (502 Gateway Error)";
+        } else if (status === 404) {
+            if (nowPlayingTrack) nowPlayingTrack.textContent = "Stream Not Found (404 Error)";
+        } else if (status === 0) {
+            if (nowPlayingTrack) nowPlayingTrack.textContent = "Network error. Checking connection...";
+        }
+
         reconnectTimeout = setTimeout(() => {
             const currentState = stateManager.getState();
             if (currentState.isPlaying) {
@@ -253,23 +331,33 @@ export function initPlayer() {
                 currentState.audio.load();
                 currentState.audio.play().catch(err => {
                     console.error('Reconnect failed:', err);
-                    if (nowPlayingTrack) nowPlayingTrack.textContent = 'Reconnect failed. Retry play.';
-                    stateManager.setPlaying(false);
+                    // Don't stop playing here, let the 'error' event trigger the next retry
                 });
             }
-        }, 3000);
+        }, delay);
     }
 
-    currentState.audio.addEventListener('error', () => { handleStreamDrop(); });
+    currentState.audio.addEventListener('error', (e) => { 
+        console.error("Audio Element Error:", currentState.audio.error);
+        handleStreamDrop(currentState.audio.error); 
+    });
     currentState.audio.addEventListener('ended', () => { handleStreamDrop(); });
     currentState.audio.addEventListener('playing', () => {
         if (reconnectTimeout) {
             clearTimeout(reconnectTimeout);
             reconnectTimeout = null;
         }
+        reconnectAttempts = 0;
+        
+        // Defer metadata fetch slightly to ensure audio buffer has priority
         const st = stateManager.getState();
-        if (st.isPlaying && nowPlayingTrack && (nowPlayingTrack.textContent === "Reconnecting..." || nowPlayingTrack.textContent.includes("Reconnect failed"))) {
-            fetchMetadata(st.currentStation);
+        if (st.isPlaying && nowPlayingTrack) {
+            setTimeout(() => {
+                const latestState = stateManager.getState();
+                if (latestState.isPlaying) {
+                    fetchMetadata(latestState.currentStation);
+                }
+            }, 2000);
         }
     });
 
@@ -280,6 +368,7 @@ export function initPlayer() {
     });
 
     stationSelect.addEventListener('change', () => {
+        stateManager.setBitrate(null); // Reset quality badge
         stateManager.setStation(stationSelect.value);
         // Auto-play on selection
         stateManager.setPlaying(true);
@@ -322,7 +411,8 @@ export function initPlayer() {
             if (isFav) {
                 await removeFavorite(currentUrl);
             } else {
-                await addFavorite({ name, url: currentUrl, genre, country });
+                const bitrate = selectedOption.dataset.bitrate ? parseInt(selectedOption.dataset.bitrate, 10) : null;
+                await addFavorite({ name, url: currentUrl, genre, country, bitrate });
             }
         } else {
             let favorites = JSON.parse(localStorage.getItem('favoriteStations')) || [];
@@ -334,7 +424,8 @@ export function initPlayer() {
                 let customStations = JSON.parse(localStorage.getItem('customStations')) || [];
                 const allKnown = [...defaultStations, ...customStations];
                 if (!allKnown.some(s => s.url === currentUrl)) {
-                    customStations.push({ name, url: currentUrl, genre });
+                    const bitrate = selectedOption.dataset.bitrate ? parseInt(selectedOption.dataset.bitrate, 10) : null;
+                    customStations.push({ name, url: currentUrl, genre, bitrate });
                     localStorage.setItem('customStations', JSON.stringify(customStations));
                 }
             }
@@ -400,6 +491,14 @@ export function initPlayer() {
             const response = await fetch(`${PROXY_URL}metadata?url=${encodeURIComponent(streamUrl)}`);
             const data = await response.json();
 
+            if (data.status === 'error') {
+                console.warn("Metadata proxy returned error:", data.message);
+                // If the proxy says the stream is offline, we should know
+                if (data.message && data.message.includes('502')) {
+                    if (nowPlayingTrack) nowPlayingTrack.textContent = "Station Offline (502)";
+                }
+            }
+
             if (data.title) {
                 nowPlayingTrack.textContent = data.title;
                 document.title = `${data.title} | Radio Stream Player`;
@@ -414,13 +513,61 @@ export function initPlayer() {
                 document.title = `Now Playing: ${stationName} | Radio Stream Player`;
                 nowPlayingTrack.classList.remove('marquee-active');
             }
+
+            // Update bitrate if available in metadata
+            // Normalize bitrate key if it varies by proxy implementation
+            let bitrate = data.bitrate || data.br || null;
+            
+            // If still missing, attempt to sniff from headers
+            if (!bitrate) {
+                bitrate = await sniffBitrateFromHeaders(streamUrl);
+            }
+
+            if (bitrate) {
+                stateManager.setBitrate(parseInt(bitrate, 10));
+            }
         } catch (error) {
             console.error("Failed to fetch stream metadata:", error);
-            nowPlayingTrack.textContent = stationSelect.options[stationSelect.selectedIndex]?.text.replace(/^★\s/, '');
+            // Don't overwrite the "Reconnecting" text if we are in a drop state
+            if (!reconnectAttempts) {
+                nowPlayingTrack.textContent = stationSelect.options[stationSelect.selectedIndex]?.text.replace(/^★\s/, '');
+            }
             nowPlayingTrack.classList.remove('marquee-active');
         }
 
         updateMediaSession(stateManager.getState());
+    }
+
+    /**
+     * Diagnostic: Try to extract bitrate from HTTP headers (ICY-BR)
+     */
+    async function sniffBitrateFromHeaders(url) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000); // 3s timeout for sniff
+
+        try {
+            const proxiedUrl = getProxiedAudioUrl(url);
+            const response = await fetch(proxiedUrl, { 
+                method: 'GET', 
+                headers: { 'Range': 'bytes=0-0' },
+                signal: controller.signal
+            });
+            
+            // Immediately abort the stream after receiving headers
+            controller.abort();
+            
+            // Check common bitrate headers
+            const brHeaders = ['icy-br', 'bitrate', 'x-audiocast-bitrate'];
+            for (const h of brHeaders) {
+                const val = response.headers.get(h);
+                if (val) return val;
+            }
+            return null;
+        } catch (e) {
+            return null;
+        } finally {
+            clearTimeout(timeoutId);
+        }
     }
 
     function updateNowPlaying(state) {
@@ -442,11 +589,21 @@ export function initPlayer() {
         if (state.isPlaying) {
             nowPlayingTrack.textContent = "Loading track info...";
             nowPlayingTrack.classList.remove('marquee-active');
-            fetchMetadata(streamUrl);
+            
+            // Set initial bitrate from station metadata if available as a fallback
+            const staticBitrate = selectedOption.dataset.bitrate;
+            if (staticBitrate) {
+                stateManager.setBitrate(parseInt(staticBitrate, 10));
+            }
+
+            // We no longer call fetchMetadata(streamUrl) here immediately.
+            // It will be triggered by the 'playing' event or the interval below
+            // to ensure the music gets bandwidth priority first.
         } else {
             nowPlayingTrack.textContent = "Ready to play...";
             document.title = "Radio Stream Player";
             nowPlayingTrack.classList.remove('marquee-active');
+            stateManager.setBitrate(null); // Clear badge on stop
             updateMediaSession(state);
         }
 

@@ -40,6 +40,31 @@ function updateVolumeSliderTrack(value) {
     volumeSlider.style.background = `linear-gradient(to right, ${primaryColor} ${progress}%, ${borderColor} ${progress}%)`;
 }
 
+function updateBitrateBadge(bitrate) {
+    const badge = document.getElementById('bitrate-badge');
+    if (!badge) return;
+
+    if (bitrate && bitrate > 0) {
+        badge.textContent = `${bitrate} kbps`;
+        badge.style.display = 'block';
+        
+        // Apply quality colors
+        badge.classList.remove('bitrate-high', 'bitrate-mid', 'bitrate-low');
+        if (bitrate >= 192) {
+            badge.classList.add('bitrate-high');
+            badge.title = 'High Quality Stream';
+        } else if (bitrate >= 128) {
+            badge.classList.add('bitrate-mid');
+            badge.title = 'Standard Quality Stream';
+        } else {
+            badge.classList.add('bitrate-low');
+            badge.title = 'Low Quality / Mobile Stream';
+        }
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
 async function fetchMetadata(streamUrl) {
     if (!nowPlayingTrack) return;
 
@@ -59,6 +84,10 @@ async function fetchMetadata(streamUrl) {
             const stationName = stationSelect.options[stationSelect.selectedIndex]?.text || '';
             nowPlayingTrack.textContent = stationName;
             nowPlayingTrack.classList.remove('marquee-active');
+        }
+
+        if (data.bitrate) {
+            updateBitrateBadge(parseInt(data.bitrate, 10));
         }
     } catch (error) {
         nowPlayingTrack.textContent = stationSelect.options[stationSelect.selectedIndex]?.text || '';
@@ -91,6 +120,7 @@ function updateNowPlaying() {
     } else {
         nowPlayingTrack.textContent = "Ready to play...";
         nowPlayingTrack.classList.remove('marquee-active');
+        updateBitrateBadge(null); // Clear on stop
     }
 
     metadataInterval = setInterval(() => {
@@ -120,6 +150,7 @@ function togglePlay() {
 playPauseBtn.addEventListener('click', togglePlay);
 
 stationSelect.addEventListener('change', () => {
+    updateBitrateBadge(null); // Clear on change
     audio.src = getProxiedAudioUrl(stationSelect.value);
     updateNowPlaying();
     if (isPlaying) {

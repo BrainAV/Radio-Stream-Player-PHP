@@ -19,6 +19,7 @@ export class StateManager {
             metadataInterval: null,
             popoutWindow: null,
             animationFrameId: null,
+            currentBitrate: null,
             ...initialState
         };
         this.#subscribers = [];
@@ -127,6 +128,10 @@ export class StateManager {
 
     setAnimationFrameId(id) {
          this.#setState({ animationFrameId: id });
+    }
+
+    setBitrate(kbps) {
+        this.#setState({ currentBitrate: kbps });
     }
 }
 

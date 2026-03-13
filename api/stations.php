@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     try {
         // Prepare statement to select stations safely
-        $stmt = $pdo->prepare("SELECT id, name, url, genre, country, type FROM stations WHERE type = :type ORDER BY id ASC");
+        $stmt = $pdo->prepare("SELECT id, name, url, genre, country, bitrate, type FROM stations WHERE type = :type ORDER BY id ASC");
         $stmt->bindParam(':type', $type, PDO::PARAM_STR);
         $stmt->execute();
         
@@ -72,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $url = filter_var($data['url'] ?? '', FILTER_SANITIZE_URL);
     $genre = filter_var($data['genre'] ?? 'Unknown', FILTER_SANITIZE_STRING);
     $country = filter_var($data['country'] ?? 'Unknown', FILTER_SANITIZE_STRING);
+    $bitrate = filter_var($data['bitrate'] ?? null, FILTER_VALIDATE_INT);
 
     // Validate absolute minimums
     if (empty($name) || empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
@@ -82,12 +83,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Insert as 'custom' allowing community directory expansion
-        $stmt = $pdo->prepare("INSERT INTO stations (name, url, genre, country, type) VALUES (:name, :url, :genre, :country, 'custom')");
+        $stmt = $pdo->prepare("INSERT INTO stations (name, url, genre, country, bitrate, type) VALUES (:name, :url, :genre, :country, :bitrate, 'custom')");
         
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':url', $url);
         $stmt->bindParam(':genre', $genre);
         $stmt->bindParam(':country', $country);
+        $stmt->bindParam(':bitrate', $bitrate);
         
         $stmt->execute();
 

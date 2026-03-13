@@ -30,17 +30,23 @@ This document outlines the future direction and planned features for the Radio S
 
 ## 🚀 v2.2 Milestone: Monetization & Pop-out Evolution
 
-### ✅ Completed in v2.2
+### ✅ Completed in v2.2.0 - v2.2.1
 - **Admin Dashboard** — Dedicated UI for station and user management.
 - **Webmaster Config** — `site_config` DB table; Admin → Site Config tab for GA4, AdSense ID, custom head scripts.
 - **Premium User Tier** — `is_premium` flag on users table; Admin can toggle per-user.
 - **Role-Based Ads** — AdSense disabled server-side for `admin` and `is_premium` users in both `index.php` and `popout.php`.
-- **Ad Slots Wired** — Live AdSense client + slot IDs set in `template-player.html` (responsive) and `popout.html` (300×50 fixed banner). Auto Ads disabled — manual placement only.
-- **Pop-out Player Overhaul:**
-    - Inherits user background via `?bg=` URL param.
-    - Auto-starts playback on open.
-    - Station list is DB-aware (uses session cookie → `api/favorites.php`); respects `favoritesOnly` and genre filters.
-    - Served by `popout.php` for server-side ad injection.
+- **Ad Slots Wired** — Live AdSense client + slot IDs set in `template-player.html` (responsive) and `popout.html` (300×50 fixed banner).
+- **Pop-out Player Overhaul** — Background inheritance, auto-play, and full DB-synced station list.
+
+### ✅ Completed in v2.2.2 (The Bitrate & Resiliency Update)
+- **Stream Bitrate Display** — Real-time kbps badge in the player with DB fallback.
+- **Headless Header Sniffing** — Automatic bitrate detection from HTTP headers (`icy-br`) when metadata is absent.
+- **Resiliency Diagnostics** — Explicit 404/502/Network error reporting in the player UI.
+- **Exponential Reconnection** — Backoff-based automatic stream recovery.
+- **Music-First Priority** — Optimized startup time by deferring metadata requests until audio is playing.
+- **Password Visibility Toggle** — Integrated show/hide eyes on all auth forms.
+- **Nav Menu Iconification** — Compact, icon-only navigation for cleaner UI.
+- **Balanced Mono Visualization** — Automatic mirroring for single-channel audio streams.
 
 ### 🔲 Remaining for v2.2
 - **AdSense Ad Slot Review** — Verify both ad units are approved and serving in AdSense console, adjust slot IDs or formats if needed.
@@ -50,8 +56,8 @@ This document outlines the future direction and planned features for the Radio S
 
 ### ⚠️ Known Quirks (v2.2)
 - **Pop-out Ad Rendering** — The `#ad-space-popout` 300×50 banner may require the user to open the popup slightly wider than `320px` on some browsers/OS combinations before AdSense fully renders. Root cause: AdSense's available-width detection varies by browser viewport reporting. Workaround: window is pre-sized to `320×390`; users can resize if needed. Investigation ongoing for v2.3.
+- ✅ **VU Meter Mono Streams** — Implemented auto-detection and mirroring for mono streams. If one channel is silent, the visualizer mirrors the active channel for a balanced display.
 - **Pop-out `IS_PREMIUM` Sync** — `window.IS_PREMIUM` in the pop-out window is not synced after the main window's auth state changes (e.g., admin logs in after pop-out is already open). Pop-out ads will only hide on fresh open. Acceptable limitation for v2.2.
-- **VU Meter Mono Streams** — Some stations broadcast in mono; only the left channel of the `AnalyserNode` is used, which can result in a one-sided VU display. Investigation needed to detect mono streams and merge channels for a balanced visualization.
 
 ---
 
@@ -62,13 +68,10 @@ This document outlines the future direction and planned features for the Radio S
 - **PHP Stream Proxy** — Port Cloudflare Worker audio proxy to `api/proxy.php` for full self-hosting.
 
 ### Player UX
-- **Nav Site Icon** — Replace or augment the "Radio Stream Player" text title in the header nav with an SVG icon (headphones or retro radio theme) consistent with the existing icon-only controls (settings gear, login, admin). Should scale cleanly at the same size as the other nav icons.
-- ✅ **Nav Title → Home Link** — Wrapped the "Radio Stream Player" header title in an `<a href="/">`. Standard UX expectation.
-- ✅ **Station Selection → Auto-Play** — Selecting a station from the dropdown immediately begins playback. Removes friction.
+- **Nav Site Icon** — Replace or augment the "Radio Stream Player" text title in the header nav with an SVG icon (headphones or retro radio theme) consistent with the existing icon-only controls.
 - **Play/Pause Button State Sync** — The play/pause button icon should always accurately reflect the actual audio element play state (playing vs. paused/stopped), including edge cases: stream error/disconnect, browser auto-play blocking, and popout vs. main window state. Drives from the StateManager so all subscribers (button, OS media session, VU meter) update atomically.
-- **Stream Bitrate Display** — Show detected stream bitrate (kbps) in the player UI during playback, or as a color-coded badge (e.g. green = high quality, yellow = mid, red = low). Could also surface in Admin station management.
-- ✅ **Password Show/Hide Toggle** — Added an eye icon to all password fields (Login, Register, Profile, Reset) to toggle visibility. Improves accessibility and user confidence.
-- ✅ **Nav Menu Iconification** — Reorganized the main navigation to use icon-only buttons for Info & Support and Account management. Declutters the settings modal and provides faster access to mission-critical sections.
+- **Dynamic VU Scale** — Option to adjust the visualizer sensitivity for quiet vs. loud streams.
+- **Visualizer Fullscreen Mode** — A dedicated "Immersive" mode focusing entirely on the VU meter and background.
 
 ### User Features
 - **Song History (Premium)** — DB-backed track history per station and per user. Research whether stations expose song data via RSS feeds; otherwise use a cron-based approach to poll ICY metadata at low frequency (budget: standard low-cost polling for all; higher-resolution history for admin/premium).

@@ -699,6 +699,13 @@ select option {
     box-sizing: border-box;
 }
 
+.now-playing-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+
 .now-playing-label {
     font-size: 0.8em;
     font-weight: 600;
@@ -706,6 +713,42 @@ select option {
     opacity: 0.7;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    padding-right: 10px;
+}
+
+.bitrate-badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-color);
+    opacity: 0.8;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    white-space: nowrap;
+}
+
+.dark-theme .bitrate-badge {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.bitrate-high {
+    background: rgba(16, 185, 129, 0.1) !important;
+    color: #10b981 !important;
+    border-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+.bitrate-mid {
+    background: rgba(245, 158, 11, 0.1) !important;
+    color: #f59e0b !important;
+    border-color: rgba(245, 158, 11, 0.2) !important;
+}
+
+.bitrate-low {
+    background: rgba(239, 68, 68, 0.1) !important;
+    color: #ef4444 !important;
+    border-color: rgba(239, 68, 68, 0.2) !important;
 }
 
 .now-playing-track-wrapper {
