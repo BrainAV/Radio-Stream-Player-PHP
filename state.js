@@ -10,8 +10,11 @@ export class StateManager {
             analyserLeft: null,
             analyserRight: null,
             isPlaying: false,
-            currentStation: null,
-            volume: 0.5,
+            currentStation: localStorage.getItem('lastStation') || null,
+            volume: (() => {
+                const sv = parseFloat(localStorage.getItem('volume'));
+                return isNaN(sv) ? 0.5 : sv;
+            })(),
             vuStyle: (() => {
                 const ls = parseInt(localStorage.getItem('vuStyle'), 10);
                 return isNaN(ls) ? 1 : ls;

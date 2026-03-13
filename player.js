@@ -55,6 +55,7 @@ export function initPlayer() {
         if (newState.volume !== oldState.volume && newState.audio) {
             updateVolumeSliderTrack(newState.volume);
             newState.audio.volume = newState.volume;
+            localStorage.setItem('volume', newState.volume);
             // Also keep the UI slider in sync if the state was changed programmatically via Media Keys
             if (volumeSlider.value != newState.volume) {
                 volumeSlider.value = newState.volume;
@@ -66,6 +67,7 @@ export function initPlayer() {
             if (newState.audio) {
                 newState.audio.src = getProxiedAudioUrl(newState.currentStation);
             }
+            localStorage.setItem('lastStation', newState.currentStation);
             
             // Sync the dropdown UI
             if (stationSelect.value !== newState.currentStation) {

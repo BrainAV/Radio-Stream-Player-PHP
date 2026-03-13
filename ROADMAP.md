@@ -31,12 +31,13 @@ This document outlines the future direction and planned features for the Radio S
 ## 🚀 v2.2 Milestone: Monetization & Pop-out Evolution
 
 ### ✅ Completed in v2.2.0 - v2.2.1
-- **Admin Dashboard** — Dedicated UI for station and user management.
+- **Admin Dashboard (Mobile Optimized)** — Responsive UI for station and user management with stackable mobile cards and toggleable sidebar.
 - **Webmaster Config** — `site_config` DB table; Admin → Site Config tab for GA4, AdSense ID, custom head scripts.
 - **Premium User Tier** — `is_premium` flag on users table; Admin can toggle per-user.
 - **Role-Based Ads** — AdSense disabled server-side for `admin` and `is_premium` users in both `index.php` and `popout.php`.
 - **Ad Slots Wired** — Live AdSense client + slot IDs set in `template-player.html` (responsive) and `popout.html` (300×50 fixed banner).
 - **Pop-out Player Overhaul** — Background inheritance, auto-play, and full DB-synced station list.
+- **Integrated Ad Layout (v2.2.1)** — Moved the primary ad unit inside the player card as a native row, ensuring it feels like a native part of the "Glassmorphism" UI.
 
 ### ✅ Completed in v2.2.2 (The Bitrate & Resiliency Update)
 - **Stream Bitrate Display** — Real-time kbps badge in the player with DB fallback.
@@ -47,6 +48,9 @@ This document outlines the future direction and planned features for the Radio S
 - **Password Visibility Toggle** — Integrated show/hide eyes on all auth forms.
 - **Nav Menu Iconification** — Compact, icon-only navigation for cleaner UI.
 - **Balanced Mono Visualization** — Automatic mirroring for single-channel audio streams.
+- **Declutter Mode** — Added a toggle in Settings to hide default system stations while keeping personal favorites and custom stations visible.
+- **Persist Playback State** — The player now remembers your last selected station and volume level across page refreshes.
+- **Nav Site Icon** — Integrated a retro radio SVG icon into the header for a more refined, professional look.
 
 ### 🔲 Remaining for v2.2
 - **AdSense Ad Slot Review** — Verify both ad units are approved and serving in AdSense console, adjust slot IDs or formats if needed.
@@ -70,8 +74,6 @@ This document outlines the future direction and planned features for the Radio S
 ### Security & DevOps
 - **Secrets Management & Hardening** — Remove hardcoded credentials (DB password, API keys) from `api/config.php` and migrate to environment variables via `.env`. Implement `api/config.php.example` and strictly enforce `.gitignore` to prevent credential leakage in the repository.
 
-### Player UX
-- **Nav Site Icon** — Replace or augment the "Radio Stream Player" text title in the header nav with an SVG icon (headphones or retro radio theme) consistent with the existing icon-only controls.
 - **Play/Pause Button State Sync** — The play/pause button icon should always accurately reflect the actual audio element play state (playing vs. paused/stopped), including edge cases: stream error/disconnect, browser auto-play blocking, and popout vs. main window state. Drives from the StateManager so all subscribers (button, OS media session, VU meter) update atomically.
 - **Dynamic VU Scale** — Option to adjust the visualizer sensitivity for quiet vs. loud streams.
 - **Visualizer Fullscreen Mode** — A dedicated "Immersive" mode focusing entirely on the VU meter and background.
@@ -100,8 +102,4 @@ This document outlines the future direction and planned features for the Radio S
 - **In-Browser Recording** — Allow users to record streams at the browser level (Web Audio API → MediaRecorder → download as MP3/WAV). No server storage required. Premium feature.
 - **Cloud Drive Recording (Future)** — Explore allowing users to connect their personal Google Drive and route recordings directly to their cloud storage. Avoids server-side storage costs entirely.
 
-### 🆕 New Ideas (Pending Refinement)
-- ✅ **Dynamic Browser Title** — Implemented dynamic title updates using "Now Playing" info.
-- **Persist Playback State** — Save current station and play state (playing/paused) to `localStorage` so the player resumes exactly where it left off after a page refresh.
-- **Integrated Ad Layout** — Modify `#ad-space-main` to remove outer padding and place it inside the player card as a new row, ensuring it feels like a native part of the "Glassmorphism" UI rather than an external block.
 
