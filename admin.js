@@ -28,8 +28,31 @@ document.addEventListener('DOMContentLoaded', () => {
             if (targetId === 'users-view') loadUsers();
             if (targetId === 'stations-view') loadStations();
             if (targetId === 'settings-view') loadSettings();
+
+            // Close sidebar on mobile after clicking
+            if (window.innerWidth <= 768) {
+                document.querySelector('.admin-sidebar').classList.remove('open');
+                document.getElementById('sidebar-overlay').classList.remove('active');
+            }
         });
     });
+
+    // Mobile Sidebar Toggle
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const adminSidebar = document.querySelector('.admin-sidebar');
+
+    if (sidebarToggle && sidebarOverlay && adminSidebar) {
+        sidebarToggle.addEventListener('click', () => {
+            adminSidebar.classList.add('open');
+            sidebarOverlay.classList.add('active');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+            adminSidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('active');
+        });
+    }
 
     // Helper to format dates
     function formatDate(dateString) {
@@ -85,12 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     const isProtected = (user.id == 1 || user.id == window.USER_ID);
                     
                     tr.innerHTML = `
-                        <td>${user.id}</td>
-                        <td>${user.user_email}</td>
-                        <td>${user.display_name}</td>
-                        <td>${getRoleBadge(user.role)}${getPremiumBadge(user.is_premium)}</td>
-                        <td>${formatDate(user.created_at)}</td>
-                        <td style="display: flex; gap: 5px;">
+                        <td data-label="ID">${user.id}</td>
+                        <td data-label="Email">${user.user_email}</td>
+                        <td data-label="Display Name">${user.display_name}</td>
+                        <td data-label="Role">${getRoleBadge(user.role)}${getPremiumBadge(user.is_premium)}</td>
+                        <td data-label="Joined">${formatDate(user.created_at)}</td>
+                        <td data-label="Actions" style="display: flex; gap: 5px;">
                             <button class="console-btn btn-small edit-user-btn" data-id="${user.id}" data-role="${user.role}" data-email="${user.user_email}" data-premium="${user.is_premium}">Edit</button>
                             ${!isProtected ? `<button class="console-btn btn-small btn-danger delete-user-btn" data-id="${user.id}" data-email="${user.user_email}">Delete</button>` : `<span style="font-size: 0.8em; opacity: 0.5; padding: 4px;">Protected</span>`}
                         </td>
@@ -241,11 +264,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 data.data.forEach(station => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${station.id}</td>
-                        <td>${station.name}</td>
-                        <td>${station.genre || '-'}</td>
-                        <td class="truncate" title="${station.url}">${station.url}</td>
-                        <td style="display: flex; gap: 5px;">
+                        <td data-label="ID">${station.id}</td>
+                        <td data-label="Name">${station.name}</td>
+                        <td data-label="Genre">${station.genre || '-'}</td>
+                        <td data-label="URL" class="truncate" title="${station.url}">${station.url}</td>
+                        <td data-label="Actions" style="display: flex; gap: 5px;">
                             <button class="console-btn btn-small edit-station-btn" data-id="${station.id}" data-name="${station.name}" data-genre="${station.genre || ''}" data-url="${station.url}">Edit</button>
                             <button class="console-btn btn-small btn-danger delete-station-btn" data-id="${station.id}" data-name="${station.name}">Delete</button>
                         </td>

@@ -29,6 +29,20 @@ $userRole = $_SESSION['user_role'];
         window.USER_ID = <?php echo $userId; ?>;
         window.USER_ROLE = '<?php echo $userRole; ?>';
     </script>
+    
+    <!-- Mobile Header -->
+    <header class="admin-mobile-header glass-panel">
+        <div class="admin-brand">
+            <h2>Admin CP</h2>
+        </div>
+        <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle Menu">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+            </svg>
+        </button>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
     <div class="admin-layout">
         <!-- Sidebar Navigation -->
@@ -95,7 +109,7 @@ $userRole = $_SESSION['user_role'];
 
             <!-- Stations View -->
             <section id="stations-view" class="admin-view" style="display: none;">
-                <header class="admin-header" style="justify-content: space-between;">
+                <header class="admin-header" style="justify-content: space-between; flex-wrap: wrap; gap: 15px;">
                     <h1>Station Management</h1>
                     <button id="add-station-open-btn" class="console-btn">Add System Station</button>
                 </header>
@@ -174,8 +188,8 @@ $userRole = $_SESSION['user_role'];
                 </div>
 
                 <div id="settings-msg" style="margin-bottom: 16px; font-size: 0.9em; display: none; padding: 10px 14px; border-radius: 6px;"></div>
-                <div style="display: flex; align-items: center; gap: 16px;">
-                    <button id="save-settings-btn" class="console-btn" style="padding: 12px 28px;">Save Configuration</button>
+                <div class="settings-action-row" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                    <button id="save-settings-btn" class="console-btn" style="padding: 12px 28px; min-width: 200px;">Save Configuration</button>
                     <span style="font-size: 0.82em; opacity: 0.5;">Changes take effect on the next page load.</span>
                 </div>
             </section>

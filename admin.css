@@ -44,6 +44,7 @@
     display: flex;
     flex-direction: column;
     padding: 20px 0;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .admin-brand {
@@ -131,15 +132,17 @@
 
 .stat-card h3 {
     margin: 0 0 10px;
-    font-size: 1rem;
-    opacity: 0.8;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.6;
 }
 
 .stat-value {
     font-size: 2.5rem;
-    font-weight: bold;
+    font-weight: 800;
     color: #60a5fa;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
 }
 
 /* Glass Tables */
@@ -209,4 +212,185 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/* Mobile Navigation Components (Hidden on Desktop) */
+.admin-mobile-header {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-radius: 0;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+.admin-mobile-header .admin-brand {
+    padding: 0;
+    border: none;
+    margin: 0;
+}
+
+.sidebar-toggle {
+    background: transparent;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1001;
+}
+
+/* --- Responsive Media Queries --- */
+
+@media (max-width: 992px) {
+    .admin-sidebar {
+        width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-body {
+        flex-direction: column;
+        overflow-y: auto;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .admin-mobile-header {
+        display: flex;
+    }
+
+    .admin-sidebar {
+        position: fixed;
+        left: -250px;
+        top: 0;
+        bottom: 0;
+        z-index: 1002;
+        width: 250px;
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .admin-sidebar.open {
+        left: 0;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    .admin-main {
+        padding: 20px 15px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .admin-header h1 {
+        font-size: 1.5rem;
+    }
+
+    /* Form responsiveness improvements */
+    #station-form-wrapper div[style*="flex"] {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+
+    #station-form-wrapper input,
+    #station-form-wrapper button {
+        width: 100% !important;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+    }
+
+    /* Stackable Table or Card-like View for Mobile */
+    .admin-table thead {
+        display: none; /* Hide headers on small mobile */
+    }
+
+    .admin-table, 
+    .admin-table tbody, 
+    .admin-table tr, 
+    .admin-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .admin-table tr {
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .admin-table td {
+        border: none;
+        padding: 10px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .admin-table td:last-child {
+        border-bottom: none;
+        justify-content: center;
+        padding-top: 15px;
+        margin-top: 5px;
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    .admin-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        text-align: left;
+        margin-right: 15px;
+        opacity: 0.5;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .truncate {
+        max-width: 150px;
+    }
+
+    .btn-small {
+        flex: 1;
+        padding: 10px;
+    }
 }
