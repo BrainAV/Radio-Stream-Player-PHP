@@ -67,7 +67,8 @@ This document outlines the future direction and planned features for the Radio S
 - ✅ **Station Selection → Auto-Play** — Selecting a station from the dropdown immediately begins playback. Removes friction.
 - **Play/Pause Button State Sync** — The play/pause button icon should always accurately reflect the actual audio element play state (playing vs. paused/stopped), including edge cases: stream error/disconnect, browser auto-play blocking, and popout vs. main window state. Drives from the StateManager so all subscribers (button, OS media session, VU meter) update atomically.
 - **Stream Bitrate Display** — Show detected stream bitrate (kbps) in the player UI during playback, or as a color-coded badge (e.g. green = high quality, yellow = mid, red = low). Could also surface in Admin station management.
-- **Password Show/Hide Toggle** — Add an eye icon to the login password field to toggle visibility. Improves accessibility, especially for users who need to confirm their password visually.
+- ✅ **Password Show/Hide Toggle** — Added an eye icon to all password fields (Login, Register, Profile, Reset) to toggle visibility. Improves accessibility and user confidence.
+- ✅ **Nav Menu Iconification** — Reorganized the main navigation to use icon-only buttons for Info & Support and Account management. Declutters the settings modal and provides faster access to mission-critical sections.
 
 ### User Features
 - **Song History (Premium)** — DB-backed track history per station and per user. Research whether stations expose song data via RSS feeds; otherwise use a cron-based approach to poll ICY metadata at low frequency (budget: standard low-cost polling for all; higher-resolution history for admin/premium).
@@ -87,7 +88,7 @@ This document outlines the future direction and planned features for the Radio S
 ### Monetization & Support
 - **Premium Subscription** — Choose a payment processor (Stripe or PayPal) and implement a subscription flow to upgrade users to premium (ad-free + premium features). Define the full premium feature set before implementation.
 - **Premium Feature List** — Define and document exactly what premium unlocks: ad-free experience, song history, higher-resolution metadata polling, recording, etc.
-- ✅ **Donations Link** — Added a tasteful PayPal link in the General settings tab.
+- ✅ **Donations Link** — Added a tasteful PayPal link in the dedicated Info & Support modal.
 
 ### Advanced / Premium Features
 - **In-Browser Recording** — Allow users to record streams at the browser level (Web Audio API → MediaRecorder → download as MP3/WAV). No server storage required. Premium feature.

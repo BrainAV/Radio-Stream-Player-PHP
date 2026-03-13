@@ -5,6 +5,12 @@ import { stateManager } from './state.js';
 const settingsBtn = document.getElementById('settings-btn');
 const settingsModal = document.getElementById('settings-modal');
 const closeSettingsBtn = document.getElementById('close-settings-btn');
+const infoBtn = document.getElementById('info-btn');
+const infoModal = document.getElementById('info-modal');
+const closeInfoBtn = document.getElementById('close-info-btn');
+const accountBtn = document.getElementById('header-account-btn');
+const accountModal = document.getElementById('account-modal');
+const closeAccountBtn = document.getElementById('close-account-btn');
 const vuStyleSelect = document.getElementById('vu-style-select');
 const themeSelect = document.getElementById('theme-select');
 const addStationBtn = document.getElementById('add-station-btn');
@@ -22,6 +28,29 @@ const favoriteBtn = document.getElementById('favorite-btn');
 
 // Initialize Settings
 export function initSettings() {
+    // Password Toggle Logic
+    const initPasswordToggles = () => {
+        const toggleBtns = document.querySelectorAll('.toggle-password');
+        const eyeIcon = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>';
+        const eyeOffIcon = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.82l2.92 2.92c1.51-1.39 2.59-3.26 3.14-5.24-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg>';
+
+        toggleBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent potential form submission
+                const wrapper = btn.closest('.password-wrapper');
+                const input = wrapper ? wrapper.querySelector('input') : null;
+                if (input) {
+                    const isPassword = input.type === 'password';
+                    input.type = isPassword ? 'text' : 'password';
+                    btn.innerHTML = isPassword ? eyeOffIcon : eyeIcon;
+                    btn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+                }
+            });
+        });
+    };
+
+    initPasswordToggles();
+
     // Populate VU Style Dropdown
     if (vuStyleSelect) {
         VU_STYLES.forEach((style) => {
@@ -409,6 +438,26 @@ export function initSettings() {
         });
     }
 
+    if (infoBtn && infoModal && closeInfoBtn) {
+        infoBtn.addEventListener('click', openInfo);
+        closeInfoBtn.addEventListener('click', closeInfo);
+
+        // Close when clicking outside
+        infoModal.addEventListener('click', (e) => {
+            if (e.target === infoModal) closeInfo();
+        });
+    }
+
+    if (accountBtn && accountModal && closeAccountBtn) {
+        accountBtn.addEventListener('click', openAccount);
+        closeAccountBtn.addEventListener('click', closeAccount);
+
+        // Close when clicking outside
+        accountModal.addEventListener('click', (e) => {
+            if (e.target === accountModal) closeAccount();
+        });
+    }
+
     // Settings Tabs Logic
     const tabBtns = document.querySelectorAll('.settings-tab-btn');
     const tabContents = document.querySelectorAll('.settings-tab-content');
@@ -772,6 +821,7 @@ export function initSettings() {
 
         let authBtn = document.getElementById('header-login-btn') || document.getElementById('header-logout-btn');
         let adminBtn = document.getElementById('header-admin-btn');
+        let accountBtnHeader = document.getElementById('header-account-btn');
         
         const loginSvg = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>`;
         const logoutSvg = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>`;
@@ -806,6 +856,27 @@ export function initSettings() {
              }
         } else if (adminBtn) {
              adminBtn.remove();
+        }
+
+        // Handle Account Button Visibility
+        const accountSvg = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>`;
+        if (window.IS_LOGGED_IN) {
+            if (!accountBtnHeader) {
+                accountBtnHeader = document.createElement('button');
+                accountBtnHeader.id = 'header-account-btn';
+                accountBtnHeader.className = 'theme-btn';
+                accountBtnHeader.style.fontSize = '14px';
+                accountBtnHeader.style.display = 'flex';
+                accountBtnHeader.style.alignItems = 'center';
+                accountBtnHeader.setAttribute('aria-label', 'My Account');
+                accountBtnHeader.title = 'My Account';
+                accountBtnHeader.innerHTML = accountSvg;
+                accountBtnHeader.onclick = openAccount;
+                // Insert before logout/login button
+                btnGroup.insertBefore(accountBtnHeader, authBtn);
+            }
+        } else if (accountBtnHeader) {
+            accountBtnHeader.remove();
         }
 
         // Update properties based on state
@@ -1233,4 +1304,21 @@ function openSettings() {
 
 function closeSettings() {
     settingsModal.style.display = 'none';
-}
+}
+
+function openInfo() {
+    if (infoModal) infoModal.style.display = 'flex';
+}
+
+function closeInfo() {
+    if (infoModal) infoModal.style.display = 'none';
+}
+
+function openAccount() {
+    if (accountModal) accountModal.style.display = 'flex';
+}
+
+function closeAccount() {
+    if (accountModal) accountModal.style.display = 'none';
+}
+

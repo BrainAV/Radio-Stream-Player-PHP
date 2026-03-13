@@ -14,7 +14,9 @@ Use this skill when modifying user profile systems, authentication flows, or dat
     - Never expose raw passwords. Use `password_hash()` and `password_verify()`.
     - Sensitive updates (email/password) **MUST** require validation of the current password.
 2.  **Schema Consistency**: Adhere to the `users` table schema defined in `database/schema.sql`.
-    - Primary fields: `id`, `user_email`, `user_pass`, `display_name`, `role`, `avatar`.
+3.  **Dynamic UI Synchronization**: Ensure the UI reflects auth state changes immediately without page refreshes.
+    - After login/logout, update the DOM to inject or remove authenticated-only elements (e.g., Account buttons, Admin links).
+    - Maintain a consistent `header-btn-group` across both PHP server-side rendering and JS client-side updates.
 3.  **Hybrid Experience**: Ensure the player correctly handles both Guests and Users.
     - Guests: Rely on `localStorage` for favorites and settings.
     - Users: Sync data with the MySQL database via `api/`.

@@ -11,4 +11,29 @@
 - do radio streams offer song feeds like rss? Or are we extracting using chron to update the database song history when users are not listening. Set a standard low budget song history per station, per user, and admin/premium level listing.
 - sharing dynamic routes for stations, countries, genres, and user profiles. 
 - donations link / icon
-- Eye icon to see password when logging in. (some old people need to see pw)
+- ✅ Eye icon to see password when logging in. (some old people need to see pw)
+
+new-
+- Browser Title could get some dynamic updates. Something like for what's Now Playing, Resesearch if home page should be dynamic titles for browser, or just the future dynamic station pages that get built out.
+- remove padding from the banner ads and place them inside the player below all in it's own row before the bottom of the player
+
+- If page get refreshed, player forgets and defaults back to 1st station in list to play. Like set play state in the local memory and if the page gets reloaded, it should resume where it left off.    
+
+
+
+
+- ETN.FM  stream dropped or wouldn't load for a moment. I wasn't sure if it was our end or their server, as the player didn't tell me why it couldn't connect. (not sure if I want to keep re-trying to connect in case the radio server was just having a moment)
+
+Console logs:'''api.djay.ca/?url=https%3A%2F%2Fstream.pcradio.ru%2Fetnfm_trance-hi:1  Failed to load resource: the server responded with a status of 502 ()
+player.js:247 Stream dropped. Attempting to reconnect in 3 seconds...
+player.js:43 Playback failed: NotSupportedError: Failed to load because no supported source was found.
+(anonymous) @ player.js:43
+api.djay.ca/?url=https%3A%2F%2Fstream.pcradio.ru%2Fetnfm_trance-hi:1  Failed to load resource: the server responded with a status of 502 ()
+player.js:247 Stream dropped. Attempting to reconnect in 3 seconds...
+player.js:80 Playback failed: NotSupportedError: Failed to load because no supported source was found.
+(anonymous) @ player.js:80
+api.djay.ca/?url=https%3A%2F%2Fstream.pcradio.ru%2Fetnfm_trance-hi:1  Failed to load resource: the server responded with a status of 404 ()
+player.js:247 Stream dropped. Attempting to reconnect in 3 seconds...
+player.js:80 Playback failed: NotSupportedError: Failed to load because no supported source was found.
+(anonymous) @ player.js:80
+'''

@@ -533,6 +533,52 @@ body.popout-body .ad-placeholder {
     outline: none;
 }
 
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.password-wrapper .settings-input {
+    flex: 1;
+    padding-right: 45px !important; /* Make room for the toggle icon */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    opacity: 0.5;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 2;
+    border-radius: 6px;
+}
+
+.toggle-password:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .toggle-password:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.toggle-password:active {
+    transform: scale(0.9);
+}
+
+.toggle-password svg {
+    pointer-events: none; /* Clicking the svg should click the button */
+}
+
 .station-selector select,
 .setting-item select,
 select.settings-input {
@@ -1254,6 +1300,7 @@ select option {
     box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.4);
     max-height: 90vh;
+    min-height: 520px; /* Fixed minimum height to prevent layout jumps between tabs */
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -1282,7 +1329,9 @@ select option {
 .settings-body {
     overflow-y: auto;
     flex-grow: 1;
-    padding: 20px;
+    padding: 24px;
+    /* Smooth transition for content changes in the future */
+    scroll-behavior: smooth;
 }
 
 .settings-header h3 {
@@ -1518,24 +1567,34 @@ select option {
 /* Settings Tabs */
 .settings-tabs {
     display: flex;
-    gap: 5px;
-    margin-bottom: 20px;
+    gap: 0;
+    margin-bottom: 0;
     border-bottom: 1px solid var(--border-color);
-    padding-bottom: 5px;
+    padding: 0 10px;
+    overflow-x: auto; /* Handle many tabs on small screens */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.settings-tabs::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
 }
 
 .settings-tab-btn {
     background: transparent;
     border: none;
-    color: #111827; /* Force dark text in light mode */
-    opacity: 0.8; /* Increased from 0.6 */
-    padding: 12px 0;
-    font-size: 0.95rem;
+    color: #111827; 
+    opacity: 0.6;
+    padding: 14px 16px;
+    margin-bottom: -1px; /* Align border with tab bar bottom */
+    font-size: 0.9rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     border-bottom: 2px solid transparent;
-    flex: 1;
+    flex: 0 0 auto; /* Don't stretch, allow scroll */
     font-weight: 500;
+    white-space: nowrap;
 }
 
 .dark-theme .settings-tab-btn {

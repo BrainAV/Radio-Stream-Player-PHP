@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Password Visibility Toggle** — Added an interactive eye icon to all password fields (Login, Registration, Account Settings, and Password Reset) to toggle between hidden and visible text. Improves accessibility and reduces input errors.
+- **Settings UI Polish** — Reorganized the settings modal into 4 core tabs (General, Appearance, Collection, Directory) to focus purely on player configuration. Fixed "layout jumping" and added mobile horizontal scrolling for tabs.
+- **Dedicated Info & Support Button** — Moved "Info & Support" to a dedicated header button for easier access to project details and donation links.
+- **Dedicated Account Button** — Moved "Account" settings to a dedicated header button (for logged-in users). Includes a fix for dynamic button visibility ensuring the icon appears immediately after login without requiring a page refresh.
 
 ### Changed
 
