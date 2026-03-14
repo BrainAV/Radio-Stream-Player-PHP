@@ -179,5 +179,31 @@ When preparing a new release (incrementing the version number):
     -   It serves as the source for GitHub Release notes or announcements.
 3.  **Update Version**: Ensure any version numbers in the code or `README.md` (if applicable) are updated.
 
+## 7. PWA Maintenance & Known Limitations
+
+The Radio Stream Player is a Progressive Web App (PWA). While this provides a native-like experience, there are several platform-level limitations and maintenance rules to be aware of.
+
+### 7.1. Service Worker Update Lifecycle
+The application uses a "Skip Waiting" and "Clients Claim" strategy in `sw.js`. 
+- **Immediate Takeover**: When a new Service Worker is detected (via a version bump in `CACHE_NAME`), it will immediately activate and take control of all open pages.
+- **Cache Strategy**: It uses a "Network First" approach for core assets, falling back to the cache if the network is unavailable.
+
+### 7.2. Versioning Synchronicity
+It is **critical** to keep the `CACHE_NAME` in `sw.js` in sync with the project version in `CHANGELOG.md` and `manifest.json`.
+- **Triggering Updates**: Browsers check `sw.js` for changes. Changing the `CACHE_NAME` string is the most reliable way to force a background update of all cached assets.
+
+### 7.3. Known OS-Level Quirks
+Developers should be aware of the following browser/OS behaviors that cannot currently be fixed via programming:
+
+1.  **The "1.0" Version Placeholder**: 
+    - **Issue**: Even if `manifest.json` specifies `"version": "2.2.3"`, Windows Settings (Apps > Installed Apps) will likely still display **"1.0"**.
+    - **Reason**: The W3C Web Manifest spec does not have a standard version field that OSs currently read. Chromium (Chrome/Edge) uses "1.0" as a hardcoded placeholder for the Windows app wrapper.
+    - **Solution**: Code updates work fine via the Service Worker; ignore the OS-level version display.
+
+2.  **Icon Stickiness**:
+    - **Issue**: Updating the icons in `manifest.json` or changing the images in `/icons/` usually does **not** update the icon on the user's Desktop or Taskbar.
+    - **Reason**: Windows/Chrome/Edge "freeze" the app shortcut icon at the moment of installation and do not currently support automatic icon updates.
+    - **Solution**: To see new icons on the OS level, users must uninstall and then reinstall the PWA.
+
 ---
 *This guide should be kept up-to-date with any significant architectural changes.*

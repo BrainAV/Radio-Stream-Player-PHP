@@ -52,12 +52,11 @@ This document outlines the future direction and planned features for the Radio S
 - **Persist Playback State** — The player now remembers your last selected station and volume level across page refreshes.
 - **Nav Site Icon** — Integrated a retro radio SVG icon into the header for a more refined, professional look.
 
-### 🔲 Remaining for v2.2
-- **AdSense Ad Slot Review** — Verify both ad units are approved and serving in AdSense console, adjust slot IDs or formats if needed.
-- ~~**Webmaster Settings (Admin)**~~ ✅ — Site Config tab fully implemented: GA4, AdSense ID, and custom head code manageable via Admin dashboard. Changes are server-injected on next page load.
-- **Stream Crawler/Finder (Admin Utility)** — Tool to extract direct stream URLs from a station website; auto-detect bitrate/quality.
-- **Broken Stream Reports UI** — Admin interface for reviewing user-flagged stations.
+### ✅ Completed in v2.2.3 (PWA Side Quest)
 - **PWA Support / Add to Home Screen** ✅ — Full Progressive Web App implementation with `manifest.json`, Service Worker caching, and iOS optimization.
+- **PWA Auto-Update Logic** ✅ — Implemented `skipWaiting` and `clientsClaim` to ensure users get the latest code immediately after a version bump.
+
+### 🔲 Remaining for v2.2
 
 ### ⚠️ Known Quirks (v2.2)
 - **Pop-out Ad Rendering** — The `#ad-space-popout` 300×50 banner may require the user to open the popup slightly wider than `320px` on some browsers/OS combinations before AdSense fully renders. Root cause: AdSense's available-width detection varies by browser viewport reporting. Workaround: window is pre-sized to `320×390`; users can resize if needed. Investigation ongoing for v2.3.
