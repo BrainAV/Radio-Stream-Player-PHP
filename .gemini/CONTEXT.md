@@ -12,7 +12,8 @@ Refer to `DEVELOPER_GUIDE.md` for architecture details.
 - **Backend**: PHP 7.4+ (cPanel/Shared Hosting compatible)
 - **Database**: MySQL/MariaDB (PDO for security)
 - **Frontend**: HTML5, CSS3, Vanilla JavaScript (ES6+ Modules)
-- **Core APIs**: Web Audio API
+- **Core APIs**: Web Audio API, Service Worker (PWA)
+- **PWA Capabilities**: Installable (homescreen), Offline App Shell caching, iOS standalone optimization (v2.2.4).
 - **Cloud Dependency**: Currently relies on `api.djay.ca` (Cloudflare) for metadata/proxy (Targeted for PHP porting).
 </TECH_STACK>
 <CODING_CONVENTIONS>

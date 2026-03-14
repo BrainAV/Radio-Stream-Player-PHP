@@ -118,6 +118,11 @@ SELECT id, user_pass, role, is_premium FROM users WHERE user_email = ?
 
 ---
 
+## 10. PWA Standalone Suppression
+When the app is running in **PWA Standalone Mode** (Home Screen), ad containers should still follow the role-based suppression rules.
+- **Check Environment:** Use `(window.matchMedia('(display-mode: standalone)').matches)` to detect standalone mode.
+- **Behavior:** The existing Layer 1 and Layer 2 logic automatically covers standalone mode because it relies on session/auth state, but ensure that any new "Install Now" prompts are suppressed if standalone mode is detected.
+
 ## ⚠️ Known Limitations (v2.2)
 
 - **Pop-out IS_PREMIUM sync**: `window.IS_PREMIUM` in the pop-out window is not synced if the user logs in/out in the main window after the pop-out is already open. Pop-out ads will only update on next open. Acceptable for v2.2.

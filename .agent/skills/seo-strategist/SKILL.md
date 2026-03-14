@@ -18,6 +18,7 @@ Every dynamic page (station or listing) must include:
 2.  **Meta Tags:** Dynamic `<title>` and `<meta name="description">` generated from the station's metadata or category info.
 3.  **Social Graph:** Include OpenGraph (`og:title`, `og:image`) and Twitter Card tags to ensure sharable links look premium on social platforms.
 4.  **Canonical URLs:** Always include a `<link rel="canonical">` to prevent duplicate content issues.
+5.  **PWA Metadata:** Ensure `manifest.json` is correctly linked and that `theme-color` and `apple-mobile-web-app-capable` meta tags are present for a high-quality install experience.
 
 ## 3. Dynamic Listing Pages
 When generating listing pages (by Country or Genre):

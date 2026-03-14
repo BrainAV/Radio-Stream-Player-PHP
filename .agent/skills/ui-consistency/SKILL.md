@@ -75,6 +75,12 @@ These patterns are **mandatory** for all mobile UI work:
 - `.main-content`: `height: auto; min-height: 100vh; overflow: visible` — allows the ad below the fold to be scrolled to.
 - `body`: `overflow: auto` — overrides the desktop `overflow: hidden` so mobile users can scroll.
 
+### 6.4. Standalone PWA Mode
+When the app is running as a PWA (standalone):
+- **Hide Browser UI:** Ensure no elements rely on browser "Back" or "Reload" buttons. Provide internal navigation.
+- **Title Bar Integration:** Account for the OS title bar (or lack thereof). Use `env(safe-area-inset-top)` to prevent content from going under the status bar on mobile.
+- **Install Promo Suppression:** If the user is already in standalone mode, suppress any "Install App" banners or buttons.
+
 ### iOS-Specific Gotchas
 - **`background-attachment: fixed` is broken on iOS Safari** — it causes the wallpaper to flash white or scroll with content. Fix:
   ```css
