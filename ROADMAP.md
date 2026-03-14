@@ -52,7 +52,7 @@ This document outlines the future direction and planned features for the Radio S
 - **Persist Playback State** — The player now remembers your last selected station and volume level across page refreshes.
 - **Nav Site Icon** — Integrated a retro radio SVG icon into the header for a more refined, professional look.
 
-### ✅ Completed in v2.2.3 (PWA Side Quest)
+### ✅ Completed in v2.2.4 (PWA Side Quest)
 - **PWA Support / Add to Home Screen** ✅ — Full Progressive Web App implementation with `manifest.json`, Service Worker caching, and iOS optimization.
 - **PWA Auto-Update Logic** ✅ — Implemented `skipWaiting` and `clientsClaim` to ensure users get the latest code immediately after a version bump.
 
