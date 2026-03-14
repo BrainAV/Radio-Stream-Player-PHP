@@ -205,5 +205,18 @@ Developers should be aware of the following browser/OS behaviors that cannot cur
     - **Reason**: Windows/Chrome/Edge "freeze" the app shortcut icon at the moment of installation and do not currently support automatic icon updates.
     - **Solution**: To see new icons on the OS level, users must uninstall and then reinstall the PWA.
 
+## 8. Database Management
+
+The project uses a standard MySQL database. To ensure consistency across environments, we follow a strict schema management policy.
+
+### 8.1. Master Schema vs. Migrations
+- **`database/schema.sql`**: This is the **Source of Truth**. It must always contain the complete, up-to-date structure of the database. New installations should only need to run this file.
+- **`database/update_vX.X.X.sql`**: These are **Incremental Migrations**. Every time a table is added or modified, a new migration file must be created to help existing users upgrade.
+
+### 8.2. Synchronization Policy
+Whenever a migration is created:
+1.  Apply the change to the local database.
+2.  **Immediately update `schema.sql`** to reflect the new state. This ensures that the master schema never falls behind the migration history.
+
 ---
 *This guide should be kept up-to-date with any significant architectural changes.*

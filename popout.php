@@ -7,6 +7,7 @@
 
 session_start();
 require_once __DIR__ . '/api/config.php';
+require_once __DIR__ . '/api/session_check.php';
 
 $html = file_get_contents(__DIR__ . '/popout.html');
 
