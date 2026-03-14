@@ -24,5 +24,9 @@ You are a PWA Specialist and Performance Engineer. Use this skill whenever you a
   ```
 - **Registration:** The Service Worker should be registered at the end of the main script (`script.js`) inside a `window.load` listener to prioritize audio playback bandwidth during initial load.
 
+## 4. Known Quirks & OS Limitations
+- **Stable Versioning:** Do not be alarmed if Windows Settings reports the app as "1.0". This is a browser default; internal code updates are handled by the `CACHE_NAME` versioning in `sw.js`.
+- **Static Icons:** OS-level icons (Desktop/Taskbar) are "sticky" and won't update automatically after installation. Users must reinstall to see new icons.
+
 > [!IMPORTANT]
 > **Bandwidth First:** Always defer non-critical PWA tasks (like Service Worker registration) until after the player is ready to ensure the fastest possible playback start time.
