@@ -21,9 +21,10 @@ When triggered, you must execute these exact steps in order:
 2. Synthesize the bullet points from the newly dated Changelog section into a structured, user-friendly summary.
 3. This file should be formatted nicely with emojis, highlighting key features and bug fixes for the end user.
 
-### Step 3: Verify Version Numbers
+### Step 3: Verify & Sync Version Numbers
 1. Read the `README.md`.
 2. Ensure any hardcoded mention of the 'Current Version' in the documentation matches the new release number.
+3. **PWA Sync:** Update the `CACHE_NAME` version in `sw.js` to match the new version number (e.g., `radio-player-v2.2.4`). This is critical for triggering app updates for PWA users.
 
 ## 2. Semantic Versioning Rules (SemVer)
 If the user doesn't specify the next version number, determine it based on the items in the `[Unreleased]` block:
