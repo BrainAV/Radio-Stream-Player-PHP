@@ -21,6 +21,11 @@ $userRole = $_SESSION['user_role'];
     <link rel="shortcut icon" href="favicon.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="admin.css">
+    
+    <!-- PWA / Mobile Theme -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#111827">
+    <link rel="apple-touch-icon" href="favicon.png">
 </head>
 <body class="admin-body">
     <!-- Expose user context for admin.js -->

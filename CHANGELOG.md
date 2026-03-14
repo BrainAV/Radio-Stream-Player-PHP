@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-### Changed
-### Fixed
+- **PWA (Progressive Web App) Support** — The Radio Stream Player can now be "installed" on mobile homescreens (iOS/Android) and desktop. Features include a standalone display mode, custom app icons (192px/512px), and a Service Worker for faster app-shell loading.
+- **iOS Home Screen Optimization** — Added specific meta tags (`apple-mobile-web-app-capable`) to ensure the player opens in a true full-screen "standalone" mode on iPhones without browser chrome.
 
 ## [2.2.3] - 2026-03-13
 

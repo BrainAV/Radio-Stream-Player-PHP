@@ -6,4 +6,7 @@
 - for recording, server space is no good, so it has to be done in browser level and saved that way, or we allow users (not the host) to connect their personal google account and cloud drive space and we route the recording to their cloud drive space somehow. 
 - do radio streams offer song feeds like rss? Or are we extracting using chron to update the database song history when users are not listening. Set a standard low budget song history per station, per user, and admin/premium level listing.
 - sharing dynamic routes for stations, countries, genres, and user profiles. 
-- If page get refreshed, player forgets and defaults back to 1st station in list to play. Like set play state in the local memory and if the page gets reloaded, it should resume where it left off.    
+- If page get refreshed, player forgets and defaults back to 1st station in list to play. Like set play state in the local memory and if the page gets reloaded, it should resume where it left off.    
+
+Manage My Collection
+- If a user edits a "Manage My Collection" station. Does that station edit for only that user, or is this a global station upate? Could be a security issue if the global station link or details are updated by a user... just forward thinking of when we create drynamic pages for stations that are shared for all users. 

@@ -57,6 +57,7 @@ This document outlines the future direction and planned features for the Radio S
 - ~~**Webmaster Settings (Admin)**~~ ✅ — Site Config tab fully implemented: GA4, AdSense ID, and custom head code manageable via Admin dashboard. Changes are server-injected on next page load.
 - **Stream Crawler/Finder (Admin Utility)** — Tool to extract direct stream URLs from a station website; auto-detect bitrate/quality.
 - **Broken Stream Reports UI** — Admin interface for reviewing user-flagged stations.
+- **PWA Support / Add to Home Screen** ✅ — Full Progressive Web App implementation with `manifest.json`, Service Worker caching, and iOS optimization.
 
 ### ⚠️ Known Quirks (v2.2)
 - **Pop-out Ad Rendering** — The `#ad-space-popout` 300×50 banner may require the user to open the popup slightly wider than `320px` on some browsers/OS combinations before AdSense fully renders. Root cause: AdSense's available-width detection varies by browser viewport reporting. Workaround: window is pre-sized to `320×390`; users can resize if needed. Investigation ongoing for v2.3.
