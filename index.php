@@ -6,6 +6,7 @@
 
 session_start();
 require_once __DIR__ . '/api/config.php';
+require_once __DIR__ . '/api/session_check.php';
 
 // --- User IS Logged in or Guest ---
 // Serve the actual Glassmorphism Radio Player HTML UI using template-player.html

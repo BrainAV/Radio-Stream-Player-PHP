@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/api/config.php';
+require_once __DIR__ . '/api/session_check.php';
 
 // The Master Gatekeeper
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {

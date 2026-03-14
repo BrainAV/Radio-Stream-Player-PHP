@@ -7,11 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [2.2.5] - 2026-03-14
 
 ### Added
-### Changed
+- **Remember Me (Persistent Login)** — Implemented a long-lived authentication system that keeps users logged in even after closing the browser or PWA. Uses secure, hashed database tokens and HttpOnly cookies valid for 30 days.
+- **Login UX improvement** — Users can now press the "Enter" key from the password field to submit the login form.
+- **Session recovery logic** — Created `api/session_check.php` to automatically restore user state across `index.php`, `admin.php`, and `popout.php` without requiring manual logout/login cycles.
+- **Database Schema Sync Policy** — Formalized the "Source of Truth" rule where `database/schema.sql` must always match migration scripts. Updated the `database-architect` skill and `DEVELOPER_GUIDE.md` to enforce this standard.
+
 ### Fixed
+- **PWA versioning** — Bumped `sw.js` and `manifest.json` in lockstep to ensure immediate update triggers for the new persistence features.
 
 ## [2.2.4] - 2026-03-14
 

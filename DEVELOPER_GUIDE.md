@@ -205,5 +205,32 @@ Developers should be aware of the following browser/OS behaviors that cannot cur
     - **Reason**: Windows/Chrome/Edge "freeze" the app shortcut icon at the moment of installation and do not currently support automatic icon updates.
     - **Solution**: To see new icons on the OS level, users must uninstall and then reinstall the PWA.
 
+## 8. Database Management
+
+The project uses a standard MySQL database. To ensure consistency across environments, we follow a strict schema management policy.
+
+### 8.1. Master Schema vs. Migrations
+- **`database/schema.sql`**: This is the **Source of Truth**. It must always contain the complete, up-to-date structure of the database. New installations should only need to run this file.
+- **`database/update_vX.X.X.sql`**: These are **Incremental Migrations**. Every time a table is added or modified, a new migration file must be created to help existing users upgrade.
+
+### 8.2. Synchronization Policy
+Whenever a migration is created:
+1.  Apply the change to the local database.
+2.  **Immediately update `schema.sql`** to reflect the new state. This ensures that the master schema never falls behind the migration history.
+
+## 9. Design & Branding
+
+The Radio Stream Player follows a **Glassmorphism** and **Neon** aesthetic. This section documents the design assets and prompts used to maintain visual consistency.
+
+### 9.1. PWA Icons
+The headphone icons used for the PWA (`favicon.png`, `icons/icon-192.png`, `icons/icon-512.png`) were generated with the following AI prompt to ensure a premium look:
+
+> **"A premium, minimalist headphone icon with neon purple and electric blue glowing accents. Designed in a sleek glassmorphism style with high-quality translucent layers, subtle gradients, and a dark rounded-square background. High-tech, modern app icon aesthetic, 512x512, centered."**
+
+### 9.2. Color Palette
+- **Primary Background**: `#111827` (Dark Navy/Gray)
+- **Accent Glow**: Neon Purple / Electric Blue
+- **Translucency**: `rgba(255, 255, 255, 0.05)` to `0.1` with `backdrop-filter: blur(12px)`
+
 ---
-*This guide should be kept up-to-date with any significant architectural changes.*
+*This guide should be kept up-to-date with any significant architectural or design changes.*

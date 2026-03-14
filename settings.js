@@ -965,10 +965,19 @@ export function initSettings() {
         });
     }
 
+    if (loginPassInput) {
+        loginPassInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                authLoginBtn.click();
+            }
+        });
+    }
+
     if (authLoginBtn) {
         authLoginBtn.addEventListener('click', async () => {
             const email = loginEmailInput.value;
             const password = loginPassInput.value;
+            const remember = document.getElementById('login-remember')?.checked || false;
 
             if (!email || !password) {
                 showLoginError('Please enter both email and password.');
@@ -982,7 +991,12 @@ export function initSettings() {
                 const response = await fetch('api/auth.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ login_submit: 1, email, password })
+                    body: JSON.stringify({ 
+                        login_submit: 1, 
+                        email, 
+                        password,
+                        remember
+                    })
                 });
                 const data = await response.json();
 

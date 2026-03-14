@@ -35,6 +35,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['user_role'] = $user['role'];
                     session_regenerate_id(true);
 
+                    // --- Remember Me Logic ---
+                    if (isset($input['remember']) && $input['remember'] === true) {
+                        $token = bin2hex(random_bytes(32));
+                        $tokenHash = hash('sha256', $token);
+                        $expires = date('Y-m-d H:i:s', time() + (86400 * 30)); // 30 days
+
+                        $tokenStmt = $pdo->prepare("INSERT INTO user_tokens (user_id, token, expires_at) VALUES (?, ?, ?)");
+                        $tokenStmt->execute([$user['id'], $tokenHash, $expires]);
+
+                        // Set the cookie (raw token)
+                        setcookie('remember_me', $token, [
+                            'expires' => time() + (86400 * 30),
+                            'path' => '/',
+                            'secure' => true,
+                            'httponly' => true,
+                            'samesite' => 'Lax'
+                        ]);
+                    }
+
                     echo json_encode([
                         'status' => 'success', 
                         'message' => 'Login successful.',
@@ -59,6 +78,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if ($action === 'logout') {
+    // Invalidate Remember Me token if exists
+    if (isset($_COOKIE['remember_me'])) {
+        $tokenHash = hash('sha256', $_COOKIE['remember_me']);
+        try {
+            $pdo = get_db_connection();
+            if ($pdo) {
+                $stmt = $pdo->prepare("DELETE FROM user_tokens WHERE token = ?");
+                $stmt->execute([$tokenHash]);
+            }
+        } catch (PDOException $e) {}
+        
+        setcookie('remember_me', '', [
+            'expires' => time() - 3600,
+            'path' => '/',
+            'secure' => true,
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]);
+    }
+
     session_destroy();
     echo json_encode(['status' => 'success', 'message' => 'Logged out.']);
     exit;
