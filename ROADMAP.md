@@ -52,11 +52,20 @@ This document outlines the future direction and planned features for the Radio S
 - **Persist Playback State** — The player now remembers your last selected station and volume level across page refreshes.
 - **Nav Site Icon** — Integrated a retro radio SVG icon into the header for a more refined, professional look.
 
-### ✅ Completed in v2.2.4 (PWA Side Quest)
-- **PWA Support / Add to Home Screen** ✅ — Full Progressive Web App implementation with `manifest.json`, Service Worker caching, and iOS optimization.
-- **PWA Auto-Update Logic** ✅ — Implemented `skipWaiting` and `clientsClaim` to ensure users get the latest code immediately after a version bump.
+### v2.2.5 (The Persistence & Integrity Update)
+- **Remember Me (Persistent Login)** ✅ — Secure, token-based session restoration for 30 days.
+- **PWA Auto-Login** ✅ — Automatic detection and recovery of user sessions across all entry points.
+- **Database Schema Sync Policy** ✅ — Formalized `schema.sql` as the master source of truth.
+- **UX: Enter to Login** ✅ — Added keyboard support for auth forms.
+- **Developer Documentation** ✅ — Documented branding, AI icon prompts, and shell-aware terminal skills.
 
-### 🔲 Remaining for v2.2
+### ✅ Completed in v2.2.6 (State Sync & Integrity)
+- **Fix: Station Dropdown Sync** — Ensured the station selector UI always matches the restored audio state on page load.
+- **Play/Pause Button State Sync** — Centralized play/pause icons in StateManager to prevent icon-flip glitches during errors or auto-play blocks.
+- **localStorage → DB Favorites Import** — Added automated sync of guest favorites to the cloud on first registration/login.
+
+### 🔲 Milestone v2.2.7: UX Polish & Social Features
+- [ ] **Site Config: Social Links** — Add fields in Admin Site Config for GitHub, Twitter, etc., instead of hardcoding them in `settings.js`.
 
 ### ⚠️ Known Quirks (v2.2)
 - **Pop-out Ad Rendering** — The `#ad-space-popout` 300×50 banner may require the user to open the popup slightly wider than `320px` on some browsers/OS combinations before AdSense fully renders. Root cause: AdSense's available-width detection varies by browser viewport reporting. Workaround: window is pre-sized to `320×390`; users can resize if needed. Investigation ongoing for v2.3.

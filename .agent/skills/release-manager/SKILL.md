@@ -32,6 +32,11 @@ If the user doesn't specify the next version number, determine it based on the i
 *   **MINOR (e.g., 1.3.0 to 1.4.0):** If new, user-facing features were added (e.g., adding a new Directory search UI).
 *   **PATCH (e.g., 1.3.0 to 1.3.1):** If the changes consist purely of bug fixes, CSS tweaks, or underlying code maintenance that doesn't change functionality.
 
+## 4. Command Integrity
+When running final `git` commands or database migrations, always adhere to the `terminal-commander` skill:
+- Use `%SAME%` for Windows/PowerShell compatibility (replace `&&` with `;`).
+- Ensure special characters in database passwords are double-quoted.
+
 ## 3. Communication
 *   Do not ask for permission between steps; execute all three steps as a single batch operation.
 *   Once finished, proudly present a summary of the actions taken to the user and ask them to verify the new `RELEASE_vX.X.X.md` file!

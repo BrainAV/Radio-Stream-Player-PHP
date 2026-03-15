@@ -953,6 +953,41 @@ export function initSettings() {
         window.dispatchEvent(new CustomEvent('settingsOpened'));
     }
 
+    /**
+     * Detects guest favorites in localStorage and offers to sync them to the DB.
+     */
+    async function triggerFavoritesImport() {
+        const customStations = JSON.parse(localStorage.getItem('customStations')) || [];
+        const favoriteStations = JSON.parse(localStorage.getItem('favoriteStations')) || [];
+
+        if (customStations.length === 0 && favoriteStations.length === 0) return;
+
+        // Non-intrusive prompt
+        if (confirm("Sync Local Favorites?\n\nWe found saved stations in this browser. Would you like to sync them to your account for access on any device?")) {
+            try {
+                const response = await fetch('api/import_favorites.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ customStations, favoriteStations })
+                });
+                const data = await response.json();
+                if (data.status === 'success') {
+                    // Successful sync: wipe localStorage to prevent duplicate prompts
+                    localStorage.removeItem('customStations');
+                    localStorage.removeItem('favoriteStations');
+                    
+                    // Re-render the collection to show combined results
+                    await refreshAppData();
+                    alert(data.message);
+                } else {
+                    console.error('Import API error:', data.message);
+                }
+            } catch (e) {
+                console.error('Network error during favorites import:', e);
+            }
+        }
+    }
+
     if (closeLoginBtn) {
         closeLoginBtn.addEventListener('click', () => {
             if (loginModal) loginModal.style.display = 'none';
@@ -1008,7 +1043,8 @@ export function initSettings() {
                     if (loginModal) loginModal.style.display = 'none';
                     updateAuthButton();
                     updateAdVisibility(); // hide ads immediately for admin/premium
-                    refreshAppData();
+                    await refreshAppData();
+                    await triggerFavoritesImport();
                 } else {
                     showLoginError(data.message || 'Login failed.');
                 }
@@ -1142,7 +1178,8 @@ export function initSettings() {
                     
                     updateAuthButton();
                     updateAdVisibility(); // hide ads if new user is somehow privileged
-                    refreshAppData();
+                    await refreshAppData();
+                    await triggerFavoritesImport();
                 } else {
                     showRegisterError(data.message || 'Registration failed.');
                 }

@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+- [ ] Placeholder for future features.
+
+## [2.2.6] - 2026-03-14
+
+### Added
+- **localStorage → DB Favorites Import** — Integrated an automated migration flow that detects guest favorites/custom stations and offers to sync them to the user's permanent account upon first login or registration.
+- **Station Search: Enter to Search** — Added keyboard support for the Radio Browser search input.
+
+### Fixed
+- **Station Dropdown Sync** — Resolved an issue where the station selector UI would remain set to the first station on page load, even if a different station was restored via persistence.
+- **Play/Pause Icon Integrity** — Fixed intermittent "icon-flipping" where the play/pause button would show the wrong state during auto-play blocks or stream errors. The icon is now strictly driven by the centralized `StateManager`.
+
 ## [2.2.5] - 2026-03-14
 
 ### Added

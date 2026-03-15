@@ -153,12 +153,17 @@ export function initPlayer() {
             stationSelect.appendChild(option);
         });
 
-        if (currentVal && Array.from(stationSelect.options).some(opt => opt.value === currentVal)) {
-            stationSelect.value = currentVal;
-        } else if (filteredStations.length > 0 && !state.currentStation) {
-            // Initial load edge case: no station in state yet
+        // prioritize state.currentStation (the source of truth) over the previous DOM value
+        const targetStation = state.currentStation || currentVal;
+        
+        if (targetStation && Array.from(stationSelect.options).some(opt => opt.value === targetStation)) {
+            stationSelect.value = targetStation;
+        } else if (filteredStations.length > 0) {
+            // Default to first available if nothing is set or current selection is filtered out
             stationSelect.value = filteredStations[0].url;
-            stateManager.setStation(filteredStations[0].url);
+            if (!state.currentStation) {
+                stateManager.setStation(filteredStations[0].url);
+            }
         }
         updateFavoriteBtnState(stateManager.getState().currentStation, favorites);
         updateMediaSession(stateManager.getState());
@@ -224,7 +229,7 @@ export function initPlayer() {
         favoriteBtn.title = isFav ? "Remove from Favorites" : "Add to Favorites";
     }
 
-    function updateMediaSession(state) {
+    function updateMediaSession(state, metadataTitle = null) {
         if (!('mediaSession' in navigator)) return;
 
         const selectedOption = stationSelect.options[stationSelect.selectedIndex];
@@ -234,12 +239,31 @@ export function initPlayer() {
         const genre = selectedOption.dataset.genre || 'Live Radio';
         const country = selectedOption.dataset.country || 'Internet';
 
+        let displayTitle = stationName;
+        let displayArtist = genre;
+        let displayAlbum = country;
+
+        if (metadataTitle) {
+            // Try to split "Artist - Song"
+            const parts = metadataTitle.split(' - ');
+            if (parts.length >= 2) {
+                displayArtist = parts[0].trim();
+                displayTitle = parts.slice(1).join(' - ').trim();
+                displayAlbum = stationName; // Use station name as Album when showing song info
+            } else {
+                displayTitle = metadataTitle;
+                displayArtist = stationName;
+                displayAlbum = genre;
+            }
+        }
+
         navigator.mediaSession.metadata = new MediaMetadata({
-            title: stationName,
-            artist: genre,
-            album: country,
+            title: displayTitle,
+            artist: displayArtist,
+            album: displayAlbum,
             artwork: [
-                { src: 'https://cdn-icons-png.flaticon.com/512/565/565535.png', sizes: '512x512', type: 'image/png' }
+                { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+                { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' }
             ]
         });
 
@@ -267,8 +291,23 @@ export function initPlayer() {
     if (currentState.currentStation) {
         currentState.audio.src = getProxiedAudioUrl(currentState.currentStation);
     }
-
     
+    // Explicit sync for Play/Pause state from audio element back to StateManager
+    // This handles cases where the browser pauses the audio (e.g. backgrounding, errors, or auto-play blocks)
+    currentState.audio.addEventListener('play', () => {
+        if (!stateManager.getState().isPlaying) {
+            stateManager.setPlaying(true);
+        }
+    });
+
+    currentState.audio.addEventListener('pause', () => {
+        // Only set playing to false if we weren't just switching stations
+        const st = stateManager.getState();
+        if (st.isPlaying && st.audio.readyState >= 2) { // 2 = HAVE_CURRENT_DATA
+            stateManager.setPlaying(false);
+        }
+    });
+
     // --- Audio Event Listeners (Auto-Reconnect) ---
     let reconnectTimeout = null;
     let reconnectAttempts = 0;
@@ -534,6 +573,8 @@ export function initPlayer() {
             if (bitrate) {
                 stateManager.setBitrate(parseInt(bitrate, 10));
             }
+
+            updateMediaSession(stateManager.getState(), data.title || null);
         } catch (error) {
             console.error("Failed to fetch stream metadata:", error);
             // Don't overwrite the "Reconnecting" text if we are in a drop state
@@ -541,9 +582,8 @@ export function initPlayer() {
                 nowPlayingTrack.textContent = stationSelect.options[stationSelect.selectedIndex]?.text.replace(/^★\s/, '');
             }
             nowPlayingTrack.classList.remove('marquee-active');
+            updateMediaSession(stateManager.getState());
         }
-
-        updateMediaSession(stateManager.getState());
     }
 
     /**

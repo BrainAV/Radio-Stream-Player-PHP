@@ -227,6 +227,9 @@ The headphone icons used for the PWA (`favicon.png`, `icons/icon-192.png`, `icon
 
 > **"A premium, minimalist headphone icon with neon purple and electric blue glowing accents. Designed in a sleek glassmorphism style with high-quality translucent layers, subtle gradients, and a dark rounded-square background. High-tech, modern app icon aesthetic, 512x512, centered."**
 
+>  (me jason here)  This one might work with the rebrand to Radio DJay Canada
+"A minimalist, high-tech app icon featuring a digital soundwave that subtly forms the silhouette of a maple leaf. Neon purple and cyan glassmorphism style with glowing translucent layers. Modern, sleek aesthetic with a dark premium background. Designed for a 512x512 rounded app tile, vibrant and professional."
+
 ### 9.2. Color Palette
 - **Primary Background**: `#111827` (Dark Navy/Gray)
 - **Accent Glow**: Neon Purple / Electric Blue
