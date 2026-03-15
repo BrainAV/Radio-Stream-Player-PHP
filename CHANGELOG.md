@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **localStorage → DB Favorites Import** — Integrated an automated migration flow that detects guest favorites/custom stations and offers to sync them to the user's permanent account upon first login or registration.
 - **Station Search: Enter to Search** — Added keyboard support for the Radio Browser search input.
+- **Lock Screen Enhancements** — Improved the Media Session integration to display real-time song information and the PWA app icon on the OS lock screen and media controls.
 
 ### Fixed
 - **Station Dropdown Sync** — Resolved an issue where the station selector UI would remain set to the first station on page load, even if a different station was restored via persistence.
