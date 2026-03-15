@@ -65,20 +65,20 @@ The audio visualization is powered by the Web Audio API. The audio signal flows 
                    ┌──────────────────────────┐
 <audio> element -> │ MediaElementAudioSource  ├─> speakers (AudioDestination)
                    └──────────────────────────┘
-                                │
+                                 │
                    ┌──────────────────────────┐
                    │    ChannelSplitter       │
                    └──────────────────────────┘
-                                │
+                                 │
            ┌────────────────────┴────────────────────┐
            │ (Channel 0)                  (Channel 1) │
            ▼                                          ▼
-┌───────────────────┐                      ┌───────────────────┐
-│ AnalyserNode (L)  │                      │ AnalyserNode (R)  │
-└───────────────────┘                      └───────────────────┘
+ ┌───────────────────┐                      ┌───────────────────┐
+ │ AnalyserNode (L)  │                      │ AnalyserNode (R)  │
+ └───────────────────┘                      └───────────────────┘
            │                                          │
            ▼                                          ▼
-     (JS Analysis)                            (JS Analysis)
+      (JS Analysis)                            (JS Analysis)
 ```
 
 ### 3.3. Visualization Engine
@@ -220,3 +220,20 @@ Whenever a migration is created:
 
 ---
 *This guide should be kept up-to-date with any significant architectural changes.*
+
+## 9. Design & Branding
+
+The Radio Stream Player follows a **Glassmorphism** and **Neon** aesthetic. This section documents the design assets and prompts used to maintain visual consistency.
+
+### 9.1. PWA Icons
+The headphone icons used for the PWA (`favicon.png`, `icons/icon-192.png`, `icons/icon-512.png`) were generated with the following AI prompt to ensure a premium look:
+
+> **"A premium, minimalist headphone icon with neon purple and electric blue glowing accents. Designed in a sleek glassmorphism style with high-quality translucent layers, subtle gradients, and a dark rounded-square background. High-tech, modern app icon aesthetic, 512x512, centered."**
+
+>  (me jason here)  This one might work with the rebrand to Radio DJay Canada
+"A minimalist, high-tech app icon featuring a digital soundwave that subtly forms the silhouette of a maple leaf. Neon purple and cyan glassmorphism style with glowing translucent layers. Modern, sleek aesthetic with a dark premium background. Designed for a 512x512 rounded app tile, vibrant and professional."
+
+### 9.2. Color Palette
+- **Primary Background**: `#111827` (Dark Navy/Gray)
+- **Accent Glow**: Neon Purple / Electric Blue
+- **Translucency**: `rgba(255, 255, 255, 0.05)` to `0.1` with `backdrop-filter: blur(12px)`
