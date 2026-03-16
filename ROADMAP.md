@@ -64,7 +64,12 @@ This document outlines the future direction and planned features for the Radio S
 - **Play/Pause Button State Sync** — Centralized play/pause icons in StateManager to prevent icon-flip glitches during errors or auto-play blocks.
 - **localStorage → DB Favorites Import** — Added automated sync of guest favorites to the cloud on first registration/login.
 
-### 🔲 Milestone v2.2.7: UX Polish & Social Features
+### ✅ Completed in v2.2.7 (Cloud Persistence & UX Polish)
+- **VU Style Memory (Cloud Sync)** — Integrated visualizer preferences into the user profile DB, ensuring the VU Meter style sticks between systems for logged-in users.
+- **Dynamic Profile Updates** — Refined `api/profile.php` to allow preference updates without password re-entry, improving UX flow.
+- **UI: Dynamic Header State** — Replaced hardcoded "Now Playing" string with a reactive "Ready to Play" initial state.
+
+### 🔲 Milestone v2.2.7+ (Planned)
 - [ ] **Site Config: Social Links** — Add fields in Admin Site Config for GitHub, Twitter, etc., instead of hardcoding them in `settings.js`.
 
 ### ⚠️ Known Quirks (v2.2)

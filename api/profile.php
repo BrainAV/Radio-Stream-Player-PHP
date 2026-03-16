@@ -30,7 +30,7 @@ if (!$pdo) {
 // ---------------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
-        $stmt = $pdo->prepare("SELECT user_email, display_name FROM users WHERE id = :id");
+        $stmt = $pdo->prepare("SELECT user_email, display_name, vu_style FROM users WHERE id = :id");
         $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
         $stmt->execute();
         $user = $stmt->fetch();
@@ -57,18 +57,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
-    if (!$data || !isset($data['current_password'])) {
-        http_response_code(400);
-        echo json_encode(['status' => 'error', 'message' => 'Current password is required to make changes.']);
-        exit();
-    }
-
-    $current_pass = $data['current_password'];
-    
     // ---------------------------------------------------------
     // ACCOUNT DELETION LOGIC
     // ---------------------------------------------------------
     if (isset($data['action']) && $data['action'] === 'delete_account') {
+        if (!isset($data['current_password'])) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Current password is required to delete account.']);
+            exit();
+        }
+        $current_pass = $data['current_password'];
+        
         if ($user_id == 1) {
             http_response_code(403);
             echo json_encode(['status' => 'error', 'message' => 'The primary administrator account cannot be deleted.']);
@@ -99,17 +98,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $new_email = filter_var($data['new_email'] ?? '', FILTER_SANITIZE_EMAIL);
     $new_pass = $data['new_password'] ?? '';
+    $vu_style = $data['vu_style'] ?? null;
 
     try {
-        // 1. Verify current password
-        $stmt = $pdo->prepare("SELECT user_pass FROM users WHERE id = ?");
-        $stmt->execute([$user_id]);
-        $user = $stmt->fetch();
+        // 1. Verify current password ONLY if changing sensitive fields
+        if (!empty($new_email) || !empty($new_pass)) {
+            if (!isset($data['current_password'])) {
+                http_response_code(403);
+                echo json_encode(['status' => 'error', 'message' => 'Current password is required to update email or password.']);
+                exit();
+            }
+            
+            $stmt = $pdo->prepare("SELECT user_pass FROM users WHERE id = ?");
+            $stmt->execute([$user_id]);
+            $user = $stmt->fetch();
 
-        if (!$user || !password_verify($current_pass, $user['user_pass'])) {
-            http_response_code(403);
-            echo json_encode(['status' => 'error', 'message' => 'Incorrect current password.']);
-            exit();
+            if (!$user || !password_verify($data['current_password'], $user['user_pass'])) {
+                http_response_code(403);
+                echo json_encode(['status' => 'error', 'message' => 'Incorrect current password.']);
+                exit();
+            }
         }
 
         // 2. Prepare update
@@ -124,6 +132,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($new_pass)) {
             $updates[] = "user_pass = ?";
             $params[] = password_hash($new_pass, PASSWORD_DEFAULT);
+        }
+
+        if (isset($data['vu_style'])) {
+            $updates[] = "vu_style = ?";
+            $params[] = $data['vu_style'];
         }
 
         if (empty($updates)) {

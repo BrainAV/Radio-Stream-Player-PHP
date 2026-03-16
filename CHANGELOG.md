@@ -7,10 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [2.2.7] - 2026-03-16
 
 ### Added
-- [ ] Placeholder for future features.
+- **Cloud VU Style Persistence** — Logged-in users' VU Meter visualization preferences are now stored in the database, allowing settings to persist across different browsers and systems.
+- **Dynamic Profile Updates** — Refined the Profile API to allow updating preferences (like VU style) seamlessly without requiring a password confirmation for non-sensitive fields.
+
+### Fixed
+- **UI Hardcoding** — Replaced the hardcoded "Now Playing: ETN-FM Trance" message with a dynamic "Ready to Play" header and "Select a station to begin" subtitle for a better initial user experience.
 
 ## [2.2.6] - 2026-03-14
 

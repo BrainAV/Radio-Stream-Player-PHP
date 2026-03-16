@@ -16,20 +16,24 @@ if (isset($_SESSION['user_id'])) {
     $userId = intval($_SESSION['user_id']);
     $userRole = $_SESSION['user_role'] ?? 'editor';
     
-    // Fetch user details including premium status
+    // Fetch user details including premium status and vu_style
     $isPremium = 0;
+    $vuStyle = 'led';
     $pdo = get_db_connection();
     if ($pdo) {
-        $stmt = $pdo->prepare("SELECT is_premium FROM users WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT is_premium, vu_style FROM users WHERE id = ?");
         $stmt->execute([$userId]);
         $user = $stmt->fetch();
         if ($user) {
             $isPremium = intval($user['is_premium']);
+            if (!empty($user['vu_style'])) {
+                $vuStyle = $user['vu_style'];
+            }
         }
     }
 
     $isPremiumJs = $isPremium ? 'true' : 'false';
-    $loggedInJs = "<script>window.IS_LOGGED_IN = true; window.USER_ID = {$userId}; window.USER_ROLE = '{$userRole}'; window.IS_PREMIUM = {$isPremiumJs};</script>";
+    $loggedInJs = "<script>window.IS_LOGGED_IN = true; window.USER_ID = {$userId}; window.USER_ROLE = '{$userRole}'; window.IS_PREMIUM = {$isPremiumJs}; window.USER_VU_STYLE = '{$vuStyle}';</script>";
     
     $adminBtn = '';
     if ($userRole === 'admin') {

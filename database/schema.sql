@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS users (
   display_name varchar(250) NOT NULL,
   role varchar(50) NOT NULL DEFAULT 'editor',
   is_premium TINYINT(1) NOT NULL DEFAULT 0,
+  vu_style VARCHAR(50) DEFAULT 'led',
   avatar varchar(255) DEFAULT NULL,
   created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),

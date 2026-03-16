@@ -24,7 +24,7 @@ function check_persistent_session() {
 
         // Find valid token
         $stmt = $pdo->prepare("
-            SELECT t.user_id, u.role, u.is_premium 
+            SELECT t.user_id, u.role, u.is_premium, u.vu_style 
             FROM user_tokens t
             JOIN users u ON t.user_id = u.id
             WHERE t.token = ? AND t.expires_at > NOW()
@@ -37,6 +37,7 @@ function check_persistent_session() {
             $_SESSION['user_id'] = $data['user_id'];
             $_SESSION['user_role'] = $data['role'];
             $_SESSION['is_premium'] = (bool)$data['is_premium'];
+            $_SESSION['vu_style'] = $data['vu_style'];
             
             // Optional: Rotate token for improved security (skipped for simplicity in this MVP)
         } else {

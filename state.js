@@ -16,8 +16,17 @@ export class StateManager {
                 return isNaN(sv) ? 0.5 : sv;
             })(),
             vuStyle: (() => {
+                if (window.USER_VU_STYLE) {
+                    const idx = ['classic', 'led', 'circular', 'waveform', 'spectrum', 'retro', 'neon'].indexOf(window.USER_VU_STYLE);
+                    if (idx !== -1) return idx;
+                }
                 const ls = parseInt(localStorage.getItem('vuStyle'), 10);
-                return isNaN(ls) ? 1 : ls;
+                if (!isNaN(ls)) return ls;
+                
+                // Also check if string was saved to localStorage
+                const lsStr = localStorage.getItem('vuStyle');
+                const idx = ['classic', 'led', 'circular', 'waveform', 'spectrum', 'retro', 'neon'].indexOf(lsStr);
+                return idx !== -1 ? idx : 1;
             })(),
             metadataInterval: null,
             popoutWindow: null,

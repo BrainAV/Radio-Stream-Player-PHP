@@ -62,8 +62,8 @@ export function initSettings() {
             vuStyleSelect.appendChild(option);
         });
 
-        // Set initial value from localStorage or default
-        const savedStyle = localStorage.getItem('vuStyle');
+        // Set initial value from server (DB), localStorage or default
+        const savedStyle = window.USER_VU_STYLE || localStorage.getItem('vuStyle');
         if (savedStyle !== null) {
             // Handle backwards compatibility where savedStyle might be an integer "1"
             const numStyle = parseInt(savedStyle, 10);
@@ -79,13 +79,28 @@ export function initSettings() {
         }
 
         // Change Listener
-        vuStyleSelect.addEventListener('change', (e) => {
+        vuStyleSelect.addEventListener('change', async (e) => {
             const selectedStyleName = e.target.value;
             const index = VU_STYLES.indexOf(selectedStyleName);
             if (index !== -1) {
                 // Save the string to localStorage for robustness
                 localStorage.setItem('vuStyle', selectedStyleName);
                 stateManager.setVuStyle(index);
+
+                // If logged in, also save to cloud (database)
+                if (window.IS_LOGGED_IN) {
+                    try {
+                        await fetch('api/profile.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                vu_style: selectedStyleName 
+                            })
+                        });
+                    } catch (e) {
+                        console.error("Failed to sync vu_style to cloud", e);
+                    }
+                }
             }
         });
     }
@@ -937,6 +952,16 @@ export function initSettings() {
                 window.USER_ID = null;
                 window.USER_ROLE = null;
                 window.IS_PREMIUM = false;
+
+                // Sync VU style back to guest preference (localStorage)
+                window.USER_VU_STYLE = null;
+                const savedStyle = localStorage.getItem('vuStyle') || 'led';
+                const idx = VU_STYLES.indexOf(savedStyle);
+                if (idx !== -1) {
+                    stateManager.setVuStyle(idx);
+                    if (vuStyleSelect) vuStyleSelect.value = savedStyle;
+                }
+
                 updateAuthButton();
                 updateAdVisibility(); // restore ads for guests
                 refreshAppData();
@@ -1040,6 +1065,14 @@ export function initSettings() {
                     window.USER_ID = data.user_id;
                     window.USER_ROLE = data.role;
                     window.IS_PREMIUM = data.is_premium === true || data.is_premium === 1;
+                    if (data.vu_style) {
+                        window.USER_VU_STYLE = data.vu_style;
+                        const idx = VU_STYLES.indexOf(data.vu_style);
+                        if (idx !== -1) {
+                            stateManager.setVuStyle(idx);
+                            if (vuStyleSelect) vuStyleSelect.value = data.vu_style;
+                        }
+                    }
                     if (loginModal) loginModal.style.display = 'none';
                     updateAuthButton();
                     updateAdVisibility(); // hide ads immediately for admin/premium
@@ -1166,6 +1199,14 @@ export function initSettings() {
                         window.USER_ID = data.user.id;
                         window.USER_ROLE = data.user.role;
                         window.IS_PREMIUM = data.user.is_premium === true || data.user.is_premium === 1;
+                        if (data.user.vu_style) {
+                            window.USER_VU_STYLE = data.user.vu_style;
+                            const idx = VU_STYLES.indexOf(data.user.vu_style);
+                            if (idx !== -1) {
+                                stateManager.setVuStyle(idx);
+                                if (vuStyleSelect) vuStyleSelect.value = data.user.vu_style;
+                            }
+                        }
                     }
                     
                     if (registerModal) registerModal.style.display = 'none';

@@ -90,7 +90,8 @@ try {
         'message' => 'Registration successful. Welcome!',
         'user' => [
             'id' => $new_user_id,
-            'role' => $role
+            'role' => $role,
+            'vu_style' => 'led'
         ]
     ]);
 

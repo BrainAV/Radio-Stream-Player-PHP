@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo = get_db_connection();
             if ($pdo) {
                 // Fetch user
-                $stmt = $pdo->prepare("SELECT id, user_pass, role, is_premium FROM users WHERE user_email = ?");
+                $stmt = $pdo->prepare("SELECT id, user_pass, role, is_premium, vu_style FROM users WHERE user_email = ?");
                 $stmt->execute([$email]);
                 $user = $stmt->fetch();
 
@@ -59,7 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'message' => 'Login successful.',
                         'user_id' => $user['id'],
                         'role' => $user['role'],
-                        'is_premium' => (bool)$user['is_premium']
+                        'is_premium' => (bool)$user['is_premium'],
+                        'vu_style' => $user['vu_style']
                     ]);
                     exit;
                 } else {
