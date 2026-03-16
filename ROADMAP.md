@@ -69,8 +69,11 @@ This document outlines the future direction and planned features for the Radio S
 - **Dynamic Profile Updates** — Refined `api/profile.php` to allow preference updates without password re-entry, improving UX flow.
 - **UI: Dynamic Header State** — Replaced hardcoded "Now Playing" string with a reactive "Ready to Play" initial state.
 
-### 🔲 Milestone v2.2.7+ (Planned)
-- [ ] **Site Config: Social Links** — Add fields in Admin Site Config for GitHub, Twitter, etc., instead of hardcoding them in `settings.js`.
+### ✅ Completed in v2.2.8 (Admin Intelligence & Branding)
+- **Station Intelligence** — Implemented "Total Favorites" analytics, "Promote to System" station engine, and individual user collection visibility.
+- **Operational Health** — Real-time search for Users/Stations, duplicate stream detection, and an automated stream health validation utility.
+- **Dynamic branding** — Centralized Social Media CRUD (GitHub, Twitter, etc.) and a master Maintenance Mode toggle in the Admin Dashboard.
+- **Public Settings API** — Created a secure endpoint to serve non-sensitive site config to the player frontend.
 
 ### ⚠️ Known Quirks (v2.2)
 - **Pop-out Ad Rendering** — The `#ad-space-popout` 300×50 banner may require the user to open the popup slightly wider than `320px` on some browsers/OS combinations before AdSense fully renders. Root cause: AdSense's available-width detection varies by browser viewport reporting. Workaround: window is pre-sized to `320×390`; users can resize if needed. Investigation ongoing for v2.3.

@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.2.8] - 2026-03-16
+
+### Added
+- **Station Intelligence & Analytics** — Implemented "Total Favorites" tracking for all stations, allowing admins to see popularity rankings at a glance.
+- **One-Click Station Promotion** — Added a "Promote to System" feature for admins to instantly convert popular user-added stations into public system defaults.
+- **Improved Duplicate Detection** — Implemented bi-directional conflict detection. URLs with same contents but different formatting (trailing slashes/semicolons) are flagged as exact duplicates, while shared names are flagged as potential mirrors.
+- **User Collection Visibility** — Admins can now view individual user collections (favorites and custom stations) directly from the User Management panel.
+- **Real-Time Search & Filtering** — Implemented live searching for both User and Station tables and added advanced filtering for System vs. User-added stations.
+- **Automated Stream Health Check** — Developed a stream validation utility that pings URLs to detect alive, dead, or failing streams directly from the dashboard.
+- **Duplicate Station Detection** — Added UI highlighting for duplicate stream URLs to help admins maintain a clean station directory.
+- **Dynamic Social Branding** — Moved hardcoded social links (GitHub, Twitter, Facebook, Instagram, PayPal) into the database, manageable via the Site Config panel.
+- **Maintenance Mode** — Implemented a master toggle to redirect non-admin users to a maintenance landing page during system updates.
+- **Public Settings API** — Created `api/settings.php` to securely provide non-sensitive site configuration to the player frontend.
+
+### Fixed
+- **Duplicate Detection False Negatives** — Refined the detection logic to strip SHOUTcast-style trailing semicolons (`;`) and slashes (`/`), ensuring URLs like `...:8130/` and `...:8130/;` are correctly identified as duplicates.
+- **CSS & JS Syntax Integrity** — Resolved missing closing braces in `admin.css` and `settings.js` discovered during the Branding implementation.
+- **Social Link Accessibility** — Updated the "About" modal to dynamically toggle social icons based on whether a URL is provided in the dashboard.
+
 ## [2.2.7] - 2026-03-16
 
 ### Added

@@ -93,6 +93,12 @@ $userRole = $_SESSION['user_role'];
                 <header class="admin-header">
                     <h1>User Management</h1>
                 </header>
+                <div class="admin-actions" style="margin-bottom: 20px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <label for="user-search-input" style="font-size: 0.9em; opacity: 0.8; white-space: nowrap;">Search Users:</label>
+                        <input type="text" id="user-search-input" class="settings-input" placeholder="Search by email or name..." style="margin: 0; padding: 8px; flex: 1; max-width: 400px;">
+                    </div>
+                </div>
                 <div class="glass-panel table-container">
                     <table class="admin-table">
                         <thead>
@@ -138,6 +144,21 @@ $userRole = $_SESSION['user_role'];
                     <div id="station-form-msg" style="margin-top: 10px; font-size: 0.9em; display: none;"></div>
                 </div>
 
+                <div class="admin-actions" style="margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    <button id="add-station-open-btn" class="console-btn" style="white-space: nowrap;">+ Add System Station</button>
+                    <button id="check-health-btn" class="console-btn" style="white-space: nowrap; background: var(--secondary-color, #4f46e5);">Scan Stream Health</button>
+                    <div style="flex-grow: 1;"></div>
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <input type="text" id="station-search-input" class="settings-input" placeholder="Search stations..." style="width: 200px; margin: 0; padding: 8px;">
+                        <label for="station-type-filter" style="font-size: 0.9em; opacity: 0.8; white-space: nowrap;">Filter:</label>
+                        <select id="station-type-filter" class="settings-input" style="width: 180px; margin: 0; padding: 8px;">
+                            <option value="all">All Stations</option>
+                            <option value="default">System Only</option>
+                            <option value="custom">User-Added Only</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="glass-panel table-container">
                     <table class="admin-table">
                         <thead>
@@ -145,7 +166,8 @@ $userRole = $_SESSION['user_role'];
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Genre</th>
-                                <th>URL</th>
+                                <th>Type</th>
+                                <th title="Total User Favorites">Popularity</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -193,6 +215,48 @@ $userRole = $_SESSION['user_role'];
                     </div>
                 </div>
 
+                <!-- Social Media & Support Section -->
+                <div class="glass-panel" style="padding: 25px; margin-bottom: 20px;">
+                    <h3 style="margin: 0 0 18px; font-size: 1em; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.6; color: white;">🌍 Social Media & Support</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="config-social-github" style="display: block; margin-bottom: 6px; font-weight: 600; color: white;">GitHub URL</label>
+                            <input type="url" id="config-social-github" class="settings-input" placeholder="https://github.com/...">
+                        </div>
+                        <div class="form-group">
+                            <label for="config-social-twitter" style="display: block; margin-bottom: 6px; font-weight: 600; color: white;">Twitter/X URL</label>
+                            <input type="url" id="config-social-twitter" class="settings-input" placeholder="https://twitter.com/...">
+                        </div>
+                        <div class="form-group">
+                            <label for="config-social-facebook" style="display: block; margin-bottom: 6px; font-weight: 600; color: white;">Facebook URL</label>
+                            <input type="url" id="config-social-facebook" class="settings-input" placeholder="https://facebook.com/...">
+                        </div>
+                        <div class="form-group">
+                            <label for="config-social-instagram" style="display: block; margin-bottom: 6px; font-weight: 600; color: white;">Instagram URL</label>
+                            <input type="url" id="config-social-instagram" class="settings-input" placeholder="https://instagram.com/...">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label for="config-social-support" style="display: block; margin-bottom: 6px; font-weight: 600; color: white;">Support/Donate URL (PayPal/Ko-fi)</label>
+                        <input type="url" id="config-social-support" class="settings-input" placeholder="https://paypal.me/...">
+                    </div>
+                </div>
+
+                <!-- Operational Status Section -->
+                <div class="glass-panel" style="padding: 25px; margin-bottom: 20px; border-left: 4px solid #ef4444;">
+                    <h3 style="margin: 0 0 18px; font-size: 1em; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.6; color: white;">🚨 Operational Status</h3>
+                    <div class="form-group" style="display: flex; align-items: center; gap: 15px;">
+                        <label class="switch">
+                            <input type="checkbox" id="config-maintenance-mode">
+                            <span class="slider round"></span>
+                        </label>
+                        <div>
+                            <span style="font-weight: 600; color: white; display: block;">Maintenance Mode</span>
+                            <p style="margin: 4px 0 0; font-size: 0.82em; opacity: 0.55;">When enabled, guests are redirected to a maintenance page. Admins can still access the site and dashboard.</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="settings-msg" style="margin-bottom: 16px; font-size: 0.9em; display: none; padding: 10px 14px; border-radius: 6px;"></div>
                 <div class="settings-action-row" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
                     <button id="save-settings-btn" class="console-btn" style="padding: 12px 28px; min-width: 200px;">Save Configuration</button>
@@ -228,6 +292,34 @@ $userRole = $_SESSION['user_role'];
                 
                 <div id="edit-user-msg" style="margin-bottom: 15px; font-size: 0.9em; display: none; padding: 10px; border-radius: 4px;"></div>
                 <button id="save-user-role-btn" class="console-btn" style="width: 100%; padding: 10px;">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Stations Modal -->
+    <div id="user-stations-modal" class="settings-modal" style="display: none;">
+        <div class="settings-content" style="max-width: 600px; background: rgba(20, 20, 20, 0.95);">
+            <div class="settings-header">
+                <h3>User Station List</h3>
+                <button id="close-user-stations-btn" class="close-btn">&times;</button>
+            </div>
+            <div class="settings-body" style="padding: 20px; color: white;">
+                <p style="margin-bottom: 15px;">Viewing collection for: <strong id="user-stations-display" style="color: var(--primary-color);"></strong></p>
+                <div id="user-stations-container" style="max-height: 400px; overflow-y: auto;">
+                    <table class="admin-table mini">
+                        <thead>
+                            <tr>
+                                <th>Station</th>
+                                <th>Genre</th>
+                                <th>Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-stations-tbody">
+                            <!-- Populated via admin.js -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

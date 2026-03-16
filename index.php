@@ -77,6 +77,13 @@ if ($pdo) {
     $stmt = $pdo->query("SELECT config_key, config_value FROM site_config");
     $config = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 
+    // Maintenance Mode Check
+    $isMaintenance = isset($config['maintenance_mode']) && $config['maintenance_mode'] == '1';
+    if ($isMaintenance && $userRole !== 'admin') {
+        include __DIR__ . '/maintenance.php';
+        exit;
+    }
+
     $headScripts = "";
     
     // Google Tag (gtag.js)

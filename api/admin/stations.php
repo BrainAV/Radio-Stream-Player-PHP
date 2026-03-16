@@ -28,8 +28,14 @@ $input = json_decode(file_get_contents('php://input'), true);
 
 try {
     if ($method === 'GET') {
-        // List System Stations (type = 'default' implies it's a system station)
-        $stmt = $pdo->query("SELECT id, name, url, genre FROM stations WHERE type = 'default' ORDER BY name ASC");
+        // List Stations with favorite counts (popularity)
+        $stmt = $pdo->query("
+            SELECT s.id, s.name, s.url, s.genre, s.type, COUNT(uf.id) as favorite_count 
+            FROM stations s
+            LEFT JOIN user_favorites uf ON s.id = uf.station_id
+            GROUP BY s.id
+            ORDER BY favorite_count DESC, s.name ASC
+        ");
         $stations = $stmt->fetchAll();
         echo json_encode(['status' => 'success', 'data' => $stations]);
         exit();
@@ -54,7 +60,7 @@ try {
     }
 
     if ($method === 'PUT') {
-        // Edit System Station
+        // Edit Station (Admin can edit any station)
         $id = intval($input['id'] ?? 0);
         $name = trim($input['name'] ?? '');
         $url = trim($input['url'] ?? '');
@@ -65,16 +71,32 @@ try {
             exit();
         }
 
-        // Ensure we only edit a system station (type = 'default')
-        $stmt = $pdo->prepare("UPDATE stations SET name = ?, url = ?, genre = ? WHERE id = ? AND type = 'default'");
+        $stmt = $pdo->prepare("UPDATE stations SET name = ?, url = ?, genre = ? WHERE id = ?");
         $stmt->execute([$name, $url, $genre, $id]);
 
         echo json_encode(['status' => 'success', 'message' => 'Station updated.']);
         exit();
     }
 
+    if ($method === 'PATCH') {
+        // Promote Station to System ('default')
+        $id = intval($input['id'] ?? 0);
+        $new_type = $input['type'] ?? 'default';
+
+        if (!$id) {
+            echo json_encode(['status' => 'error', 'message' => 'Invalid ID.']);
+            exit();
+        }
+
+        $stmt = $pdo->prepare("UPDATE stations SET type = ? WHERE id = ?");
+        $stmt->execute([$new_type, $id]);
+
+        echo json_encode(['status' => 'success', 'message' => "Station type updated to $new_type."]);
+        exit();
+    }
+
     if ($method === 'DELETE') {
-        // Delete System Station
+        // Delete Station
         $id = intval($input['id'] ?? 0);
 
         if (!$id) {
@@ -82,8 +104,7 @@ try {
             exit();
         }
 
-        // Favorites pointing to this station will CASCADE delete if the DB supports it, or become orphaned
-        $stmt = $pdo->prepare("DELETE FROM stations WHERE id = ? AND type = 'default'");
+        $stmt = $pdo->prepare("DELETE FROM stations WHERE id = ?");
         $stmt->execute([$id]);
 
         echo json_encode(['status' => 'success', 'message' => 'Station deleted.']);

@@ -1407,6 +1407,41 @@ export function initSettings() {
         }
     }
 
+    // Load dynamic brand settings
+    loadPublicSettings();
+}
+
+/**
+ * Fetches non-sensitive site config (social links, etc.)
+ */
+async function loadPublicSettings() {
+    try {
+        const res = await fetch('api/settings.php');
+        const result = await res.json();
+        
+        if (result.status === 'success') {
+            const config = result.data;
+            const links = {
+                'social-link-github': config.social_github,
+                'social-link-twitter': config.social_twitter,
+                'social-link-facebook': config.social_facebook,
+                'social-link-instagram': config.social_instagram,
+                'social-link-support': config.social_support
+            };
+
+            for (const [id, url] of Object.entries(links)) {
+                const el = document.getElementById(id);
+                if (el && url && url.trim() !== '') {
+                    el.href = url.trim();
+                    el.style.display = 'flex';
+                } else if (el) {
+                    el.style.display = 'none';
+                }
+            }
+        }
+    } catch (e) {
+        console.error('[PublicSettings] Failed to load brand config', e);
+    }
 }
 
 function openSettings() {
