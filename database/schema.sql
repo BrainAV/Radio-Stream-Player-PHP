@@ -73,7 +73,13 @@ CREATE TABLE IF NOT EXISTS site_config (
 INSERT IGNORE INTO site_config (config_key, config_value) VALUES
 ('google_tag_id', 'G-T93274MPPZ'),
 ('adsense_id', 'ca-pub-0633259514526906'),
-('custom_head_code', '');
+('custom_head_code', ''),
+('social_github', ''),
+('social_twitter', ''),
+('social_facebook', ''),
+('social_instagram', ''),
+('social_support', ''),
+('maintenance_mode', '0');
 
 
 -- Seed default admin user (Password: admin123)
