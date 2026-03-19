@@ -106,8 +106,6 @@ This document outlines the future direction and planned features for the Radio S
 - **Email Verification** — Double opt-in at registration to prevent bot accounts.
 - **Custom Background Uploads** — Allow users to upload images (local/cloud storage).
 - **Wallpaper Search** — Unsplash API integration for searching backgrounds inside the player.
-- **localStorage → DB Favorites Import** — On first login, compare the user's `localStorage` custom stations/favorites with their DB record and offer a one-click (or auto) import to avoid losing pre-login saved stations.
-- **Hide Unfavorited System Stations** — Allow logged-in users to hide any system station they haven't favorited. Favorited stations always show; system stations can be decluttered. Strong incentive to register.
 
 ### Discovery & SEO
 - **Clean URLs (Remove `.php` Extension)** — Add Apache `.htaccess` rewrite rules so all public-facing pages use clean paths: `admin.php` → `admin/`, `popout.php` → `popout/`, `index.php` remains the root `/`. Improves professionalism and is a prerequisite for the dynamic station routing below.
