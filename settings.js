@@ -1513,6 +1513,8 @@ export function initSettings() {
     // Bind common mobile buttons to existing modal actions
     document.getElementById('mobile-info-btn')?.addEventListener('click', () => { closeMobileNavFunc(); openInfo(); });
     document.getElementById('mobile-settings-btn')?.addEventListener('click', () => { closeMobileNavFunc(); openSettings(); });
+    document.getElementById('mobile-account-btn')?.addEventListener('click', () => { closeMobileNavFunc(); openAccount(); });
+    document.getElementById('mobile-logout-btn')?.addEventListener('click', () => { closeMobileNavFunc(); handleLogout(); });
 
     // Load dynamic brand settings
     loadPublicSettings();
