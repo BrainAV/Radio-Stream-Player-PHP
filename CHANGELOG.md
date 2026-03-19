@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Clean URLs Implementation** — Integrated Apache `.htaccess` rewrites to enable professional, extension-less paths (e.g., `/admin`, `/popout`, `/`). Updated all internal application links, PWA `start_url`, and Service Worker caching to support the new structure.
 - **PWA Meta Tag Synchronization** — Added the modern `mobile-web-app-capable` and other standard PWA tags to both `template-player.html` and `popout.html` for improved cross-platform installation.
 
 ### Changed

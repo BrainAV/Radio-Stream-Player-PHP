@@ -499,7 +499,7 @@ export function initPlayer() {
 
             const themeClass = document.documentElement.classList.contains('dark-theme') ? 'dark' : 'light';
             const savedBg = localStorage.getItem('customBackground') || '';
-            const popoutUrl = `popout.php?station=${encodeURIComponent(st.currentStation)}&theme=${themeClass}&bg=${encodeURIComponent(savedBg)}`;
+            const popoutUrl = `/popout?station=${encodeURIComponent(st.currentStation)}&theme=${themeClass}&bg=${encodeURIComponent(savedBg)}`;
             
             const newWindow = window.open(popoutUrl, 'RadioStreamPopout', 'width=320,height=390');
             stateManager.setPopoutWindow(newWindow);

@@ -38,13 +38,13 @@ if (isset($_SESSION['user_id'])) {
     $adminBtn = '';
     $adminBtnMob = '';
     if ($userRole === 'admin') {
-        $adminBtn = '<a href="admin.php" id="header-admin-btn" class="theme-btn desktop-only" style="font-size: 14px; display: flex; align-items: center; text-decoration: none;" aria-label="Admin Control Panel" title="Admin Control Panel">
+        $adminBtn = '<a href="admin" id="header-admin-btn" class="theme-btn desktop-only" style="font-size: 14px; display: flex; align-items: center; text-decoration: none;" aria-label="Admin Control Panel" title="Admin Control Panel">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                 <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
             </svg>
         </a>';
         
-        $adminBtnMob = '<a href="admin.php" id="mobile-admin-btn" class="mobile-nav-item" aria-label="Admin Control Panel">
+        $adminBtnMob = '<a href="admin" id="mobile-admin-btn" class="mobile-nav-item" aria-label="Admin Control Panel">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                 <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
             </svg>

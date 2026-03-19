@@ -1,0 +1,31 @@
+RewriteEngine On
+RewriteBase /
+
+# 1. Remove .php extension from public-facing URLs (Canonical Redirects)
+# Redirect /admin.php -> /admin
+RewriteCond %{THE_REQUEST} /admin\.php [NC]
+RewriteRule ^admin\.php$ /admin [R=301,L]
+
+# Redirect /popout.php -> /popout
+RewriteCond %{THE_REQUEST} /popout\.php [NC]
+RewriteRule ^popout\.php$ /popout [R=301,L]
+
+# Redirect /index.php -> /
+RewriteCond %{THE_REQUEST} /index\.php [NC]
+RewriteRule ^index\.php$ / [R=301,L]
+
+# 2. Internal Rewrites (Serve files without .php)
+# Serve index.php for the root
+RewriteRule ^$ index.php [L]
+
+# Serve admin.php for /admin
+RewriteRule ^admin/?$ admin.php [L]
+
+# Serve popout.php for /popout
+RewriteRule ^popout/?$ popout.php [L]
+
+# 3. Security: Prevent direct access to api/config.php
+RewriteRule ^api/config\.php$ - [F,L]
+
+# 4. Standard Directory Index
+DirectoryIndex index.php

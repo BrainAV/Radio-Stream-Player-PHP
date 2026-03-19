@@ -49,7 +49,7 @@
         <div class="icon">⚙️</div>
         <h1>Under Maintenance</h1>
         <p>We're currently performing some scheduled maintenance to improve your listening experience. We'll be back shortly!</p>
-        <a href="admin.php" class="admin-link">Admin Access</a>
+        <a href="/admin" class="admin-link">Admin Access</a>
     </div>
 </body>
 </html>

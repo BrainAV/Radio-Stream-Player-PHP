@@ -80,6 +80,7 @@ This document outlines the future direction and planned features for the Radio S
 - **Responsive Hamburger Toggle** — Integrated a functional hamburger menu into the player header for small screens (≤ 600px).
 - **Dynamic Auth Sync** — Unified authentication button state (Login/Logout/Admin/Account) between the desktop header and mobile menu in real-time.
 - **Responsive UI Utilities** — Introduced `.desktop-only` and `.mobile-only` CSS classes for cleaner cross-device visibility control.
+- **Clean URLs** — Eliminated `.php` extensions from public navigation via `.htaccess`, preparing the foundation for dynamic station routing.
 
 ### ⚠️ Known Quirks (v2.2)
 - **Pop-out Ad Rendering** — The `#ad-space-popout` 300×50 banner may require the user to open the popup slightly wider than `320px` on some browsers/OS combinations before AdSense fully renders. Root cause: AdSense's available-width detection varies by browser viewport reporting. Workaround: window is pre-sized to `320×390`; users can resize if needed. Investigation ongoing for v2.3.

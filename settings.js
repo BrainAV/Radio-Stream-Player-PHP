@@ -878,7 +878,7 @@ export function initSettings() {
              if (!adminBtn) {
                  adminBtn = document.createElement('a');
                  adminBtn.id = 'header-admin-btn';
-                 adminBtn.href = 'admin.php';
+                 adminBtn.href = '/admin';
                  adminBtn.className = 'theme-btn desktop-only';
                  adminBtn.style.fontSize = '14px';
                  adminBtn.style.display = 'flex';
@@ -949,7 +949,7 @@ export function initSettings() {
                 if (!mobileAdminBtn) {
                     mobileAdminBtn = document.createElement('a');
                     mobileAdminBtn.id = 'mobile-admin-btn';
-                    mobileAdminBtn.href = 'admin.php';
+                    mobileAdminBtn.href = '/admin';
                     mobileAdminBtn.className = 'mobile-nav-item';
                     mobileAdminBtn.innerHTML = adminSvg + '<span>Admin Panel</span>';
                     mobileAuthGroup.insertBefore(mobileAdminBtn, mobileAuthBtn);
