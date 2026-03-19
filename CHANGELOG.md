@@ -10,10 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- 
+- **PWA Meta Tag Synchronization** — Added the modern `mobile-web-app-capable` and other standard PWA tags to both `template-player.html` and `popout.html` for improved cross-platform installation.
 
-### Fixed
-- 
+### Changed
+- **Strategic Roadmap Updates** — Added new future goals to `ROADMAP.md` for Mobile Ad Optimization, Ad Refresh Strategy, and Network Resiliency (converting Cloudflare Worker proxy to native PHP).
 
 ## [2.2.9] - 2026-03-19
 

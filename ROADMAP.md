@@ -91,8 +91,8 @@ This document outlines the future direction and planned features for the Radio S
 ## 🔭 v2.3+ Future Goals
 
 ### Backend Independence
-- **PHP Metadata Proxy** — Port Cloudflare Worker ICY metadata logic to `api/metadata.php`.
-- **PHP Stream Proxy** — Port Cloudflare Worker audio proxy to `api/proxy.php` for full self-hosting.
+- **PHP Metadata Proxy** — Port Cloudflare Worker ICY metadata logic to `api/metadata.php`. Resolves `ERR_CONNECTION_CLOSED` issues seen on Cloudflare.
+- **PHP Stream Proxy** — Port Cloudflare Worker audio proxy to `api/proxy.php` for full self-hosting. Resolves `ERR_QUIC_PROTOCOL_ERROR` and eliminates dependency on the `api.djay.ca` demo worker.
 
 ### Security & DevOps
 - **Secrets Management & Hardening** — Remove hardcoded credentials (DB password, API keys) from `api/config.php` and migrate to environment variables via `.env`. Implement `api/config.php.example` and strictly enforce `.gitignore` to prevent credential leakage in the repository.
@@ -112,6 +112,8 @@ This document outlines the future direction and planned features for the Radio S
 ### Discovery & SEO
 - **Clean URLs (Remove `.php` Extension)** — Add Apache `.htaccess` rewrite rules so all public-facing pages use clean paths: `admin.php` → `admin/`, `popout.php` → `popout/`, `index.php` remains the root `/`. Improves professionalism and is a prerequisite for the dynamic station routing below.
 - **Dynamic Station Pages** — `.htaccess` + PHP routing for `/[country]/[genre]/[station-name]` URLs. Define access tiers per page: basic info for guests, now-playing & song history for logged-in users, full analytics for premium/admin.
+- **Mobile Ad Optimization** — Research and implement responsive AdSense slots for mobile to prevent layout clipping and ensure ads deliver correctly on smaller viewports.
+- **Ad Refresh Strategy** — Investigate AdSense reload policies or dynamic station page implementation to allow for non-intrusive ad refreshing.
 - **Shareable Links** — Dynamic URLs for stations, countries, genres, and eventually user profiles. Visiting a station URL auto-initializes the player and starts playback.
 - **Listing Pages** — Index pages by Country and Genre for SEO discoverability.
 - **Global Search & Filters** — Search bar + Genre/Country filter controls for the full station database.
