@@ -10,11 +10,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- 
+
+### Fixed
+- 
+
+## [2.2.10] - 2026-03-19
+
+### Added
 - **Clean URLs Implementation** — Integrated Apache `.htaccess` rewrites to enable professional, extension-less paths (e.g., `/admin`, `/popout`, `/`). Updated all internal application links, PWA `start_url`, and Service Worker caching to support the new structure.
 - **PWA Meta Tag Synchronization** — Added the modern `mobile-web-app-capable` and other standard PWA tags to both `template-player.html` and `popout.html` for improved cross-platform installation.
 
 ### Changed
 - **Strategic Roadmap Updates** — Added new future goals to `ROADMAP.md` for Mobile Ad Optimization, Ad Refresh Strategy, and Network Resiliency (converting Cloudflare Worker proxy to native PHP).
+
+### Fixed
+- **Mobile Navigation Listeners** — Added missing event listeners for `mobile-account-btn` and `mobile-logout-btn` to ensure they correctly trigger modals and logout actions while closing the mobile navigation sheet.
 
 ## [2.2.9] - 2026-03-19
 
