@@ -1854,12 +1854,132 @@ select option {
    Already hidden on .main-content above;
    also suppress on the body on mobile
    ============================================ */
-@media (max-width: 500px) {
-    body::-webkit-scrollbar {
-        display: none;
+
+
+.desktop-only {
+    display: flex !important;
+}
+
+.mobile-only {
+    display: none !important;
+}
+
+@media (max-width: 600px) {
+    .desktop-only {
+        display: none !important;
     }
-    body {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+    .mobile-only {
+        display: flex !important;
     }
-}
+    
+    /* Optimize header for mobile */
+    .tool-header h2 {
+        font-size: 1.1rem;
+    }
+}
+
+/* Mobile Nav Overlay */
+.mobile-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-nav-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+/* Mobile Nav Bottom Sheet */
+.mobile-nav-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-radius: 24px 24px 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 2001;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+}
+
+.dark-theme .mobile-nav-sheet {
+    background: rgba(17, 24, 39, 0.8);
+}
+
+.mobile-nav-sheet.active {
+    transform: translateY(0);
+}
+
+.mobile-nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mobile-nav-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.mobile-nav-body {
+    padding: 12px 0;
+    display: flex;
+    flex-direction: column;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.mobile-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 24px;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.05rem;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    width: 100%;
+    font-family: inherit;
+    text-decoration: none;
+}
+
+.mobile-nav-item:active {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-nav-item svg {
+    opacity: 0.8;
+    color: var(--primary-color);
+}
+
+#mobile-auth-group {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 8px;
+    padding-top: 8px;
+}
+

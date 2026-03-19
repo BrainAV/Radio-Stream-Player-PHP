@@ -75,6 +75,12 @@ This document outlines the future direction and planned features for the Radio S
 - **Dynamic branding** — Centralized Social Media CRUD (GitHub, Twitter, etc.) and a master Maintenance Mode toggle in the Admin Dashboard.
 - **Public Settings API** — Created a secure endpoint to serve non-sensitive site config to the player frontend.
 
+### ✅ Completed in v2.2.9 (Mobile Navigation Overhaul)
+- **Glassmorphism Bottom Sheet** — Replaced cluttered header icons with a modern, sliding navigation sheet for mobile users.
+- **Responsive Hamburger Toggle** — Integrated a functional hamburger menu into the player header for small screens (≤ 600px).
+- **Dynamic Auth Sync** — Unified authentication button state (Login/Logout/Admin/Account) between the desktop header and mobile menu in real-time.
+- **Responsive UI Utilities** — Introduced `.desktop-only` and `.mobile-only` CSS classes for cleaner cross-device visibility control.
+
 ### ⚠️ Known Quirks (v2.2)
 - **Pop-out Ad Rendering** — The `#ad-space-popout` 300×50 banner may require the user to open the popup slightly wider than `320px` on some browsers/OS combinations before AdSense fully renders. Root cause: AdSense's available-width detection varies by browser viewport reporting. Workaround: window is pre-sized to `320×390`; users can resize if needed. Investigation ongoing for v2.3.
 - ✅ **VU Meter Mono Streams** — Implemented auto-detection and mirroring for mono streams. If one channel is silent, the visualizer mirrors the active channel for a balanced display.

@@ -861,10 +861,11 @@ export function initSettings() {
         const loginSvg = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>`;
         const logoutSvg = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>`;
         const adminSvg = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>`;
+        const accountSvg = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>`;
 
         if (!authBtn) {
             authBtn = document.createElement('button');
-            authBtn.className = 'theme-btn';
+            authBtn.className = 'theme-btn desktop-only';
             authBtn.style.fontSize = '14px';
             authBtn.style.display = 'flex';
             authBtn.style.alignItems = 'center';
@@ -878,7 +879,7 @@ export function initSettings() {
                  adminBtn = document.createElement('a');
                  adminBtn.id = 'header-admin-btn';
                  adminBtn.href = 'admin.php';
-                 adminBtn.className = 'theme-btn';
+                 adminBtn.className = 'theme-btn desktop-only';
                  adminBtn.style.fontSize = '14px';
                  adminBtn.style.display = 'flex';
                  adminBtn.style.alignItems = 'center';
@@ -894,12 +895,11 @@ export function initSettings() {
         }
 
         // Handle Account Button Visibility
-        const accountSvg = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>`;
         if (window.IS_LOGGED_IN) {
             if (!accountBtnHeader) {
                 accountBtnHeader = document.createElement('button');
                 accountBtnHeader.id = 'header-account-btn';
-                accountBtnHeader.className = 'theme-btn';
+                accountBtnHeader.className = 'theme-btn desktop-only';
                 accountBtnHeader.style.fontSize = '14px';
                 accountBtnHeader.style.display = 'flex';
                 accountBtnHeader.style.alignItems = 'center';
@@ -929,6 +929,79 @@ export function initSettings() {
             authBtn.onclick = () => {
                 if (loginModal) loginModal.style.display = 'flex';
             };
+        }
+
+        // --- Mobile Auth Sync ---
+        const mobileAuthGroup = document.getElementById('mobile-auth-group');
+        if (mobileAuthGroup) {
+            let mobileAuthBtn = document.getElementById('mobile-login-btn') || document.getElementById('mobile-logout-btn');
+            let mobileAdminBtn = document.getElementById('mobile-admin-btn');
+            let mobileAccountBtn = document.getElementById('mobile-account-btn');
+
+            if (!mobileAuthBtn) {
+                mobileAuthBtn = document.createElement('button');
+                mobileAuthGroup.appendChild(mobileAuthBtn);
+            }
+            mobileAuthBtn.className = 'mobile-nav-item';
+
+            // Mobile Admin Button
+            if (window.IS_LOGGED_IN && window.USER_ROLE === 'admin') {
+                if (!mobileAdminBtn) {
+                    mobileAdminBtn = document.createElement('a');
+                    mobileAdminBtn.id = 'mobile-admin-btn';
+                    mobileAdminBtn.href = 'admin.php';
+                    mobileAdminBtn.className = 'mobile-nav-item';
+                    mobileAdminBtn.innerHTML = adminSvg + '<span>Admin Panel</span>';
+                    mobileAuthGroup.insertBefore(mobileAdminBtn, mobileAuthBtn);
+                }
+            } else if (mobileAdminBtn) {
+                mobileAdminBtn.remove();
+            }
+
+            // Mobile Account Button
+            if (window.IS_LOGGED_IN) {
+                if (!mobileAccountBtn) {
+                    mobileAccountBtn = document.createElement('button');
+                    mobileAccountBtn.id = 'mobile-account-btn';
+                    mobileAccountBtn.className = 'mobile-nav-item';
+                    mobileAccountBtn.innerHTML = accountSvg + '<span>My Account</span>';
+                    mobileAccountBtn.onclick = () => {
+                        const sheet = document.getElementById('mobile-nav-sheet');
+                        const overlay = document.getElementById('mobile-nav-overlay');
+                        if (sheet) sheet.classList.remove('active');
+                        if (overlay) {
+                            overlay.classList.remove('active');
+                            setTimeout(() => overlay.style.display = 'none', 300);
+                        }
+                        document.body.style.overflow = '';
+                        openAccount();
+                    };
+                    mobileAuthGroup.insertBefore(mobileAccountBtn, mobileAuthBtn);
+                }
+            } else if (mobileAccountBtn) {
+                mobileAccountBtn.remove();
+            }
+
+            // Update mobile login/logout properties
+            if (window.IS_LOGGED_IN) {
+                mobileAuthBtn.id = 'mobile-logout-btn';
+                mobileAuthBtn.innerHTML = logoutSvg + '<span>Logout</span>';
+                mobileAuthBtn.onclick = handleLogout;
+            } else {
+                mobileAuthBtn.id = 'mobile-login-btn';
+                mobileAuthBtn.innerHTML = loginSvg + '<span>Login</span>';
+                mobileAuthBtn.onclick = () => {
+                    const sheet = document.getElementById('mobile-nav-sheet');
+                    const overlay = document.getElementById('mobile-nav-overlay');
+                    if (sheet) sheet.classList.remove('active');
+                    if (overlay) {
+                        overlay.classList.remove('active');
+                        setTimeout(() => overlay.style.display = 'none', 300);
+                    }
+                    document.body.style.overflow = '';
+                    if (loginModal) loginModal.style.display = 'flex';
+                };
+            }
         }
     }
 
@@ -1406,6 +1479,40 @@ export function initSettings() {
              element.style.color = '#34d399';
         }
     }
+
+    // --- Mobile Navigation Logic ---
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
+    const mobileNavSheet = document.getElementById('mobile-nav-sheet');
+    const closeMobileNav = document.getElementById('close-mobile-nav');
+
+    const openMobileNav = () => {
+        if (!mobileNavOverlay || !mobileNavSheet) return;
+        mobileNavOverlay.style.display = 'block';
+        setTimeout(() => {
+            mobileNavOverlay.classList.add('active');
+            mobileNavSheet.classList.add('active');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+    };
+
+    const closeMobileNavFunc = () => {
+        if (!mobileNavOverlay || !mobileNavSheet) return;
+        mobileNavOverlay.classList.remove('active');
+        mobileNavSheet.classList.remove('active');
+        setTimeout(() => {
+            mobileNavOverlay.style.display = 'none';
+        }, 300);
+        document.body.style.overflow = '';
+    };
+
+    if (mobileMenuToggle) mobileMenuToggle.addEventListener('click', openMobileNav);
+    if (closeMobileNav) closeMobileNav.addEventListener('click', closeMobileNavFunc);
+    if (mobileNavOverlay) mobileNavOverlay.addEventListener('click', closeMobileNavFunc);
+
+    // Bind common mobile buttons to existing modal actions
+    document.getElementById('mobile-info-btn')?.addEventListener('click', () => { closeMobileNavFunc(); openInfo(); });
+    document.getElementById('mobile-settings-btn')?.addEventListener('click', () => { closeMobileNavFunc(); openSettings(); });
 
     // Load dynamic brand settings
     loadPublicSettings();

@@ -15,6 +15,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - 
 
+## [2.2.9] - 2026-03-19
+
+### Added
+- **Mobile Navigation Bottom Sheet** — Implemented a modern glassmorphism sliding menu for mobile users, replacing cluttered header icons.
+- **Responsive Hamburger Menu** — Added a functional hamburger toggle button that appears on screens ≤ 600px.
+- **Unified Navigation Sheet** — Consolidated 'Info', 'Settings', 'Admin', and 'Account' links into a single, thumb-friendly mobile interface.
+
+### Changed
+- **Dynamic Header Logic** — Updated `index.php` and `settings.js` to synchronize authentication buttons (Login/Logout/Admin/Account) between the desktop header and mobile navigation sheet in real-time.
+- **Responsive UI Utilities** — Introduced `.desktop-only` and `.mobile-only` CSS classes for cleaner cross-device visibility control.
+
 ## [2.2.8] - 2026-03-16
 
 ### Added
