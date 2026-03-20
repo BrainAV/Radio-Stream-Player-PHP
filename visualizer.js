@@ -228,6 +228,32 @@ function updateVUMeters() {
         case 'retro': updateRetroVu(levelLeft, levelRight); break;
         case 'neon': updateNeonVu(levelLeft, levelRight); break;
     }
+
+    // Audio Reactive Logo: Update the --logo-reactivity CSS variable
+    updateLogoReactivity(levelLeft, levelRight);
+}
+
+function updateLogoReactivity(levelLeft, levelRight) {
+    const avgLevel = (levelLeft + levelRight) / 2; // Level is 0-100
+    const normalizedLevel = avgLevel / 100; // 0-1
+    const logo = document.querySelector('.radio-logo');
+    
+    if (logo) {
+        // Smoothing factor (Lerp)
+        const currentReactivity = parseFloat(logo.style.getPropertyValue('--logo-reactivity')) || 0;
+        const newReactivity = currentReactivity + (normalizedLevel - currentReactivity) * 0.3;
+        
+        logo.style.setProperty('--logo-reactivity', newReactivity.toFixed(3));
+
+        // Peak Color Logic: Shift towards Cyan/Bright Blue when audio intensity is high
+        if (newReactivity > 0.7) {
+            // High energy: use a brighter cyan-like color from the branding guide
+            logo.style.setProperty('--logo-peak-color', '#00f2fe'); 
+        } else {
+            // Low to mid energy: revert to primary color
+            logo.style.removeProperty('--logo-peak-color');
+        }
+    }
 }
 
 function calculateRMSLevel(dataArray) {

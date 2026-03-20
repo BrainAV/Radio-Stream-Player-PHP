@@ -10,3 +10,26 @@
 
 Manage My Collection
 - If a user edits a "Manage My Collection" station. Does that station edit for only that user, or is this a global station upate? Could be a security issue if the global station link or details are updated by a user... just forward thinking of when we create drynamic pages for stations that are shared for all users. 
+
+new - 3/19/2026 - Adsense isn't loading on mobile test pages. I think the adsense area being displayed is smaller than the ads being delivered. Need to consider Mobile ad sizes. Also I want to know if Adsense allows you to reload the ad spaced after a certain amount of time, or would I need to come up with a different strategy for ads to refresh, or build out with dynamic radio station pages. 
+
+- console errors I checked after the stream stops (could be time to change away from the api on cloudflare):
+[PWA] Service Worker registered ServiceWorkerRegistration
+api.djay.ca/metadata?url=https%3A%2F%2Fstream1-technolovers.radiohost.de%2Fmelodic-house-techno:1  Failed to load resource: net::ERR_CONNECTION_CLOSED
+player.js:579 Failed to fetch stream metadata: TypeError: Failed to fetch
+    at fetchMetadata (player.js:538:36)
+    at player.js:660:17
+fetchMetadata @ player.js:579
+api.djay.ca/?url=https%3A%2F%2Fstream1-technolovers.radiohost.de%2Fmelodic-house-techno:1  Failed to load resource: net::ERR_QUIC_PROTOCOL_ERROR
+
+- <meta name="apple-mobile-web-app-capable" content="yes"> is deprecated. Please include <meta name="mobile-web-app-capable" content="yes">
+
+Page refresh gives this:
+
+index.html?ev=01_262:233 Uncaught TypeError: Cannot read properties of undefined (reading 'setRushSimulatedLocalEvents')
+    at index.html?ev=01_262:233:562
+(anonymous) @ index.html?ev=01_262:233
+
+script.js:37 [PWA] Service Worker registered ServiceWorkerRegistration {installing: null, waiting: null, active: ServiceWorker, navigationPreload: NavigationPreloadManager, scope: 'https://radio.djay.ca/', …}
+
+(index):1 <meta name="apple-mobile-web-app-capable" content="yes"> is deprecated. Please include <meta name="mobile-web-app-capable" content="yes">

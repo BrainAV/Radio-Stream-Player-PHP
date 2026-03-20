@@ -25,6 +25,7 @@ This document outlines the future direction and planned features for the Radio S
 ### v2.1 — Account & Community
 - Full user account management (profile editing, email/password update).
 - Admin Dashboard with User Management (roles, ban, delete).
+- **Donations Link** — Added a tasteful PayPal link in the dedicated Info & Support modal.
 
 ---
 
@@ -91,39 +92,37 @@ This document outlines the future direction and planned features for the Radio S
 
 ## 🔭 v2.3+ Future Goals
 
-### Backend Independence
-- **PHP Metadata Proxy** — Port Cloudflare Worker ICY metadata logic to `api/metadata.php`. Resolves `ERR_CONNECTION_CLOSED` issues seen on Cloudflare.
-- **PHP Stream Proxy** — Port Cloudflare Worker audio proxy to `api/proxy.php` for full self-hosting. Resolves `ERR_QUIC_PROTOCOL_ERROR` and eliminates dependency on the `api.djay.ca` demo worker.
+### Backend & Proxy Strategy
+- **Formalize Cloudflare Worker** — Establish the `api.djay.ca` Cloudflare Worker as the official, permanent proxy solution for audio tunneling and metadata extraction. This offloads immense bandwidth costs from the main PHP server and provides a globally distributed edge proxy.
+- **Investigate Audio Gaps** — Diagnose the root cause of `ERR_CONNECTION_CLOSED` and occasional audio gaps when streaming through the Cloudflare worker, potentially optimizing the worker's connection handling or `player.js` reconnection logic.
 
-### Security & DevOps
-- **Secrets Management & Hardening** — Remove hardcoded credentials (DB password, API keys) from `api/config.php` and migrate to environment variables via `.env`. Implement `api/config.php.example` and strictly enforce `.gitignore` to prevent credential leakage in the repository.
-
-- **Play/Pause Button State Sync** — The play/pause button icon should always accurately reflect the actual audio element play state (playing vs. paused/stopped), including edge cases: stream error/disconnect, browser auto-play blocking, and popout vs. main window state. Drives from the StateManager so all subscribers (button, OS media session, VU meter) update atomically.
+### UI & Visualizer Enhancements
 - **Dynamic VU Scale** — Option to adjust the visualizer sensitivity for quiet vs. loud streams.
 - **Visualizer Fullscreen Mode** — A dedicated "Immersive" mode focusing entirely on the VU meter and background.
 
 ### User Features
-- **Song History (Premium)** — DB-backed track history per station and per user. Research whether stations expose song data via RSS feeds; otherwise use a cron-based approach to poll ICY metadata at low frequency (budget: standard low-cost polling for all; higher-resolution history for admin/premium).
 - **Email Verification** — Double opt-in at registration to prevent bot accounts.
-- **Custom Background Uploads** — Allow users to upload images (local/cloud storage).
 - **Wallpaper Search** — Unsplash API integration for searching backgrounds inside the player.
 
 ### Discovery & SEO
-- **Clean URLs (Remove `.php` Extension)** — Add Apache `.htaccess` rewrite rules so all public-facing pages use clean paths: `admin.php` → `admin/`, `popout.php` → `popout/`, `index.php` remains the root `/`. Improves professionalism and is a prerequisite for the dynamic station routing below.
-- **Dynamic Station Pages** — `.htaccess` + PHP routing for `/[country]/[genre]/[station-name]` URLs. Define access tiers per page: basic info for guests, now-playing & song history for logged-in users, full analytics for premium/admin.
 - **Mobile Ad Optimization** — Research and implement responsive AdSense slots for mobile to prevent layout clipping and ensure ads deliver correctly on smaller viewports.
 - **Ad Refresh Strategy** — Investigate AdSense reload policies or dynamic station page implementation to allow for non-intrusive ad refreshing.
-- **Shareable Links** — Dynamic URLs for stations, countries, genres, and eventually user profiles. Visiting a station URL auto-initializes the player and starts playback.
-- **Listing Pages** — Index pages by Country and Genre for SEO discoverability.
-- **Global Search & Filters** — Search bar + Genre/Country filter controls for the full station database.
 
-### Monetization & Support
-- **Premium Subscription** — Choose a payment processor (Stripe or PayPal) and implement a subscription flow to upgrade users to premium (ad-free + premium features). Define the full premium feature set before implementation.
-- **Premium Feature List** — Define and document exactly what premium unlocks: ad-free experience, song history, higher-resolution metadata polling, recording, etc.
-- ✅ **Donations Link** — Added a tasteful PayPal link in the dedicated Info & Support modal.
+---
 
-### Advanced / Premium Features
-- **In-Browser Recording** — Allow users to record streams at the browser level (Web Audio API → MediaRecorder → download as MP3/WAV). No server storage required. Premium feature.
-- **Cloud Drive Recording (Future)** — Explore allowing users to connect their personal Google Drive and route recordings directly to their cloud storage. Avoids server-side storage costs entirely.
+## 🔮 v3.0 Milestone: Professional Core & Commercial Vision
+
+Looking ahead, v3.0 will introduce a premium, private-core architecture—potentially leveraging Node.js—which will power the flagship experience at `radio.djay.ca`.
+
+- **Commercial Grade Core** — Refactoring the engine for high-concurrency and professional-grade stability.
+- **Secrets Management & Hardening** — Migrating hardcoded credentials to robust environment configurations (`.env`), which natively aligns with the Node.js transition.
+- **Monetization Engine** — Fully integrated user subscription models and exclusive premium features (Stripe/PayPal integration).
+- **Communication & Marketing** — Newsletter opt-in during registration with MailChimp integration to keep users updated on new features and djay products.
+- **Premium Feature Suite** — Implementing Song History, In-Browser Recording (MediaRecorder API), Custom Background Uploads (Cloud Storage), and personal Cloud Drive integration (Google Drive/Dropbox).
+- **Higher-Resolution Metadata** — Low-latency polling for premium users to provide real-time track history.
+- **Dynamic Routing Ecosystem** — Implementing **Dynamic Station Pages** (`/[country]/[genre]/[station-name]`) with access tiers (basic info, song history, analytics) and **Shareable Links** that auto-initialize the player over the network.
+- **Advanced Discovery & Search** — Introducing SEO-friendly **Listing Pages** (indexed by Country/Genre) and **Global Search & Filters** for exploring the full station database.
+- **Marketplace Readiness** — Preparing the project as a professional-grade product suitable for commercial marketplaces like CodeCanyon.
+- **Mission** — To build the most accessible and beautiful audio tools for the modern web.
 
 

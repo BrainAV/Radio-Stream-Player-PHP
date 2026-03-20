@@ -12,10 +12,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (document.getElementById('station-select')) {
-        
+
         // Wait for database stations before initializing player and settings
         await fetchStations();
-        
+
         // Initialize settings logic (genres, modals, listeners)
         initSettings();
 
@@ -39,3 +39,24 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+// Initialize Logo state and subscription
+const LOGO_ELEMENT = document.querySelector('.radio-logo');
+if (LOGO_ELEMENT) {
+    const PLAYING_CLASS = 'radio-logo--is-playing';
+    
+    // Initial state
+    if (stateManager.getState().isPlaying) {
+        LOGO_ELEMENT.classList.add(PLAYING_CLASS);
+    }
+
+    // Subscribe to changes
+    stateManager.subscribe((newState, oldState) => {
+        if (newState.isPlaying !== oldState.isPlaying) {
+            if (newState.isPlaying) {
+                LOGO_ELEMENT.classList.add(PLAYING_CLASS);
+            } else {
+                LOGO_ELEMENT.classList.remove(PLAYING_CLASS);
+            }
+        }
+    });
+}

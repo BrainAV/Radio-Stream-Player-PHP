@@ -10,10 +10,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- 
+
+### Changed
 
 ### Fixed
-- 
+
+
+## [2.2.11] - 2026-03-19
+
+### Added
+- **Reactive Audio Logo (Enhanced)** — Overhauled the radio logo's audio reactivity with a higher 15% scale factor, dynamic shadow expansion, and "peak-aware" color shifting that triggers a bright Cyan glow during high-intensity audio moments (BPM tracking).
+- **New Agent Skill: Branding Architect** — Created a formalized instruction set at `.agent/skills/branding-architect/SKILL.md` to ensure future logo iterations maintain audio connectivity, premium animation standards, and SVG structural integrity.
+- **Roadmap Refinement** — Performed a major strategic restructuring of `ROADMAP.md`, clearly delineating between the v2.x LAMP core and the v3.0 professional-grade milestone.
+- **Architecture Strategy** — Formalized the Cloudflare Worker (`api.djay.ca`) as the permanent, official proxy solution for audio and metadata. This decision prioritizes edge performance and minimizes server bandwidth costs compared to a self-hosted PHP proxy.
+
+### Changed
+- **Logo Animation Refinement** — Polished the user's manual logo animation with a smoother, more subtle pulse and a dynamic glow effect in `styles.css`.
+- **Roadmap Hygiene** — Cleaned up the roadmap by moving legacy completed items (Clean URLs, State Sync) to their respective milestones and accurately categorizing remaining v2.x goals.
+
 
 ## [2.2.10] - 2026-03-19
 

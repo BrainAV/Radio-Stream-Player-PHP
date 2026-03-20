@@ -33,7 +33,8 @@ body {
     /* Keeps the background static during scroll */
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
-    overflow: hidden; /* Prevent page-level scrolling - player is a full-page, single-screen app */
+    overflow: hidden;
+    /* Prevent page-level scrolling - player is a full-page, single-screen app */
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -44,6 +45,7 @@ body {
     body {
         background-attachment: scroll;
     }
+
     body::before {
         content: '';
         position: fixed;
@@ -58,8 +60,10 @@ body {
 /* Popout window overrides: undo the main player's overflow:hidden so the ad */
 /* section below the player card is visible without clipping.                 */
 body.popout-body {
-    overflow-x: hidden; /* hide horizontal scroll */
-    overflow-y: auto;   /* allow vertical scroll if needed */
+    overflow-x: hidden;
+    /* hide horizontal scroll */
+    overflow-y: auto;
+    /* allow vertical scroll if needed */
 }
 
 /* Override main-player ad-container sizing for the popout's constrained width */
@@ -72,20 +76,25 @@ body.popout-body .ad-container {
 
 body.popout-body .ad-placeholder {
     padding: 0;
-    display: block; /* remove flex so the ins can fill 100% width naturally */
+    display: block;
+    /* remove flex so the ins can fill 100% width naturally */
 }
 
 .main-content {
     /* Add a subtle overlay to ensure text is always readable */
     background-color: rgba(0, 0, 0, 0.2);
-    height: 100vh; /* Exact viewport height - padding included via box-sizing */
+    height: 100vh;
+    /* Exact viewport height - padding included via box-sizing */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Restore vertical centering */
+    justify-content: center;
+    /* Restore vertical centering */
     align-items: center;
-    padding: 20px 10px; /* Symmetrical padding */
-    overflow: auto; /* Allow internal scroll if content is ever taller than viewport */
+    padding: 20px 10px;
+    /* Symmetrical padding */
+    overflow: auto;
+    /* Allow internal scroll if content is ever taller than viewport */
 }
 
 /* Mobile specific alignment: Top-aligned */
@@ -99,6 +108,7 @@ body.popout-body .ad-placeholder {
 .main-content::-webkit-scrollbar {
     display: none;
 }
+
 .main-content {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -180,9 +190,12 @@ body.popout-body .ad-placeholder {
     border: 1px solid var(--border-color);
     transition: all 0.3s ease;
     display: flex;
-    flex-direction: column; /* Changed to column to accommodate integrated ad row */
-    padding: 0; /* Remove padding here, move it to children */
-    overflow: hidden; /* Ensure ad row doesn't break rounded corners */
+    flex-direction: column;
+    /* Changed to column to accommodate integrated ad row */
+    padding: 0;
+    /* Remove padding here, move it to children */
+    overflow: hidden;
+    /* Ensure ad row doesn't break rounded corners */
 }
 
 .player-main-body {
@@ -275,7 +288,8 @@ body.popout-body .ad-placeholder {
 
 /* Base VU Meter Styles */
 .vu-meter {
-    background: rgba(0, 0, 0, 0.15); /* Darker, translucent idle state for depth */
+    background: rgba(0, 0, 0, 0.15);
+    /* Darker, translucent idle state for depth */
     border-radius: 8px;
     height: 100%;
     width: 30px;
@@ -322,8 +336,10 @@ body.popout-body .ad-placeholder {
     flex: 1;
     min-height: 2px;
     background: #00ff00;
-    border-radius: 2px; /* Slightly rounder segments */
-    opacity: 0.05; /* Dimmer idle state for better contrast when lit */
+    border-radius: 2px;
+    /* Slightly rounder segments */
+    opacity: 0.05;
+    /* Dimmer idle state for better contrast when lit */
     transition: opacity 0.1s ease, background 0.1s ease;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
 }
@@ -332,7 +348,8 @@ body.popout-body .ad-placeholder {
 .vu-circular .vu-meter {
     width: 35px;
     height: 100%;
-    border-radius: 50%; /* Make it a circle */
+    border-radius: 50%;
+    /* Make it a circle */
     background: rgba(0, 0, 0, 0.15);
     border: 1px solid var(--border-color);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -365,7 +382,8 @@ body.popout-body .ad-placeholder {
 /* Waveform VU Style */
 .vu-waveform .vu-meter {
     width: 60px;
-    background: rgba(0, 0, 0, 0.1); /* Subtle wash so it's not totally empty */
+    background: rgba(0, 0, 0, 0.1);
+    /* Subtle wash so it's not totally empty */
     border: 1px solid var(--border-color);
     border-radius: 6px;
 }
@@ -542,7 +560,8 @@ body.popout-body .ad-placeholder {
 
 .password-wrapper .settings-input {
     flex: 1;
-    padding-right: 45px !important; /* Make room for the toggle icon */
+    padding-right: 45px !important;
+    /* Make room for the toggle icon */
 }
 
 .toggle-password {
@@ -576,7 +595,8 @@ body.popout-body .ad-placeholder {
 }
 
 .toggle-password svg {
-    pointer-events: none; /* Clicking the svg should click the button */
+    pointer-events: none;
+    /* Clicking the svg should click the button */
 }
 
 .station-selector select,
@@ -812,7 +832,8 @@ select option {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #0070ba; /* PayPal Blue */
+    background-color: #0070ba;
+    /* PayPal Blue */
     color: white;
     text-decoration: none;
     padding: 10px 15px;
@@ -820,7 +841,7 @@ select option {
     font-weight: 600;
     font-size: 0.95rem;
     transition: background-color 0.2s, transform 0.1s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .donation-btn:hover {
@@ -934,8 +955,10 @@ select option {
     .radiostream-player {
         flex-direction: column;
         min-width: 0;
-        width: 100%; /* Changed from width: calc(100% - 24px) to fix asymmetric margin */
-        margin: 0; /* Remove auto-margin on mobile */
+        width: 100%;
+        /* Changed from width: calc(100% - 24px) to fix asymmetric margin */
+        margin: 0;
+        /* Remove auto-margin on mobile */
         gap: 0;
     }
 
@@ -950,10 +973,12 @@ select option {
     }
 
     .main-content {
-        padding: 16px; /* Standardize mobile padding */
+        padding: 16px;
+        /* Standardize mobile padding */
         padding-top: max(16px, env(safe-area-inset-top));
         padding-bottom: max(16px, env(safe-area-inset-bottom));
-        align-items: center; /* Center player card horizontally */
+        align-items: center;
+        /* Center player card horizontally */
         /* Allow the whole page to scroll so the ad below is reachable */
         overflow: visible;
         height: auto;
@@ -976,7 +1001,8 @@ select option {
         flex-direction: row;
         width: 100%;
         justify-content: center;
-        height: 64px;  /* taller than before — more visual impact */
+        height: 64px;
+        /* taller than before — more visual impact */
         gap: 8px;
     }
 
@@ -1180,7 +1206,8 @@ select option {
     /* --- Ad Container: tighter on mobile --- */
     .ad-container {
         margin-top: 12px;
-        width: 100%; /* Match standardized player card width */
+        width: 100%;
+        /* Match standardized player card width */
         border-radius: 12px;
     }
 
@@ -1332,10 +1359,12 @@ select option {
 }
 
 .settings-content {
-    background: rgba(255, 255, 255, 0.85); /* Increased opacity for light mode contrast */
+    background: rgba(255, 255, 255, 0.85);
+    /* Increased opacity for light mode contrast */
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    color: #111827; /* Darker text for light mode */
+    color: #111827;
+    /* Darker text for light mode */
     padding: 0;
     border-radius: 16px;
     width: 90%;
@@ -1343,14 +1372,16 @@ select option {
     box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.4);
     max-height: 90vh;
-    min-height: 520px; /* Fixed minimum height to prevent layout jumps between tabs */
+    min-height: 520px;
+    /* Fixed minimum height to prevent layout jumps between tabs */
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
 .dark-theme .settings-content {
-    background: rgba(17, 24, 39, 0.6); /* Slightly more opaque for dark mode too */
+    background: rgba(17, 24, 39, 0.6);
+    /* Slightly more opaque for dark mode too */
     color: #e5e7eb;
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -1614,28 +1645,34 @@ select option {
     margin-bottom: 0;
     border-bottom: 1px solid var(--border-color);
     padding: 0 10px;
-    overflow-x: auto; /* Handle many tabs on small screens */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    overflow-x: auto;
+    /* Handle many tabs on small screens */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
     background: rgba(0, 0, 0, 0.02);
 }
 
 .settings-tabs::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
+    display: none;
+    /* Chrome/Safari */
 }
 
 .settings-tab-btn {
     background: transparent;
     border: none;
-    color: #111827; 
+    color: #111827;
     opacity: 0.6;
     padding: 14px 16px;
-    margin-bottom: -1px; /* Align border with tab bar bottom */
+    margin-bottom: -1px;
+    /* Align border with tab bar bottom */
     font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.2s ease;
     border-bottom: 2px solid transparent;
-    flex: 0 0 auto; /* Don't stretch, allow scroll */
+    flex: 0 0 auto;
+    /* Don't stretch, allow scroll */
     font-weight: 500;
     white-space: nowrap;
 }
@@ -1678,8 +1715,15 @@ select option {
 }
 
 @keyframes slideIn {
-    from { transform: translateY(-10px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .settings-tab-content {
@@ -1842,6 +1886,62 @@ select option {
     font-weight: 600;
 }
 
+/* Radio Logo Component */
+.radio-logo {
+    width: 28px;
+    height: 28px;
+    fill: none;
+    stroke: var(--primary-color);
+    stroke-width: 2;
+    filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.2));
+    transition: stroke 0.3s ease, filter 0.2s ease, transform 0.1s linear;
+}
+
+.radio-logo__body {
+    fill: var(--primary-color);
+    fill-opacity: 0.15;
+    transition: fill-opacity 0.5s ease;
+}
+
+.radio-logo__speaker-inner {
+    fill: var(--primary-color);
+    transition: transform 0.3s ease;
+}
+
+/* Playing State: Enhanced Visuals */
+.radio-logo--is-playing {
+    /* Base glow + Dynamic expansion based on audio level */
+    filter: drop-shadow(0 0 calc(6px + (var(--logo-reactivity, 0) * 14px)) var(--primary-glow-color, rgba(59, 130, 246, 0.6)));
+    
+    /* Increased scale factor (up to 1.15x) */
+    transform: scale(calc(1 + (var(--logo-reactivity, 0) * 0.15)));
+    
+    /* Dynamic peak color */
+    stroke: var(--logo-peak-color, var(--primary-color));
+    
+    animation: pulse-premium 3s infinite ease-in-out;
+    transform-origin: center;
+}
+
+.radio-logo--is-playing .radio-logo__body {
+    fill-opacity: calc(0.2 + (var(--logo-reactivity, 0) * 0.3));
+    fill: var(--logo-peak-color, var(--primary-color));
+}
+
+.radio-logo--is-playing .radio-logo__speaker {
+    transform-origin: center;
+}
+
+.radio-logo--is-playing .radio-logo__speaker-inner {
+    fill: var(--primary-hover, #2563eb);
+}
+
+@keyframes pulse-premium {
+    0%, 100% { opacity: 0.9; }
+    50% { opacity: 1; }
+}
+
+
 /* Hide ads on very small screens where they would break layout */
 @media (max-width: 350px) {
     .ad-container {
@@ -1868,10 +1968,11 @@ select option {
     .desktop-only {
         display: none !important;
     }
+
     .mobile-only {
         display: flex !important;
     }
-    
+
     /* Optimize header for mobile */
     .tool-header h2 {
         font-size: 1.1rem;
@@ -1915,7 +2016,7 @@ select option {
     padding-bottom: max(20px, env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
-    box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
 }
 
 .dark-theme .mobile-nav-sheet {
@@ -1982,4 +2083,3 @@ select option {
     margin-top: 8px;
     padding-top: 8px;
 }
-
