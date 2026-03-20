@@ -93,28 +93,18 @@ This document outlines the future direction and planned features for the Radio S
 - **Formalized Proxy Strategy** — Established the `api.djay.ca` Cloudflare Worker as the official, permanent global proxy for audio tunneling and ICY metadata polling.
 - **Architecture Segmentation** — Performed a major strategic restructuring of goals, clearly separating the LAMP-based v2.x core from the upcoming v3.0 professional-grade milestone.
 
----
-
-## 🚀 v2.3 Milestone: Resiliency & Immersive UX (Released)
-
-### ✅ Completed in v2.3.0
-- **Audio Resiliency (Retry Engine)** — Implemented an intelligent error handler in `player.js` with exponential backoff to handle `ERR_CONNECTION_CLOSED` and other proxy-related drops.
-- **Playback Persistence (isPlaying)** — The player now saves and resumes the `isPlaying` state (and last station/volume) across page refreshes for a seamless return experience.
-- **Immersive Fullscreen Mode** — Added a dedicated "Fullscreen" toggle icon that hides the station UI and focuses purely on the VU meter and background.
-- **Dynamic VU Sensitivity** — Integrated a "Visualizer Sensitivity" slider in Settings, allowing users to fine-tune `AnalyserNode` response for varying stream gains.
-- **Modern PWA Compliance** — Fully updated `admin.php`, `template-player.html`, and `popout.html` with current PWA-compliant meta tags to resolve deprecation warnings.
-- **Mobile Ad Performance Fixes** — Implemented `min-height` constraints on AdSense slots in `styles.css` to prevent significant layout shifts and ensure ads render correctly on mobile viewports.
-
-### ⚠️ Known Quirks (v2.2)
-- **Pop-out Ad Rendering** — The `#ad-space-popout` 300×50 banner may require the user to open the popup slightly wider than `320px` on some browsers/OS combinations before AdSense fully renders. Root cause: AdSense's available-width detection varies by browser viewport reporting. Workaround: window is pre-sized to `320×390`; users can resize if needed. Investigation ongoing for v2.3.
-- ✅ **VU Meter Mono Streams** — Implemented auto-detection and mirroring for mono streams. If one channel is silent, the visualizer mirrors the active channel for a balanced display.
-- **Pop-out `IS_PREMIUM` Sync** — `window.IS_PREMIUM` in the pop-out window is not synced after the main window's auth state changes (e.g., admin logs in after pop-out is already open). Pop-out ads will only hide on fresh open. Acceptable limitation for v2.2.
+### ✅ Completed in v2.2.12 (Premium Fullscreen & Resiliency)
+- **Premium Fullscreen Overhaul** — Completely redesigned the immersive fullscreen experience. VU meters are now the absolutely centred hero element (`42vh`), with an animated ambient glow and deep radial gradient background.
+- **Dynamic VU Sensitivity (Global)** — Expanded sensitivity slider support to all meter types (Classic, LED, Retro, Circular), not just frequency-domain analysers.
+- **Audio Resiliency (Retry Engine)** — Implemented an intelligent error handler with exponential backoff to handle `ERR_CONNECTION_CLOSED` and other proxy-related drops.
+- **Playback Persistence (isPlaying)** — The player now saves and resumes the `isPlaying` state across page refreshes for a seamless return experience.
+- **Modern PWA Compliance** — Fully updated `admin.php`, `template-player.html`, and `popout.html` with current PWA-compliant meta tags.
+- **Mobile Ad Layout Fixes** — Implemented `min-height` constraints on AdSense slots to prevent layout shifts.
+- **UX: Fullscreen Entry Icon** — Relocated the fullscreen toggle to the `now-playing-header` (inline with kbps) for a cleaner, intentional entry point.
 
 ---
 
----
-
-## 🔭 v2.4+ Future Goals
+## 🚀 v2.3 Milestone: Experience & Discovery (Active)
 
 ### User Experience
 - **Wallpaper Search** — Unsplash API integration for searching backgrounds inside the player.
@@ -123,6 +113,11 @@ This document outlines the future direction and planned features for the Radio S
 ### Discovery & Analytics
 - **Advanced Ad Refresh** — Investigate AdSense reload policies or dynamic station page implementation to allow for non-intrusive ad refreshing.
 - **Custom Station Submissions** — A formal "Submit a Station" flow for guests to request station additions, including automated validation.
+
+### ⚠️ Known Quirks (v2.2)
+- **Pop-out Ad Rendering** — The `#ad-space-popout` 300×50 banner may require the user to open the popup slightly wider than `320px` on some browsers/OS combinations before AdSense fully renders. Root cause: AdSense's available-width detection varies by browser viewport reporting. Workaround: window is pre-sized to `320×390`; users can resize if needed. Investigation ongoing for v2.3.
+- ✅ **VU Meter Mono Streams** — Implemented auto-detection and mirroring for mono streams. If one channel is silent, the visualizer mirrors the active channel for a balanced display.
+- **Pop-out `IS_PREMIUM` Sync** — `window.IS_PREMIUM` in the pop-out window is not synced after the main window's auth state changes (e.g., admin logs in after pop-out is already open). Pop-out ads will only hide on fresh open. Acceptable limitation for v2.2.
 
 ---
 
