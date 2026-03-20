@@ -64,6 +64,7 @@
     </header>
 
     <main class="main-content">
+        <button id="exit-fullscreen-btn" class="exit-fs-btn" aria-label="Exit Fullscreen">&times;</button>
         <div class="radiostream-player">
             <div class="player-main-body">
                 <div class="vu-meters">
@@ -75,6 +76,11 @@
                         <div class="now-playing-header">
                             <div class="now-playing-label" id="now-playing-station">Ready to Play</div>
                             <div id="bitrate-badge" class="bitrate-badge" style="display: none;">0 kbps</div>
+                            <button class="fs-trigger-btn" id="fullscreen-btn" aria-label="Toggle Immersive Fullscreen" title="Immersive Mode">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                                    <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                                </svg>
+                            </button>
                         </div>
                         <div class="now-playing-track-wrapper">
                             <div class="now-playing-track" id="now-playing-track">Select a station to begin</div>
@@ -105,7 +111,7 @@
                             <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5"
                                 aria-label="Volume control">
                         </div>
-                        <button class="console-btn" id="popout-btn" aria-label="Open player in a new pop-out window">
+                        <button class="console-btn" id="popout-btn" aria-label="Open player in a new pop-out window" title="Pop-out Window">
                             <svg class="icon icon-popout" viewBox="0 0 24 24" fill="currentColor"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -180,6 +186,15 @@
                         </select>
                         <p style="font-size: 0.8em; opacity: 0.6; margin-top: 5px;">Change how the audio levels are
                             displayed during playback.</p>
+                    </div>
+                    <div class="setting-item" style="margin-top: 15px;">
+                        <label for="vu-sensitivity-slider">Visualizer Sensitivity (VU Scale)</label>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 8px;">
+                            <span style="font-size: 0.8em; opacity: 0.5;">Less</span>
+                            <input type="range" id="vu-sensitivity-slider" min="-100" max="-30" step="1" value="-70" class="settings-slider" style="flex: 1;">
+                            <span style="font-size: 0.8em; opacity: 0.5;">More</span>
+                        </div>
+                        <p style="font-size: 0.8em; opacity: 0.6; margin-top: 5px;">Adjust sensitivity for quiet vs. loud streams.</p>
                     </div>
                 </div>
 

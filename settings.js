@@ -105,6 +105,19 @@ export function initSettings() {
         });
     }
 
+    // VU Sensitivity Slider
+    const vuSensitivitySlider = document.getElementById('vu-sensitivity-slider');
+    if (vuSensitivitySlider) {
+        const savedSensitivity = localStorage.getItem('vuSensitivity') || '-70';
+        vuSensitivitySlider.value = savedSensitivity;
+
+        vuSensitivitySlider.addEventListener('input', (e) => {
+            const val = e.target.value;
+            localStorage.setItem('vuSensitivity', val);
+            window.dispatchEvent(new CustomEvent('vuSensitivityChanged', { detail: { value: parseFloat(val) } }));
+        });
+    }
+
     // Theme Logic
     if (themeSelect) {
         const savedTheme = localStorage.getItem('theme');

@@ -9,7 +9,7 @@ export class StateManager {
             source: null,
             analyserLeft: null,
             analyserRight: null,
-            isPlaying: false,
+            isPlaying: localStorage.getItem('isPlaying') === 'true',
             currentStation: localStorage.getItem('lastStation') || null,
             volume: (() => {
                 const sv = parseFloat(localStorage.getItem('volume'));
@@ -100,7 +100,9 @@ export class StateManager {
     // --- Specific Domain Setters ---
 
     setPlaying(isPlaying) {
-        this.#setState({ isPlaying: Boolean(isPlaying) });
+        const val = Boolean(isPlaying);
+        this.#setState({ isPlaying: val });
+        localStorage.setItem('isPlaying', val);
     }
 
     setVolume(volume) {

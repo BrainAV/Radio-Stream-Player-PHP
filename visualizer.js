@@ -7,6 +7,7 @@ import { stateManager } from './state.js';
 let leftVu, rightVu, vuMeters;
 let analyserLeft, analyserRight;
 let dataArrayLeft, dataArrayRight, frequencyDataLeft, frequencyDataRight;
+let sensitivityMult = 300; // Default multiplier based on -70dB
 
 export function initVisualizer() {
     const state = stateManager.getState();
@@ -55,7 +56,91 @@ export function initVisualizer() {
             resetVuMeters(newState.vuStyle);
         }
     });
+
+    // Handle initial sensitivity
+    const savedSens = localStorage.getItem('vuSensitivity');
+    if (savedSens) {
+        applySensitivity(parseFloat(savedSens));
+    }
+
+    // Handle dynamic sensitivity changes
+    window.addEventListener('vuSensitivityChanged', (e) => {
+        applySensitivity(e.detail.value);
+    });
+
+    // Handle Fullscreen Toggle
+    const fsBtn = document.getElementById('fullscreen-btn');
+    if (fsBtn) {
+        fsBtn.addEventListener('click', toggleFullscreen);
+    }
+    const exitFsBtn = document.getElementById('exit-fullscreen-btn');
+    if (exitFsBtn) {
+        exitFsBtn.addEventListener('click', toggleFullscreen);
+    }
 }
+
+function applySensitivity(minDb) {
+    if (analyserLeft && analyserRight) {
+        analyserLeft.minDecibels = minDb;
+        analyserRight.minDecibels = minDb;
+    }
+    // Scale the 0-100% time-domain meters too.
+    // minDb range is -100 (Less) to -30 (More).
+    // map -100 -> 150, -70 -> 300, -30 -> 600
+    sensitivityMult = 300 * (1 + (minDb + 70) / 40);
+}
+
+function toggleFullscreen() {
+    const player = document.querySelector('.radiostream-player');
+    const isFs = !document.fullscreenElement;
+    
+    if (isFs) {
+        if (player.requestFullscreen) {
+            player.requestFullscreen();
+        } else if (player.webkitRequestFullscreen) {
+            player.webkitRequestFullscreen();
+        }
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        }
+    }
+}
+
+// Sync internal `.fullscreen-mode` class with the browser Fullscreen API.
+// This ensures Esc key also cleanly restores the layout.
+document.addEventListener('fullscreenchange', () => {
+    const player = document.querySelector('.radiostream-player');
+    const stationLabel = document.getElementById('now-playing-station');
+    const exitBtn = document.getElementById('exit-fullscreen-btn');
+    if (!player) return;
+    
+    if (document.fullscreenElement) {
+        player.classList.add('fullscreen-mode');
+        // Show the exit button (it lives outside .radiostream-player so CSS can't reach it)
+        if (exitBtn) exitBtn.style.display = 'flex';
+        // Strip "Now Playing: " prefix for cleaner fullscreen typography
+        if (stationLabel) {
+            const text = stationLabel.textContent;
+            const match = text.match(/^Now Playing:\s*/i);
+            if (match) {
+                stationLabel.dataset.fsOriginal = text;
+                stationLabel.textContent = text.slice(match[0].length);
+            }
+        }
+    } else {
+        player.classList.remove('fullscreen-mode');
+        // Hide the exit button
+        if (exitBtn) exitBtn.style.display = 'none';
+        // Restore original station label text
+        if (stationLabel && stationLabel.dataset.fsOriginal) {
+            stationLabel.textContent = stationLabel.dataset.fsOriginal;
+            delete stationLabel.dataset.fsOriginal;
+        }
+    }
+});
 
 function updateVuStyle(vuStyleIndex) {
     const currentStyle = VU_STYLES[vuStyleIndex];
@@ -262,7 +347,7 @@ function calculateRMSLevel(dataArray) {
         const sample = (dataArray[i] - 128) / 128;
         sum += sample * sample;
     }
-    return Math.min(Math.sqrt(sum / dataArray.length) * 300, 100);
+    return Math.min(Math.sqrt(sum / dataArray.length) * sensitivityMult, 100);
 }
 
 function getLevelColor(level) {

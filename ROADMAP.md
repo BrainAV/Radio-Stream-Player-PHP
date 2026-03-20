@@ -81,7 +81,29 @@ This document outlines the future direction and planned features for the Radio S
 - **Responsive Hamburger Toggle** — Integrated a functional hamburger menu into the player header for small screens (≤ 600px).
 - **Dynamic Auth Sync** — Unified authentication button state (Login/Logout/Admin/Account) between the desktop header and mobile menu in real-time.
 - **Responsive UI Utilities** — Introduced `.desktop-only` and `.mobile-only` CSS classes for cleaner cross-device visibility control.
+
+### ✅ Completed in v2.2.10 (Clean URLs & PWA Sync)
 - **Clean URLs** — Eliminated `.php` extensions from public navigation via `.htaccess`, preparing the foundation for dynamic station routing.
+- **PWA Meta Tag Synchronization** — Added modern `mobile-web-app-capable` tags to both `template-player.html` and `popout.html` for improved installation.
+- **Nav Sync Fixes** — Resolved event listener gaps for account and logout buttons in the mobile navigation sheet.
+
+### ✅ Completed in v2.2.11 (Branding & Architecture Strategy)
+- **Reactive Audio Logo (Premium)** — Overhauled the radio logo's audio reactivity with higher scale factors, dynamic shadows, and BPM-aware "peak" color shifting (Cyan glow).
+- **Branding Architect Skill** — Formalized the `.agent/skills/branding-architect/` skill to protect SVG integrity and animation standards.
+- **Formalized Proxy Strategy** — Established the `api.djay.ca` Cloudflare Worker as the official, permanent global proxy for audio tunneling and ICY metadata polling.
+- **Architecture Segmentation** — Performed a major strategic restructuring of goals, clearly separating the LAMP-based v2.x core from the upcoming v3.0 professional-grade milestone.
+
+---
+
+## 🚀 v2.3 Milestone: Resiliency & Immersive UX (Released)
+
+### ✅ Completed in v2.3.0
+- **Audio Resiliency (Retry Engine)** — Implemented an intelligent error handler in `player.js` with exponential backoff to handle `ERR_CONNECTION_CLOSED` and other proxy-related drops.
+- **Playback Persistence (isPlaying)** — The player now saves and resumes the `isPlaying` state (and last station/volume) across page refreshes for a seamless return experience.
+- **Immersive Fullscreen Mode** — Added a dedicated "Fullscreen" toggle icon that hides the station UI and focuses purely on the VU meter and background.
+- **Dynamic VU Sensitivity** — Integrated a "Visualizer Sensitivity" slider in Settings, allowing users to fine-tune `AnalyserNode` response for varying stream gains.
+- **Modern PWA Compliance** — Fully updated `admin.php`, `template-player.html`, and `popout.html` with current PWA-compliant meta tags to resolve deprecation warnings.
+- **Mobile Ad Performance Fixes** — Implemented `min-height` constraints on AdSense slots in `styles.css` to prevent significant layout shifts and ensure ads render correctly on mobile viewports.
 
 ### ⚠️ Known Quirks (v2.2)
 - **Pop-out Ad Rendering** — The `#ad-space-popout` 300×50 banner may require the user to open the popup slightly wider than `320px` on some browsers/OS combinations before AdSense fully renders. Root cause: AdSense's available-width detection varies by browser viewport reporting. Workaround: window is pre-sized to `320×390`; users can resize if needed. Investigation ongoing for v2.3.
@@ -90,23 +112,17 @@ This document outlines the future direction and planned features for the Radio S
 
 ---
 
-## 🔭 v2.3+ Future Goals
+---
 
-### Backend & Proxy Strategy
-- **Formalize Cloudflare Worker** — Establish the `api.djay.ca` Cloudflare Worker as the official, permanent proxy solution for audio tunneling and metadata extraction. This offloads immense bandwidth costs from the main PHP server and provides a globally distributed edge proxy.
-- **Investigate Audio Gaps** — Diagnose the root cause of `ERR_CONNECTION_CLOSED` and occasional audio gaps when streaming through the Cloudflare worker, potentially optimizing the worker's connection handling or `player.js` reconnection logic.
+## 🔭 v2.4+ Future Goals
 
-### UI & Visualizer Enhancements
-- **Dynamic VU Scale** — Option to adjust the visualizer sensitivity for quiet vs. loud streams.
-- **Visualizer Fullscreen Mode** — A dedicated "Immersive" mode focusing entirely on the VU meter and background.
-
-### User Features
-- **Email Verification** — Double opt-in at registration to prevent bot accounts.
+### User Experience
 - **Wallpaper Search** — Unsplash API integration for searching backgrounds inside the player.
+- **Email Verification** — Double opt-in at registration to prevent bot accounts and improve user database quality.
 
-### Discovery & SEO
-- **Mobile Ad Optimization** — Research and implement responsive AdSense slots for mobile to prevent layout clipping and ensure ads deliver correctly on smaller viewports.
-- **Ad Refresh Strategy** — Investigate AdSense reload policies or dynamic station page implementation to allow for non-intrusive ad refreshing.
+### Discovery & Analytics
+- **Advanced Ad Refresh** — Investigate AdSense reload policies or dynamic station page implementation to allow for non-intrusive ad refreshing.
+- **Custom Station Submissions** — A formal "Submit a Station" flow for guests to request station additions, including automated validation.
 
 ---
 
@@ -116,6 +132,7 @@ Looking ahead, v3.0 will introduce a premium, private-core architecture—potent
 
 - **Commercial Grade Core** — Refactoring the engine for high-concurrency and professional-grade stability.
 - **Secrets Management & Hardening** — Migrating hardcoded credentials to robust environment configurations (`.env`), which natively aligns with the Node.js transition.
+- **Integrated Casting & Remote Playback** — Implementation of Google Cast (Chromecast) and AirPlay support. Plan includes a lightweight hybrid strategy with a branded Custom Web Receiver for v3.0 Gold (see `docs/CASTING_PROPOSAL_v3.0.md`).
 - **Monetization Engine** — Fully integrated user subscription models and exclusive premium features (Stripe/PayPal integration).
 - **Communication & Marketing** — Newsletter opt-in during registration with MailChimp integration to keep users updated on new features and djay products.
 - **Premium Feature Suite** — Implementing Song History, In-Browser Recording (MediaRecorder API), Custom Background Uploads (Cloud Storage), and personal Cloud Drive integration (Google Drive/Dropbox).

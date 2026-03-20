@@ -25,6 +25,48 @@ export function initPlayer() {
         
         // Save infrastructure to state instantly
         stateManager.setAudioInfrastructure(audio, audioContext, source, null, null);
+
+        // --- Audio Error Handling (The Safety Net) ---
+        let reconnectAttempts = 0;
+        const MAX_RECONNECTS = 5;
+
+        audio.addEventListener('error', (e) => {
+            const state = stateManager.getState();
+            if (!state.isPlaying) return;
+
+            console.error("Audio Error Event:", e);
+            const error = audio.error;
+            
+            // Log specific error codes (1: App Aborted, 2: Network, 3: Decode, 4: Src Not Supported)
+            console.warn(`Audio element error code: ${error ? error.code : 'unknown'}`);
+
+            if (reconnectAttempts < MAX_RECONNECTS) {
+                reconnectAttempts++;
+                console.log(`Attempting reconnect ${reconnectAttempts}/${MAX_RECONNECTS}...`);
+                
+                if (nowPlayingTrack) nowPlayingTrack.textContent = `Reconnecting... (${reconnectAttempts})`;
+                
+                // Slight delay before retry to let network settle
+                setTimeout(() => {
+                    const currentUrl = state.currentStation;
+                    audio.src = getProxiedAudioUrl(currentUrl) + '&retry=' + Date.now();
+                    audio.load();
+                    audio.play().then(() => {
+                        reconnectAttempts = 0; // Reset on success
+                    }).catch(err => console.warn("Retry playback failed:", err));
+                }, 2000 * reconnectAttempts); // Exponential-ish backoff
+            } else {
+                console.error("Max reconnect attempts reached.");
+                if (nowPlayingTrack) nowPlayingTrack.textContent = "Error: Stream Lost. Try refreshing.";
+                stateManager.setPlaying(false);
+                reconnectAttempts = 0;
+            }
+        });
+
+        // Reset reconnect attempts on successful play (manual or automatic)
+        audio.addEventListener('playing', () => {
+            reconnectAttempts = 0;
+        });
     }
 
     // --- State Reactivity (The Waiter's Headset) ---

@@ -16,6 +16,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 
+## [2.2.12] - 2026-03-20
+
+### Added
+- **Persistent Playback State** — The player now saves `isPlaying` and the last active station to `localStorage`, allowing for a seamless "resume" experience across page refreshes.
+- **Dynamic VU Sensitivity** — Added a "Visualizer Sensitivity" slider in the General settings, allowing users to fine-tune the VU response for high-latency or low-gain streams.
+- **Immersive Fullscreen Mode** — Implemented a dedicated fullscreen toggle that optimizes the UI for visualizer-heavy listening on desktops and tablets.
+- **v3.0 Casting Proposal** — Drafted and integrated a technical proposal for Google Cast and AirPlay support (`docs/CASTING_PROPOSAL_v3.0.md`).
+- **Roadmap Expansion** — Formally added "Integrated Casting & Remote Playback" to the v3.0 milestone in `ROADMAP.md`.
+- **Premium Fullscreen Mode** — Completely redesigned the immersive fullscreen experience. VU meters are now the central hero element, absolutely centered on screen at `42vh` tall. Station name and track title are pinned to the top. The background uses a deep navy-to-black radial gradient with a soft animated ambient glow behind the visualizers.
+- **Fullscreen Control Dock** — The control bar in fullscreen is now a compact frosted-glass pill, fixed to the bottom center of the screen. It fades to 25% opacity and fully reveals on hover for a clean, non-intrusive experience.
+- **Exit Fullscreen Button** — A `×` circular glass button is now shown at the top-right of the screen when in fullscreen mode; it reliably appears and disappears via the `fullscreenchange` event listener (which also handles the `Esc` key correctly).
+- **Fullscreen Entry Button Relocated** — The fullscreen toggle icon (`⛶`) has been moved from the control bar to the `now-playing-header`, positioned to the right of the stream quality (kbps) badge for a cleaner, more intentional UX.
+
+### Changed
+- **PWA Meta Tag Modernization** — Replaced deprecated meta tags in `template-player.html`, `popout.html`, and `admin.php` with modern PWA-compliant standards to improve cross-browser installation.
+- **Mobile Ad Performance Fixes** — Implemented `min-height` constraints on AdSense slots in `styles.css` to prevent significant layout shifts and ensure ads render correctly on mobile devices.
+- **VU Sensitivity Scope Expanded** — `applySensitivity()` in `visualizer.js` now updates a `sensitivityMult` multiplier used by `calculateRMSLevel()`, ensuring the sensitivity slider correctly affects Classic, LED, Retro, and Circular VU meters — not just the frequency-domain analysers.
+- **Fullscreen "Now Playing" Label** — The redundant "Now Playing: " prefix is now stripped from the station label when entering fullscreen (restored on exit), so only the station name is displayed prominently.
+- **Ad Placement in Fullscreen (Non-Premium)** — Ad unit is repositioned to a fixed slot above the control dock in fullscreen mode with a dark glassmorphism backdrop, ensuring it is visible without blocking the visualizers.
+- **Roadmap Updated** — `ROADMAP.md` updated to reflect v2.3 as fully completed and v2.2.10/11 properly documented as historical milestones.
+
+### Fixed
+- **Audio Resiliency (Proxy Errors)** — Added an intelligent error handling layer in `player.js` that detects `ERR_CONNECTION_CLOSED` and other proxy-related drops, triggering an automatic reconnection with exponential backoff.
+- **Esc Key Exits Fullscreen** — Replaced the manual class-toggle approach with a `fullscreenchange` event listener that syncs the `.fullscreen-mode` CSS class with the browser Fullscreen API, so pressing `Esc` correctly restores the normal layout.
+- **Exit Fullscreen Button Now Visible** — The `#exit-fullscreen-btn` element was placed outside `.radiostream-player` in the DOM, making the original CSS selector (`.fullscreen-mode #exit-fullscreen-btn`) unreachable. Fixed by explicitly setting `style.display` via JavaScript in the `fullscreenchange` listener.
+- **Station Name Centred in Fullscreen** — The `now-playing-header` flex row was preventing centred alignment. Added an override to switch it to `flex-direction: column` in fullscreen mode so the station name and bitrate badge stack centrally.
+
+
 ## [2.2.11] - 2026-03-19
 
 ### Added

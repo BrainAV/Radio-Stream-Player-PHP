@@ -1,7 +1,7 @@
 {
   "name": "Radio Stream Player",
   "short_name": "Radio Player",
-  "version": "2.2.11",
+  "version": "2.2.12",
   "description": "A premium, full-stack internet radio player with Glassmorphism UI.",
   "start_url": "/",
   "display": "standalone",

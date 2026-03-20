@@ -33,3 +33,5 @@ index.html?ev=01_262:233 Uncaught TypeError: Cannot read properties of undefined
 script.js:37 [PWA] Service Worker registered ServiceWorkerRegistration {installing: null, waiting: null, active: ServiceWorker, navigationPreload: NavigationPreloadManager, scope: 'https://radio.djay.ca/', …}
 
 (index):1 <meta name="apple-mobile-web-app-capable" content="yes"> is deprecated. Please include <meta name="mobile-web-app-capable" content="yes">
+
+- Looking ahead, v3.0 will introduce a premium, private-core architecture—potentially leveraging Node.js—which will power the flagship experience at radio.djay.ca. This next generation will focus on sustainable development through user subscription models and exclusive premium features. As the project matures, v3.0 is envisioned as a professional-grade product suitable for commercial marketplaces like CodeCanyon. Our mission remains: to build the most accessible and beautiful audio tools for the modern web.

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'radio-player-v2.2.11';
+const CACHE_NAME = 'radio-player-v2.2.12';
 const ASSETS_TO_CACHE = [
   '/',
   '/styles.css',
