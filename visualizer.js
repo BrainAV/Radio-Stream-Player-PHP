@@ -119,7 +119,7 @@ document.addEventListener('fullscreenchange', () => {
     
     if (document.fullscreenElement) {
         player.classList.add('fullscreen-mode');
-        // Show the exit button (it lives outside .radiostream-player so CSS can't reach it)
+        // Show the exit button (it now lives inside .radiostream-player for browser fullscreen visibility)
         if (exitBtn) exitBtn.style.display = 'flex';
         // Strip "Now Playing: " prefix for cleaner fullscreen typography
         if (stationLabel) {

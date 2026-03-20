@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 
+## [2.2.13] - 2026-03-20
+
+### Fixed
+- **Confirmed Visibility for Exit Fullscreen Button** — Moved the `#exit-fullscreen-btn` back inside the `.radiostream-player` container. This ensures that the button remains in the browser's fullscreen scope and correctly receives the CSS styles for the `.fullscreen-mode` class, fixing the glitch where it was invisible in immersive mode.
+
+
 ## [2.2.12] - 2026-03-20
 
 ### Added
