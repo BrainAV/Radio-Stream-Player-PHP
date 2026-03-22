@@ -7,13 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [2.3.0] - 2026-03-21
 
 ### Added
+- **Roadmap: SVG Logo Migration** — Added a v3.0 goal to convert the new `favicon.png` design to SVG and unify the brand identity across the application.
 
 ### Changed
-
-### Fixed
+- **Immersive Mode Layout Refresh** — Optimized the vertical alignment of the `now-playing-container` in immersive mode. It is now vertically centered in the space between the top of the screen and the hero VU meters for a more balanced, professional aesthetic.
+- **Roadmap Strategic Alignment** — Formally migrated remaining v2.3 milestones to the v3.0 "Pro" roadmap, establishing v2.x as the stable open-source baseline.
 
 
 ## [2.2.13] - 2026-03-20

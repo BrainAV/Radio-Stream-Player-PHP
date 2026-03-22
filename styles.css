@@ -2226,7 +2226,7 @@ select option {
     padding: 0 !important;
 }
 
-/* === Player content (inner): fixed at top, station + track === */
+/* === Player content (inner): centered in the space above VU meters === */
 .radiostream-player.fullscreen-mode .player-content {
     position: absolute !important;
     top: 0 !important;
@@ -2235,6 +2235,8 @@ select option {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
+    justify-content: center !important; /* Center content vertically in the allocated height */
+    height: 33.2vh !important; /* Position centered in the top space (above VU meters at 33.2vh) */
     background: none !important;
     border: none !important;
     box-shadow: none !important;
@@ -2242,14 +2244,14 @@ select option {
     z-index: 10;
 }
 
-/* === Now Playing text — pinned to top of screen === */
+/* === Now Playing text — centered in the space above VU meters === */
 .radiostream-player.fullscreen-mode .now-playing-container {
     width: 100% !important;
     max-width: 85vw !important;
     text-align: center !important;
     background: none !important;
     border: none !important;
-    padding: 24px 20px 0 !important;
+    padding: 0 20px !important; /* Removed top padding to allow true centering */
     margin: 0 auto !important;
 }
 

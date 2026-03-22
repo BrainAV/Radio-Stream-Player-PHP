@@ -104,15 +104,9 @@ This document outlines the future direction and planned features for the Radio S
 
 ---
 
-## 🚀 v2.3 Milestone: Experience & Discovery (Active)
-
-### User Experience
-- **Wallpaper Search** — Unsplash API integration for searching backgrounds inside the player.
-- **Email Verification** — Double opt-in at registration to prevent bot accounts and improve user database quality.
-
-### Discovery & Analytics
-- **Advanced Ad Refresh** — Investigate AdSense reload policies or dynamic station page implementation to allow for non-intrusive ad refreshing.
-- **Custom Station Submissions** — A formal "Submit a Station" flow for guests to request station additions, including automated validation.
+### ✅ Completed in v2.3.0
+- **Immersive Mode Layout Refresh** — Optimized the vertical alignment of the now-playing content, centering it between the top of the screen and the hero VU meters for a modern, balanced terminal-style aesthetic.
+- **Roadmap Strategic Alignment** — Formally separated the LAMP-based open-source core (v2.x) from the upcoming professional Node.js-based "Pro" vision (v3.x).
 
 ### ⚠️ Known Quirks (v2.2)
 - **Pop-out Ad Rendering** — The `#ad-space-popout` 300×50 banner may require the user to open the popup slightly wider than `320px` on some browsers/OS combinations before AdSense fully renders. Root cause: AdSense's available-width detection varies by browser viewport reporting. Workaround: window is pre-sized to `320×390`; users can resize if needed. Investigation ongoing for v2.3.
@@ -134,6 +128,11 @@ Looking ahead, v3.0 will introduce a premium, private-core architecture—potent
 - **Higher-Resolution Metadata** — Low-latency polling for premium users to provide real-time track history.
 - **Dynamic Routing Ecosystem** — Implementing **Dynamic Station Pages** (`/[country]/[genre]/[station-name]`) with access tiers (basic info, song history, analytics) and **Shareable Links** that auto-initialize the player over the network.
 - **Advanced Discovery & Search** — Introducing SEO-friendly **Listing Pages** (indexed by Country/Genre) and **Global Search & Filters** for exploring the full station database.
+- **SVG Logo Migration** — Convert the new v2.2 icon design (`favicon.png`) to a high-quality SVG and replace the existing radio logo in the header and app shell for a unified v3.0 brand identity.
+- **Wallpaper Search** — Unsplash API integration for searching backgrounds inside the player.
+- **Email Verification** — Double opt-in at registration to prevent bot accounts and improve user database quality.
+- **Advanced Ad Refresh** — Investigate AdSense reload policies or dynamic station page implementation to allow for non-intrusive ad refreshing.
+- **Custom Station Submissions** — A formal "Submit a Station" flow for guests to request station additions, including automated validation.
 - **Marketplace Readiness** — Preparing the project as a professional-grade product suitable for commercial marketplaces like CodeCanyon.
 - **Mission** — To build the most accessible and beautiful audio tools for the modern web.
 
