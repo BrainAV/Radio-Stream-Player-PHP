@@ -53,65 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     exit();
 }
 
-// ---------------------------------------------------------
-// POST REQUEST: Add Custom Station
-// ---------------------------------------------------------
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Read raw JSON body
-    $json = file_get_contents('php://input');
-    $data = json_decode($json, true);
-
-    if (!$data) {
-        http_response_code(400);
-        echo json_encode(['status' => 'error', 'message' => 'Invalid JSON payload.']);
-        exit();
-    }
-
-    // Sanitize input
-    $name = filter_var($data['name'] ?? '', FILTER_SANITIZE_STRING);
-    $url = filter_var($data['url'] ?? '', FILTER_SANITIZE_URL);
-    $genre = filter_var($data['genre'] ?? 'Unknown', FILTER_SANITIZE_STRING);
-    $country = filter_var($data['country'] ?? 'Unknown', FILTER_SANITIZE_STRING);
-    $bitrate = filter_var($data['bitrate'] ?? null, FILTER_VALIDATE_INT);
-
-    // Validate absolute minimums
-    if (empty($name) || empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
-        http_response_code(400);
-        echo json_encode(['status' => 'error', 'message' => 'Valid Name and URL are required.']);
-        exit();
-    }
-
-    try {
-        // Insert as 'custom' allowing community directory expansion
-        $stmt = $pdo->prepare("INSERT INTO stations (name, url, genre, country, bitrate, type) VALUES (:name, :url, :genre, :country, :bitrate, 'custom')");
-        
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':url', $url);
-        $stmt->bindParam(':genre', $genre);
-        $stmt->bindParam(':country', $country);
-        $stmt->bindParam(':bitrate', $bitrate);
-        
-        $stmt->execute();
-
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'Station scheduled for community directory.',
-            'id' => $pdo->lastInsertId()
-        ]);
-    } catch (PDOException $e) {
-        // Error code 23000 is integrity constraint violation (Duplicate URLs)
-        if ($e->getCode() == 23000) {
-            http_response_code(409);
-            echo json_encode(['status' => 'error', 'message' => 'Station URL already exists in database.']);
-        } else {
-            http_response_code(500);
-            echo json_encode(['status' => 'error', 'message' => 'Database error during insert.']);
-        }
-    }
-    exit();
-}
-
-// If not GET or POST
+// If not GET
 http_response_code(405);
 echo json_encode(['status' => 'error', 'message' => 'Method Not Allowed']);
 exit();

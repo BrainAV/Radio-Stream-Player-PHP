@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.3.1] - 2026-03-29
+
+### Security
+- **Strict Custom Stream Sanitization** — Mitigated a potential SSRF and unauthenticated database injection vulnerability. Removed the public `POST` endpoint from `api/stations.php`. Guests and users can no longer forcefully write arbitrary stream URLs to the global database.
+- **Directory-Only Additions** — The manual "Add Custom Station" UI block has been completely removed. Users can now only add stations to their collection by searching and saving from the vetted Radio Browser Directory.
+- **Semantic Data Type** — Modified `api/favorites.php` to save new community streams with `type='directory'` instead of `type='custom'`.
+
 ## [2.3.0] - 2026-03-21
 
 ### Added

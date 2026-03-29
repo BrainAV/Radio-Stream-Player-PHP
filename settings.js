@@ -1,5 +1,5 @@
 import { VU_STYLES } from './visualizer.js';
-import { stations as defaultStations, submitCustomStation, fetchUserFavorites, addFavorite, removeFavorite } from './api.js';
+import { stations as defaultStations, fetchUserFavorites, addFavorite, removeFavorite } from './api.js';
 import { stateManager } from './state.js';
 
 const settingsBtn = document.getElementById('settings-btn');
@@ -13,14 +13,9 @@ const accountModal = document.getElementById('account-modal');
 const closeAccountBtn = document.getElementById('close-account-btn');
 const vuStyleSelect = document.getElementById('vu-style-select');
 const themeSelect = document.getElementById('theme-select');
-const addStationBtn = document.getElementById('add-station-btn');
 const favoritesOnlyCheck = document.getElementById('favorites-only-check');
 const declutterModeCheck = document.getElementById('declutter-mode-check');
 const genreSelect = document.getElementById('genre-select');
-const nameInput = document.getElementById('custom-station-name');
-const genreInput = document.getElementById('custom-station-genre');
-const urlInput = document.getElementById('custom-station-url');
-const bitrateInput = document.getElementById('custom-station-bitrate');
 const customStationsList = document.getElementById('custom-stations-list');
 const bgUrlInput = document.getElementById('bg-url-input');
 const setBgBtn = document.getElementById('set-bg-btn');
@@ -256,7 +251,6 @@ export function initSettings() {
 
         collection.forEach((station, index) => {
             const isFav = station.is_favorite == 1;
-            const canEdit = station.type === 'custom' || (!station.type && !defaultStations.some(d => d.url === station.url));
             
             const item = document.createElement('div');
             item.className = 'station-item';
@@ -264,7 +258,6 @@ export function initSettings() {
                 <span class="station-name" title="${station.url}">${station.name} ${station.genre ? `(${station.genre})` : ''}</span>
                 <div class="station-actions" style="display:flex; gap: 5px;">
                     <button class="toggle-fav-btn" data-url="${station.url}" data-isfav="${isFav}" aria-label="Toggle favorite" style="color: ${isFav ? 'gold' : 'gray'}; background: none; border: none; cursor: pointer; font-size: 1.2em;">${isFav ? '★' : '☆'}</button>
-                    ${canEdit ? `<button class="edit-btn" data-index="${index}" aria-label="Edit station">✎</button>` : ''}
                     <button class="delete-btn" data-url="${station.url}" data-index="${index}" aria-label="Delete station">&times;</button>
                 </div>
             `;
@@ -301,23 +294,7 @@ export function initSettings() {
             });
         });
 
-        // Add edit listeners
-        customStationsList.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const index = parseInt(e.target.dataset.index, 10);
-                const station = collection.filter(s => s.type === 'custom' || (!s.type && !defaultStations.some(d => d.url === s.url)))[index] || collection[index];
 
-                if (nameInput) nameInput.value = station.name || '';
-                if (urlInput) urlInput.value = station.url || '';
-                if (genreInput) genreInput.value = station.genre || '';
-                if (bitrateInput) bitrateInput.value = station.bitrate || '';
-                
-                if (addStationBtn) {
-                    addStationBtn.textContent = 'Update';
-                    addStationBtn.dataset.editingIndex = index;
-                }
-            });
-        });
 
         // Add delete listeners
         customStationsList.querySelectorAll('.delete-btn').forEach(btn => {
@@ -337,15 +314,7 @@ export function initSettings() {
                     localStorage.setItem('favoriteStations', JSON.stringify(favoriteUrls));
                 }
 
-                // Reset edit state if deleting the item currently being edited
-                if (addStationBtn.dataset.editingIndex && parseInt(addStationBtn.dataset.editingIndex, 10) === index) {
-                    nameInput.value = '';
-                    urlInput.value = '';
-                    if (genreInput) genreInput.value = '';
-                    if (bitrateInput) bitrateInput.value = '';
-                    delete addStationBtn.dataset.editingIndex;
-                    addStationBtn.textContent = 'Add';
-                }
+
 
                 populateGenres();
                 renderMyCollection();
@@ -430,49 +399,6 @@ export function initSettings() {
         });
     }
 
-    // Custom Stations Logic
-    if (addStationBtn && nameInput && urlInput) {
-        addStationBtn.addEventListener('click', async () => {
-            const name = nameInput.value.trim();
-            const url = urlInput.value.trim();
-            const genre = genreInput ? genreInput.value.trim() : 'Radio';
-            const bitrate = bitrateInput ? parseInt(bitrateInput.value, 10) : null;
-
-            if (name && url) {
-                if (window.IS_LOGGED_IN) {
-                    // Save to DB (addFavorite is imported at top level)
-                    await addFavorite({ name, url, genre, bitrate });
-                } else {
-                    // Save to localStorage
-                    const customStations = JSON.parse(localStorage.getItem('customStations')) || [];
-
-                    if (addStationBtn.dataset.editingIndex !== undefined) {
-                        const index = parseInt(addStationBtn.dataset.editingIndex, 10);
-                        customStations[index] = { name, url, genre, bitrate };
-                        delete addStationBtn.dataset.editingIndex;
-                        addStationBtn.textContent = 'Add';
-                    } else {
-                        customStations.push({ name, url, genre, bitrate });
-                        // still submit for community indexing if guest
-                        submitCustomStation(name, url, genre, '', bitrate);
-                    }
-
-                    localStorage.setItem('customStations', JSON.stringify(customStations));
-                }
-
-                // Clear inputs
-                nameInput.value = '';
-                urlInput.value = '';
-                if (genreInput) genreInput.value = '';
-                if (bitrateInput) bitrateInput.value = '';
-
-                populateGenres(); 
-                renderMyCollection();
-                // Notify player to refresh list
-                window.dispatchEvent(new CustomEvent('stationListUpdated'));
-            }
-        });
-    }
 
     // Modal Event Listeners
     if (settingsBtn && settingsModal && closeSettingsBtn) {

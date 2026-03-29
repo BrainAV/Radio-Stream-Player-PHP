@@ -17,23 +17,6 @@ export async function fetchStations() {
     return stations;
 }
 
-// POST newly discovered stations back to the database for community indexing
-export async function submitCustomStation(name, url, genre, country) {
-    try {
-        const response = await fetch('api/stations.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name, url, genre, country })
-        });
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Error submitting custom station:", error);
-        return { status: "error", message: "Network error." };
-    }
-}
 
 // Fetch user-specific favorites from the DB
 export async function fetchUserFavorites() {

@@ -94,8 +94,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($station) {
             $station_id = $station['id'];
         } else {
-            // 2. Insert as new custom station if not found
-            $stmt = $pdo->prepare("INSERT INTO stations (name, url, genre, country, bitrate, type) VALUES (?, ?, ?, ?, ?, 'custom')");
+            // 2. Insert as new directory station if not found
+            $stmt = $pdo->prepare("INSERT INTO stations (name, url, genre, country, bitrate, type) VALUES (?, ?, ?, ?, ?, 'directory')");
             $stmt->execute([$name, $url, $genre, $country, $bitrate]);
             $station_id = $pdo->lastInsertId();
         }
